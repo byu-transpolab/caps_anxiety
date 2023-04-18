@@ -45,15 +45,7 @@ bibliography: references.bib
 format:
   html:
     theme: cosmo
-  elsevier-pdf:
-    include-in-header: 
-      - packages.tex
-    journal:
-      name: Transportation Research Part A
-      cite-style: authoryear
-    keep-tex: true
-    top-level-division: section
-    toc: false
+ 
 
 editor: visual
 
