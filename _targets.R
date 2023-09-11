@@ -12,10 +12,11 @@ source("R/Optimize.R")
 source("R/Mental Health Table.R")
 
 # Set target-specific options such as packages.
-tar_option_set(packages = c("dplyr","tools", "hms", "lubridate", 
-                            "tidyverse", "leaflet", "sf", "gpsactivs", 
+# Install gpsactivs from github with remotes::install_github("byu-transpolab/gpsactivs")
+tar_option_set(packages = c("dplyr","tools", "hms", "lubridate", "gpsactivs",
+                            "tidyverse", "leaflet", "sf", "purrr", "stringr",
                             "ggspatial", "data.table", "plotly", "future.apply",
-                            "viridis", "pomp", "stats"))
+                            "viridis", "pomp", "stats", "osmdata"))
 
 # End this file with a list of target objects.
 list(
