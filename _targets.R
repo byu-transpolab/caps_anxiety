@@ -56,3 +56,4 @@ list(
   
   # Add the mental health responses
   tar_target(final_table, addMentalHealthResponses(demographics_table))
+)
