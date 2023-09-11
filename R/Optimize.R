@@ -78,8 +78,8 @@ yesterday <- function(timestamp){
   )
   
   str_c(x, lubridate::month(timestamp), sep = "-")
-  
 }
+
 
 #' Make an sf object out of lat / long tabular data
 #'
@@ -98,6 +98,7 @@ makeSf <- function(df, crs = 32612) {
     st_as_sf(coords = c("lon", "lat"), crs = 4327) %>%
     st_transform(crs)
 }
+
 
 #' Compute activity locations for one day
 #'
