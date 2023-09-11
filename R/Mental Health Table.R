@@ -18,23 +18,32 @@ addNumTrips <- function(df){
 #' number of total clusters as its own column, and how many of those
 #'  clusters were at a park, library, or grocery store
 
-addTripType <- function(tibble){
+addTripType <- function(tibble, parksSf, grocerySf, librarySf){
   
-  parksSf <- sf::st_read("resources/parks.geojson") %>%
-    st_transform(32612)
-  grocerySf <- sf::st_read("resources/groceries.geojson") %>%
-    st_transform(32612)
-  librarySf <- sf::st_read("resources/libraries.geojson") %>%
-    st_transform(32612)
-  
-  tibble %>%
+  t2 <- tibble %>%
     filter(!is.character(algorithm)) %>%
-    select(-c(cleaned)) %>%
-    unnest(cols = c(algorithm)) %>%
-    st_as_sf() %>%
-    st_join(parksSf) %>%
-    st_join(grocerySf) %>%
-    st_join(librarySf) %>%
-    mutate(id = id.x)
-    
+    select(-c(cleaned))
+  
+  # add more land use location variables
+  t2$park = purrr::map_int(t2$algorithm, ~add_location(.x, variable = id, sf = parksSf))
+  t2$grocery = purrr::map_int(t2$algorithm, ~add_location(.x, variable = SITE_NAME, sf = grocerySf))
+  t2$library = purrr::map_int(t2$algorithm, ~add_location(.x, variable = fid, sf = librarySf))
+
+  t2
+}
+
+# Function to add a location
+add_location <- function(x, variable, sf){
+  if(is.null(nrow(x))) {
+    a <- NA
+  } else {
+    a <- st_join(x, sf) %>% 
+      st_set_geometry(NULL) %>% 
+      ungroup() %>% 
+      summarise(s = sum(!is.na({{variable}})) ) %>% 
+      pull(s)
+  }
+   
+  return(a)
+}
 }
