@@ -4,13 +4,14 @@
 
 addNumTrips <- function(df){
   tibble <- as_tibble(df) %>%
-    select(id, date, cleaned, algorithm) %>%
-    group_by(id,date) %>%
+    select(userId, date, cleaned, algorithm) %>%
+    group_by(userId, date) %>%
     rowwise() %>%
     # Calculate the total number of trips someone made in a day
     mutate(numTrips = length(algorithm[[1]]))
   return(tibble)
 }
+
 
 #' @param output from addNumTrips function
 #' @return a table including ID, date, sf, algorithm, the
