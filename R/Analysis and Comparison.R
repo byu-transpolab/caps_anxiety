@@ -1,4 +1,5 @@
-#from Gillian's Mental Health Table file --> analysis/comparison
+### From Gillian's Mental_Health_Table.R file --> analysis/comparison
+
 addMentalHealthResponses <- function(tibble){
   morningResponses <- read.csv("C:/Users/griches/Desktop/BigCellGPSDataToTrips/mental_surveys/Morning_Survey_220223.csv") %>%
     rename(id = Study.Id)
@@ -97,3 +98,166 @@ num_trips %>%
         legend.key.width = unit(1, 'cm'), #change legend key width
         legend.title = element_text(size=10), #change legend title font size
         legend.text = element_text(size=8)) #change legend text font size)
+
+
+
+
+### From Gillian's Optimize.R file
+
+#' Read manually-defined activities
+#'
+#' @param folder of GeoJSON files named by Date_ID that include the number of clusters
+#' @return A nested tibble with person ID, date, and an SF points object.
+#' 
+#' 
+makeManualTable <- function(folder){
+  files <- dir(folder, pattern = ".geojson")
+  manualList <- lapply(files, function(file) {
+    st_read(file.path(folder, file)) %>%
+      st_transform(32612)
+  })
+  
+  tibble(manual = manualList,
+         name_of_file = file_path_sans_ext(files)) %>% 
+    separate(name_of_file, c("date", "id"), sep = c("_")) 
+}
+
+#' Function to join the manual_table with the algorithm_table by ID and date
+#'
+#'
+#' @param manual_table and algorithm_table targets
+#' @return alg_manual_table target which includes the id, date
+#' and the nested clusters column from both the manual table and algorithm table
+joinTables <- function(manual_table,cleaned_data) {
+  cleaned_data$date <- as.character(cleaned_data$date)
+  inner_join(manual_table, cleaned_data, by = c("date","id")) %>%
+    as_tibble() 
+}
+
+
+#' Function to return the error between algorithm and manual clusters
+#'
+#'
+#' @param alg_manual_table target and initial set of params as defined in the optims 
+#' function
+#' 
+#' @return Percent of gps 'points' that do not fall within both the algorithm buffer
+#' and the manual buffer (FALSE)
+#' 
+#' @details This function is what is called in the optimization functions.
+#' It returns the percentage of FALSE points as described in the 'number_of_points_
+#' in_cluster' function. The goal of the optimization functions is to minimize 
+#' the percent FALSE points between the number of points in the algorithm buffer
+#' and the number of points in the manual buffer.
+#' 
+calculateError <- function(params, cleaned_manual_table) {
+  clusters <- makeClusters(cleaned_manual_table, params) %>%
+    filter(algorithm != "no clusters found") 
+  
+  raw_error <- lapply(seq_along(1:nrow(clusters)), function(i){
+    # print(i)
+    number_of_points_in_cluster(
+      clusters$manual[[i]],
+      clusters$algorithm[[i]],
+      clusters$cleaned[[i]],
+      buffer = 50)
+  })
+  
+  error <- sum(unlist(raw_error), na.rm = TRUE)
+  
+  #' Create csv file of all the tested parameters and the associated error
+  #' that were calculated through optimization process, 
+  #' remember to change the name of the file for each kind of optimization
+  
+  write.table(cbind(params, error), 
+              file="optim_scaled_20220920_2.csv",row.names=F,
+              col.names=c('params','error'),
+              append = TRUE)
+  
+  error
+}
+
+
+#' Calculate percent of correctly classified points
+#' 
+#' @param manual_centers An sf object of activity locations determined through hand-coding
+#' @param algorithm_centers An sf object of activity locations determined through applying
+#'   the DBSCAN-TE algorithm
+#' @param points An sf object containing raw GPS points for the activities and trips 
+#'   represented in the centers.
+#' @param buffer The radius of the activity locations. This should be the same
+#'   units as the projection of each sf (usually meters).
+#'   
+#' @return The percent of `points` that disagree between inclusion in `manual_centers` and 
+#'   `algorithm_centers`
+#'   
+#' @details This function draws a circular buffer of the prescribed radius around
+#'   the activity centers determined by two methods, one manual and one algorithm-based.
+#'   The points are identified as being within each of the buffers, and the function
+#'   returns the percent of points that are classified differently based on the
+#'   the buffers in both methods.
+#'   
+number_of_points_in_cluster <- function(manual_centers, algorithm_centers, 
+                                        points, buffer = 50){
+  
+  if(nrow(algorithm_centers) < 1){
+    return(1) # there are no algorithm-defined clusters, so by definition nothing matches
+  }
+  
+  # create buffers around activity points
+  manual_buffer <- st_buffer(manual_centers, buffer) %>% st_union()
+  algorithm_buffer <- st_buffer(algorithm_centers, buffer) %>% st_union()
+  
+  
+  # determine whether the points are inside each set of buffers
+  agree <- points %>% 
+    mutate(
+      manual = st_within(geometry, manual_buffer, sparse = FALSE, )[, 1],
+      algori = st_within(geometry, algorithm_buffer, sparse = FALSE)[, 1],
+      
+      # are they the same?
+      agree = manual == algori
+    ) 
+  
+  # calculate percent of FALSE agreement
+  stat <- table(agree$agree)
+  
+  # if there are no FALSE occurances, return FALSE percentage as 0 instead of
+  # the default percent TRUE = 1
+  if(stat[1] == nrow(agree)){
+    return(0)
+  }
+  
+  stat[1] / sum(stat)
+  
+  
+  # map (for debugging)
+  #pal <- colorFactor("Dark2", agree$agree)
+  #leaflet() %>%
+  #addProviderTiles(providers$CartoDB) %>%
+  #addPolygons(data = manual_buffer %>% st_transform(4326), color = "red")  %>%
+  #addPolygons(data = algorithm_buffer%>% st_transform(4326), color = "green")  %>%
+  #addCircles(data = clusters$cleaned[[3]]%>% st_transform(4326), color = "black")
+  #addCircles(data = agree %>% st_transform(4326), color = ~pal(agree))
+  
+}
+
+#' Function to minimize the RMSE between algorithm clusters and manual clusters
+#' and find the optimum values for each parameters that does so
+#'
+#'
+#' @param initial vector for params and the calculateError function to be minimized
+#' @return vector of optimized parameters 
+#' @details param[1,2,3,4] are eps, minpts,delta_t, and entr_t respectively
+
+optimize <- function(cleaned_manual_table, params = c(10,3,36000,1.3)) {
+  sannbox(par = params, fn = calculateError, cleaned_manual_table = cleaned_manual_table,
+          control = list(upper = c(100, 300, 24 * 3600, 4), lower = c(10,3,300, 1),
+                         maxit = 100, parscale = c(25,75,21600,1)))
+}
+
+optimize2 <- function(cleaned_manual_table, params = c(10,3,36000,1.3)) {
+  optim(par = params, fn = calculateError, cleaned_manual_table = cleaned_manual_table,
+        method = "L-BFGS-B", upper = c(100, 300, 24 * 3600, 4), lower = c(10,3,300, 1),
+        control = list(maxit = 100, parscale = c(25,75,21600,1)))
+}
