@@ -46,4 +46,21 @@ add_location <- function(x, variable, sf){
    
   return(a)
 }
+
+# Add Mental Health Responses and Demographic Data
+addMentalHealthResponses <- function(tibble){
+  morningResponses <- read.csv("data/mental_surveys/Morning_Survey_220223.csv") %>%
+    rename(userId = Study.Id, date = Survey.Started.Date) %>% 
+    mutate(date = dmy(date)) %>%
+    mutate(date = format(date, "%Y-%m-%d")) %>% 
+    mutate(date = as.Date(date))
+  # eveningResponses <- read.csv("data/mental_surveys/Evening_Survey_220223.csv") %>% 
+  #   rename(userId = Study.Id)
+  full_join(tibble, morningResponses, by = c('userId', 'date'))
+}
+
+addDemographicData <- function(tibble) {
+  demographic <- readxl::read_excel("data/mental_surveys/Demographic_Breakdown.xlsx") %>%
+    rename(userId = Metricwire_ID)
+  full_join(tibble, demographic, by = 'userId')
 }
