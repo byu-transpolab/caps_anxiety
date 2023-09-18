@@ -86,8 +86,11 @@ addMentalHealthResponses <- function(tibble){
     # Add "evening" at the end of the column names that are repeated in the morning and in the evening
     rename_with(~paste0(., "evening"), all_of(evening_columns))
     
-  full_join(tibble, morningResponses, by = c('userId', 'date'))
-  full_join(tibble, eveningResponses, by = c('userId', 'date'))
+  # merged_data <- bind_cols(tibble, morningResponses, eveningResponses)
+  morning <- full_join(tibble, morningResponses, by = c('userId', 'date'), relationship ="many-to-many")
+  evening <- full_join(morning, eveningResponses, by = c('userId', 'date'), relationship ="many-to-many")
+  
+  return(evening)
 }
 
 addDemographicData <- function(tibble) {
