@@ -47,19 +47,6 @@ add_location <- function(x, variable, sf){
   return(a)
 }
 
-# Create a vector of the survey questions that were repeated in the morning and in the evening
-morning <- read.csv("data/mental_surveys/Morning_Survey_220223.csv")
-start_column <- which(names(morning) == "Have.you.thought.about.killing.yourself.in.the.past.12.hours.or.since.you.last.took.a.survey.")
-end_column <- which(names(morning) == "Would.you.like.a.member.of.the.research.team.to.reach.out.to.you.because.you.are.feeling.unsafe.")
-selected_columns <- names(morning)[start_column:end_column]
-morning_columns <- as.vector(selected_columns)
-
-evening <- read.csv("data/mental_surveys/Evening_Survey_220223.csv")
-start_column <- which(names(evening) == "Have.you.thought.about.killing.yourself.in.the.past.12.hours.or.since.you.last.took.a.survey.")
-end_column <- which(names(evening) == "Would.you.like.a.member.of.the.research.team.to.reach.out.to.you.because.you.are.feeling.unsafe.")
-selected_columns <- names(evening)[start_column:end_column]
-evening_columns <- as.vector(selected_columns)
-
 # Add Mental Health Responses and Demographic Data
 addMentalHealthResponses <- function(tibble){
   morningResponses <- read.csv("data/mental_surveys/Morning_Survey_220223.csv") %>%
@@ -69,11 +56,9 @@ addMentalHealthResponses <- function(tibble){
       userId,
       Survey.Name,
       date,
-      `What.time.did.you.actually.try.to.go.to.sleep.last.night.`:`Would.you.like.a.member.of.the.research.team.to.reach.out.to.you.because.you.are.feeling.unsafe.` 
-    ) %>% 
-    # Add "morning" at the end of the column names that are repeated in the morning and in the evening
-    rename_with(~paste0(., "morning"), all_of(morning_columns))
-    
+      `bed_time_q1`:`safety_request_q17_morn` 
+    ) 
+  
   eveningResponses <- read.csv("data/mental_surveys/Evening_Survey_220223.csv") %>% 
     rename(userId = User.Id, date = Survey.Started.Date) %>% 
     mutate(date = as.Date(format(dmy(date), "%Y-%m-%d"))) %>% 
@@ -81,12 +66,14 @@ addMentalHealthResponses <- function(tibble){
       userId,
       Survey.Name,
       date,
-      `How.would.you.gauge.your.energy.levels.in.the.past.day.`:`Would.you.like.a.member.of.the.research.team.to.reach.out.to.you.because.you.are.feeling.unsafe.` 
-    ) %>%
-    # Add "evening" at the end of the column names that are repeated in the morning and in the evening
-    rename_with(~paste0(., "evening"), all_of(evening_columns))
-    
-  # merged_data <- bind_cols(tibble, morningResponses, eveningResponses)
+      `energy_day_q1`:`safety_request_q36_even` 
+    ) %>% 
+    mutate(suicidal_ideation_q31_even = case_when(
+      suicidal_ideation_q31_even == "Yes" ~ TRUE,
+      suicidal_ideation_q31_even == "No" ~ FALSE,
+      TRUE ~ as.logical(NA)
+    ))
+  
   morning <- full_join(tibble, morningResponses, by = c('userId', 'date'), relationship ="many-to-many")
   evening <- full_join(morning, eveningResponses, by = c('userId', 'date'), relationship ="many-to-many")
   
