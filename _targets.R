@@ -51,9 +51,12 @@ list(
   # Determine number of trips for each activity type
   tar_target(activity_types, addTripType(num_trips, parksSf, grocerySf, librarySf)),
   
+  # Read in the demographic data
+  tar_target(demographics, readDemographicData("data/mental_surveys/Demographic_Breakdown.xlsx")),
+  
   # Add the demographic data
-  tar_target(demographics_table, addDemographicData(activity_types)),
+  tar_target(demo_table, addDemographicData(activity_types, demographics)),
   
   # Add the mental health responses
-  tar_target(final_table, addMentalHealthResponses(demographics_table))
+  tar_target(final_table, addMentalHealthResponses(demo_table))
 )
