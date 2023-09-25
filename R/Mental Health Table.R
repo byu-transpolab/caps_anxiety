@@ -80,10 +80,12 @@ addMentalHealthResponses <- function(tibble){
   return(evening)
 }
 
-addDemographicData <- function(tibble) {
-  demographic <- readxl::read_excel("data/mental_surveys/Demographic_Breakdown.xlsx") %>%
+readDemographicData <- function(file_path) {
+  demo_data <- readxl::read_excel(file_path) %>% 
     rename(userId = Metricwire_ID) %>% 
     select( -c(Recipient_First_Name))
-    
-  full_join(tibble, demographic, by = 'userId')
+}
+
+addDemographicData <- function(tibble, demographics) {
+  full_join(tibble, demographics, by = 'userId')
 }
