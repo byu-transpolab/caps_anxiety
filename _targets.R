@@ -8,8 +8,9 @@ library(future.callr)
 plan(callr)
 threads <- future::availableCores() - 1
 
-source("R/Optimize.R")
-source("R/Mental Health Table.R")
+source("R/Process GPS to Trips.R")
+source("R/Create Table.R")
+source("R/Estimate Models.R")
 
 # Set target-specific options such as packages.
 # Install gpsactivs from github with remotes::install_github("byu-transpolab/gpsactivs")
@@ -20,6 +21,18 @@ tar_option_set(packages = c("dplyr","tools", "hms", "lubridate", "gpsactivs",
 
 # List of target objects
 list(
+  
+  # Read in the demographic data
+  tar_target(demographics, readDemographicData("data/mental_surveys/Demographic_Breakdown.xlsx")),
+  
+  # Create frame of userIds and date
+  tar_target(frame, make_frame(demographics, "2020-04-25", "2021-04-24")),
+  
+  # Add the demographic data to the frame
+  tar_target(demo_data, addDemographicData(frame, demographics)),
+  
+  # Add the mental health responses to the demographic data
+  tar_target(survey_data, addMentalHealthResponses(demo_data)),
   
   # Read in and clean GPS data
   tar_target(fileslist,
@@ -48,15 +61,16 @@ list(
   tar_target(library_file, "data/resources/libraries.geojson", format = "file"),
   tar_target(librarySf, sf::st_read(library_file) %>% sf::st_transform(32612)),
   
-  # Determine number of trips for each activity type
+  # Determine the number of trips for each activity type
   tar_target(activity_types, addTripType(num_trips, parksSf, grocerySf, librarySf)),
   
-  # Read in the demographic data
-  tar_target(demographics, readDemographicData("data/mental_surveys/Demographic_Breakdown.xlsx")),
+  # Make a final table with all of the data
+  tar_target(complete_table, combine_data(survey_data, activity_types)),
   
-  # Add the demographic data
-  tar_target(demo_table, addDemographicData(activity_types, demographics)),
+  # Keep rows that have survey responses
+  tar_target(clean_comp_table, clean_table(complete_table)),
   
-  # Add the mental health responses
-  tar_target(final_table, addMentalHealthResponses(demo_table))
+  # Estimate models
+  tar_target(models, estimate_models(clean_comp_table))
+  
 )
