@@ -14,7 +14,7 @@ book:
           city: Provo
           state: UT
           postal-code: 84602
-     - name: Emily K. Blanchard
+    - name: Emily K. Blanchard
       orcid: 0000-0000-0000-0000
       email: ekblnchrd@gmail.com
       affiliations:
