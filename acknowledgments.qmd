@@ -2,7 +2,8 @@
 
 This data used in this research was collected with help from an
 Interdisciplinary Research Grant at Brigham Young University, and administered
-under IRB protocol XX. The investigators on the overarching grant include Terisa Gabrielsen and ...
+under IRB protocol F2020-242. The investigators on the overarching grant include
+Terisa Gabrielsen and Jared Nielsen.
 
 Graphics in the document are produced with multiple R packages [@modelsummary;
 @ggplot2; @ggspatial; @wesanderson].

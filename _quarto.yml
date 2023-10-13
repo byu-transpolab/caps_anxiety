@@ -45,20 +45,6 @@ book:
     - references.qmd
   keyword: "active mobility, life-stages, and quality of life"
   abstract: |
-    The abstract is a crucial component of any scientific paper, as it 
-    provides a summary of the research and its main findings. This paper 
-    provides guidelines for writing an effective scientific abstract. 
-    The first step is to identify the key elements of the research, such 
-    as the research question, methods, results, and conclusions. Next, 
-    the abstract should be written in a clear and concise manner, using 
-    simple language and avoiding technical jargon. The abstract should 
-    also be structured, with a clear introduction, methods section, results 
-    section, and conclusion. Additionally, the abstract should accurately 
-    and succinctly convey the main findings of the research, highlighting the 
-    significance and implications of the work. By following these 
-    guidelines, researchers can ensure that their abstract effectively communicates 
-    the key aspects of their research and attracts the attention of potential 
-    readers. - Written by ChatGPT
 
 bibliography: references.bib
 
