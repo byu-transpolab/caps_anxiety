@@ -2,6 +2,7 @@
 
 library(dplyr)
 library(tibble)
+library(lubridate)
 
 # WHICH userIDs are there from the list of gps .csvs
 folder_path <- "data/caps_data"
@@ -117,3 +118,32 @@ table3 <- comp_data_1 %>%
 # Filter for rows where all three columns are equal to 0
 table4 <- comp_data_1 %>%
   filter(p_gps == 0 & p_morn == 0 & p_even == 0)
+
+
+# Determining compliance with surveys
+
+# list of userIds that we not included in the study
+user_ids_to_remove <- c("5ce457e340c7ec3c62f0bf0b",
+                        "5cf80a3e39b0af75d30f8a9a",
+                        "5d012e9194fc444819b759df",
+                        "5d0be0795c9e01405be7a410",
+                        "5dd74879c275fa51872433c4",
+                        "5f4eb5c0df4cfc08a627d827",
+                        "5f600ae96ac58a28e1862544",
+                        "60be7eba0cfa734406650c33")
+
+# Group the data by 'User.Id' and find the first and last survey dates
+even_survey_data <- read.csv("data/mental_surveys/Evening_Survey_220223.csv") %>% 
+  rename(userId = User.Id, date = Survey.Started.Date) %>% 
+  mutate(date = as.Date(format(dmy(date), "%Y-%m-%d"))) %>% 
+  group_by(userId) %>% 
+  summarise(FirstSurveyDate = min(date),
+            LastSurveyDate = max(date),
+            total_responses = n()) %>%
+  arrange(userId) %>%
+  filter(!userId %in% user_ids_to_remove) %>% 
+  mutate(DaysBetween = as.numeric(difftime(LastSurveyDate, FirstSurveyDate, units = "days")))
+ 
+
+as.data.frame(even_survey_data)
+
