@@ -44,6 +44,13 @@ list(
     future = tar_resources_future(resources = list(n_cores = threads))
   )),
   
+  # Read in the data
+  tar_target(read_in, read_data(fileslist), resources = tar_resources(
+    future = tar_resources_future(resources = list(n_cores = threads)))),
+  
+  # Determine the number of GPS points before cleaning
+  tar_target(gps_points, gps_points_process(read_in)),
+  
   # Make activity clusters using the optimized parameters
   tar_target(clustered_data, makeClusters(cleaned_manual_table = cleaned_data,
                                                 params = c(11.7,3,300,1))),
