@@ -1,3 +1,64 @@
+#' Function to read in csv files
+#' 
+#' This function reads multiple CSV files and combines them into a single
+#' data.table. Each CSV file contains GPS data, and the function aggregates
+#' them into a single table.
+#'
+#' @param file_names A character vector of file paths to CSV files.
+#' @return gps_points A data.table containing the combined GPS data.
+#'
+#' @details The function reads each CSV file in the `file_names` vector, 
+#' combining them into a single data.table. It uses `fread` for efficient file 
+#' reading and parallel processing if available. The resulting data.table 
+#' contains GPS data from all the input files.
+
+read_data <- function(file_names) {
+  # Read and combine all CSV files into a data.table
+  gps_points <- data.table()
+  for (file in file_names) {
+    message("reading file: ", file)
+    data <- fread(file, nThread = parallel::detectCores() - 1)
+    gps_points <- rbind(gps_points, data)
+  }
+  return(gps_points)
+}
+
+
+#' Function to determine Num of GPS Points
+#' 
+#' This function takes a data.table of GPS data, separates date and time 
+#' information, selects specific columns, groups the data by date, and 
+#' summarizes the number of GPS points for each date.
+#'
+#' @param gps_points A data.table containing GPS data.
+#' @return processed_data A summarized data.table with date and GPS point counts.
+#'
+#' @details The function processes the GPS data to obtain summary information 
+#' about the number of GPS points recorded for each date. It extracts the date 
+#' and time information from the original data, selects relevant columns, and 
+#' groups the data by date. The resulting data.table contains two columns: 
+#' "date" and "GPS_Points."
+
+gps_points_process <- function(gps_points) {
+  processed_data <- gps_points %>%
+    # Separate date and time into columns
+    mutate(
+      timestamp = lubridate::as_datetime(time),
+      date = lubridate::date(timestamp),
+      minute = str_c(
+        str_pad(lubridate::hour(timestamp), width = 2, pad = "0"),
+        str_pad(lubridate::minute(timestamp), width = 2, pad = "0")
+      )
+    ) %>%
+    # Select out only these columns
+    select(date, lat, lon) %>% 
+    group_by(date) %>% 
+    summarise(GPS_Points = n())
+  
+  return(processed_data)
+}
+
+
 #' Function to clean the CAPS gps data
 #'
 #' Read in raw GPS data for participants in the CAPS survey. Each file
