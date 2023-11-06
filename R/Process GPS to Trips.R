@@ -134,17 +134,11 @@ process_caps_data <- function(file_names) {
 #' @details if a timestamp occurs during midnight or 3 AM, it will be assigned to the
 #'    previous calendar date
 
-yesterday <- function(timestamp){
-  x <- case_when(
-    lubridate::hour(timestamp)< 3~lubridate::day(timestamp)-1L,
-    lubridate::hour(timestamp)< 3 & lubridate::month(timestamp) %in% c(10,5,7,12) & lubridate::day(timestamp) == 1 ~ 30L,
-    lubridate::hour(timestamp)< 3 & lubridate::month(timestamp) %in% c(2,4,6,8,9,11,1) & lubridate::day(timestamp) == 1 ~ 31L,
-    lubridate::hour(timestamp)< 3 & lubridate::month(timestamp) ==3 & lubridate::day(timestamp) == 1 ~ 28L,
-    lubridate::hour(timestamp)< 3 & lubridate::month(timestamp) ==3 & lubridate::day(timestamp) == 1 & lubridate::leap_year(timestamp) ~ 29L,
-    TRUE ~ lubridate::day(timestamp)
-  )
-  
-  str_c(x, lubridate::month(timestamp), sep = "-")
+yesterday <- function(timestamp) {
+  if (hour(timestamp) < 3) {
+    timestamp <- timestamp - ddays(1)
+  }
+  as_date(timestamp)
 }
 
 
