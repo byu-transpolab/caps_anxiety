@@ -191,6 +191,23 @@ survey_days <- inner_join(even_survey_data, morn_survey_data, by = "userId")
 survey_percentages <- survey_days %>% 
   select(userId, Per_Resp_Even, Per_Resp_Morn) 
 
+# looking at the GPS data
+gps_days <- activity_types %>%
+  group_by(userId) %>%
+  summarize(Minimum_Date = min(date), 
+            Maximum_Date = max(date),
+            Total_Activity_Days = n()) %>%
+  mutate(Days_Between = as.numeric(difftime(Maximum_Date, Minimum_Date, units = "days")) + 1) %>% 
+  mutate(Per_GPS_Days = Total_Activity_Days/Days_Between)
+
+gps_percentages <- gps_days %>% 
+  select(userId, Per_GPS_Days) 
+
+# combined table with the survey compliance and gps data based on the number 
+# of days that there is data
+all_data <- left_join(survey_percentages, gps_percentages, by = join_by(userId))
+
+
 
 as.data.frame(even_survey_data)
 
