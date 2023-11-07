@@ -3,6 +3,9 @@
 library(dplyr)
 library(tibble)
 library(lubridate)
+library(tidyverse)
+library(reshape)
+library(calendR)
 
 # WHICH userIDs are there from the list of gps .csvs
 folder_path <- "data/caps_data"
@@ -10,8 +13,6 @@ folder_path <- "data/caps_data"
 csv_files <- list.files(folder_path, pattern = ".csv")
 
 csv_file_names <- sub("\\.csv$", "", csv_files)
-
- ###
 
 # WHICH userIds from the demographics
 demo_tb <- demographics
@@ -24,8 +25,6 @@ unique_demo_userIds <- unique(demo_column_values)
 unique_demo_userIds <- na.omit(demo_column_values)
 # unique_demo_userIds <- data.frame(Source = "demo_tb", Unique_Ids = unique_demo_userIds)
 
- ###
-
 # WHICH unique userIds that made trips
 gps_tb <- demographics_table
 
@@ -37,8 +36,6 @@ unique_gps_userIds <- unique(gps_column_values)
 unique_gps_userIds <- na.omit(unique_gps_userIds)
 # unique_gps_userIds <- data.frame(Source = "gps_tb", Unique_Ids = unique_gps_userIds)
 
- ###
-
 # WHICH unique userIds that filled out surveys
 survey_tb <- final_table
 
@@ -49,8 +46,6 @@ survey_column_values <- survey_tb %>%
 unique_survey_userIds <- unique(survey_column_values)
 unique_survey_userIds <- na.omit(unique_survey_userIds)
 # unique_survey_userIds <- data.frame(Source = "survey_tb", Unique_Ids = unique_survey_userIds)
-
- ###
 
 # Combine userId values from different tables into a single data frame
 combined_data <- data.frame(
@@ -84,7 +79,6 @@ missing_userIds_table <- rbind(missing_users_demo_df, missing_users_gps_df,
 print(missing_userIds_table)
 
 
-
 # MORE ANALYSIS ON THE DATA
 
 # 34,310 rows from 94 users * 365 days
@@ -96,7 +90,6 @@ users_survey <- survey_data %>% group_by(userId) %>% summarise(n = n())
 duplicates <- survey_data[duplicated(survey_data[c("userId", "date")]), ]
 unique_duplicates <- unique(duplicates[c("userId", "date")])
 print(unique_duplicates)
-
 
 # Determine with userIds have GPS data and survey responses based on the complete_table
 comp_data_1 <- complete_table %>% 
