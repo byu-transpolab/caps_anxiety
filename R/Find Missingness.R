@@ -406,4 +406,51 @@ ggplot(data = together, aes(x = date, y = value, fill = variable)) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 
+## GPS POINTS ANALYSIS
+
+# Number of GPS Points recorded on the raw csv files over time
+ggplot(data = gps_points, aes(x = date, y = GPS_Points)) +
+  geom_bar(stat = "identity", fill = "forestgreen") +
+  labs(
+    title = "GPS Points Over Time",
+    x = "Date",
+    y = "# of GPS Points"
+  ) +
+  scale_x_date(date_labels = "%b %Y", date_breaks = "1 month") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+# Number of GPS Points after the data was cleaned
+filtered_data <- cleaned_data %>% 
+  select(date, num_points) %>% 
+  group_by(date) %>% 
+  summarise(Filtered_Points = sum(num_points))
+
+ggplot(data = filtered_data, aes(x = date, y = Filtered_Points)) +
+  geom_bar(stat = "identity", fill = "purple") +
+  labs(
+    title = "All Points Over Time",
+    x = "Date",
+    y = "# of GPS Points"
+  ) +
+  scale_x_date(date_labels = "%b %Y", date_breaks = "1 month") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+# Compare the number of points from the raw data and from the cleaned data
+# Combine and melt survey and GPS data
+combine_gps <- as.data.frame(full_join(gps_points, filtered_data, by = join_by(date)))
+combine_gps <- melt(combine_gps, id = "date")
+
+# Create a histogram with different colors
+ggplot(data = combine_gps, aes(x = date, y = value, fill = variable)) +
+  geom_bar(stat = "identity") +
+  scale_x_date(date_labels = "%b %Y", date_breaks = "1 month") +
+  scale_fill_manual(values = c("forestgreen", "purple")) +
+  labs(
+    title = "Combined Plot of GPS Points Over Time",
+    x = "Date",
+    y = "Count"
+  ) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
