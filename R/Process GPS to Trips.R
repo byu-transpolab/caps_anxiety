@@ -72,16 +72,8 @@ gps_points_process <- function(gps_points) {
 #'    specific columns, sampling data to reduce the number of observations per 
 #'    minute, and creating nested tibbles for each day/user combination.
 
-process_caps_data <- function(file_names) {
-  # Read and combine all CSV files into a data.table
-  caps_data <- data.table()
-  for (file in file_names) {
-    message("reading file: ", file)
-    data <- fread(file, nThread = parallel::detectCores()-1)
-    caps_data <- rbind(caps_data, data)
-  }
-  
-  new_caps_data <- caps_data %>%
+process_caps_data <- function(gps_points) {
+  new_caps_data <- gps_points %>%
     # Separate date and time into columns
     mutate(
       timestamp = lubridate::as_datetime(time),
