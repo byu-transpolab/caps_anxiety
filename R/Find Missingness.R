@@ -294,4 +294,65 @@ colnames(zero_coverage_tibble) <- c("userId", "Survey_Start", "Survey_End", "Sur
 print(zero_coverage_tibble)
 
 
+###
+###
+
+# SURVEY HEAT MAP
+
+# Read the CSV file
+even_survey_map <- read_csv("data/mental_surveys/Evening_Survey_220223.csv", col_select = c("User Id", "Survey Started Date"))
+
+# Rename the columns using colnames
+colnames(even_survey_map) <- c("userId", "date")
+
+# Continue with the data processing
+even_survey_map <- even_survey_map %>%
+  mutate(date = dmy(date)) %>%
+  group_by(date) %>%
+  summarise(Total_Responses = n())
+
+# Read the CSV file
+morn_survey_map <- read_csv("data/mental_surveys/Morning_Survey_220223.csv", col_select = c("User Id", "Survey Started Date"))
+
+# Rename the columns using colnames
+colnames(morn_survey_map) <- c("userId", "date")
+
+# Continue with the data processing
+morn_survey_map <- morn_survey_map %>%
+  mutate(date = dmy(date)) %>%
+  group_by(date) %>%
+  summarise(Total_Responses = n())
+
+survey_map <- left_join(morn_survey_map, even_survey_map, by = join_by(date)) %>% 
+  mutate(Surveys = coalesce(Total_Responses.x, 0) + coalesce(Total_Responses.y, 0)) %>% 
+  select(date, Surveys)
+
+print(survey_map)
+
+# Create a heat map calendar
+survey_map$MonthYear <- format(survey_map$date, "%Y-%m")
+ggplot(survey_map, aes(x = MonthYear, y = format(date, "%d"))) +
+  geom_tile(aes(fill = Surveys)) +
+  scale_fill_gradient(low = "white", high = "blue") +
+  theme_minimal() +
+  labs(
+    title = "Heat Map Calendar for Surveys",
+    x = "Month",
+    y = "Day",
+    fill = "Surveys"
+  ) +
+  coord_fixed(ratio = 1) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+# Create a histogram
+ggplot(survey_map, aes(x = date, y = Surveys)) +
+  geom_bar(stat = "identity", fill = "blue", width = 0.5) +
+  labs(
+    x = "Date",
+    y = "Number of Surveys",
+    title = "Surveys Over Time"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 
