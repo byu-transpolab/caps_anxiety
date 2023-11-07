@@ -261,4 +261,37 @@ gps_survey_date_range <- left_join(ultimate_start_end_dates1, overlapping_days1,
   select(userId, Per_Resp_Morn, Per_Resp_Even, Date_Coverage, Per_GPS_Days, Date_Coverage_All)
 
 
+### EXAMPLE ~ NO OVERLAP ###
+
+# Create a table with the userIds that do not have any overlap in their GPS data and Survey data
+users_with_zero_coverage <- gps_survey_date_range %>%
+  filter(Date_Coverage_All == 0) %>%
+  select(userId, Date_Coverage_All)
+
+user_tibbles <- list()
+
+for (user_id in users_with_zero_coverage$userId) {
+  single_user_survey <- ultimate_start_end_dates %>%
+    filter(userId == user_id)
+  
+  single_user_gps <- gps_days %>%
+    filter(userId == user_id) %>%
+    select(-Total_Activity_Days)
+  
+  user_tibble <- left_join(single_user_survey, single_user_gps, by = join_by(userId))
+  
+  user_tibbles <- c(user_tibbles, list(user_tibble))
+}
+
+# Combine the data frames and rename columns
+zero_coverage_tibble <- bind_rows(user_tibbles)
+
+# Rename the columns
+colnames(zero_coverage_tibble) <- c("userId", "Survey_Start", "Survey_End", "Survey_Days", 
+  "Percent_Survey_Even", "Percent_Survey_Morn", 
+  "GPS_Start", "GPS_End", "GPS_Days", "Percent_GPS")
+
+print(zero_coverage_tibble)
+
+
 
