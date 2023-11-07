@@ -113,30 +113,84 @@ table4 <- comp_data_1 %>%
   filter(p_gps == 0 & p_morn == 0 & p_even == 0)
 
 
+### 
+###
+
+
 # Determining compliance with surveys
 
-# list of userIds that we not included in the study
-user_ids_to_remove <- c("5ce457e340c7ec3c62f0bf0b",
-                        "5cf80a3e39b0af75d30f8a9a",
-                        "5d012e9194fc444819b759df",
-                        "5d0be0795c9e01405be7a410",
-                        "5dd74879c275fa51872433c4",
-                        "5f4eb5c0df4cfc08a627d827",
-                        "5f600ae96ac58a28e1862544",
-                        "60be7eba0cfa734406650c33")
+# EVENING ~ list of userIds that we not included in the study
+user_ids_to_remove_even <- c("5ce457e340c7ec3c62f0bf0b", 
+                             "5cf80a3e39b0af75d30f8a9a", 
+                             "5d012e9194fc444819b759df", 
+                             "5d0be0795c9e01405be7a410", 
+                             "5dd74879c275fa51872433c4", 
+                             "5f4eb5c0df4cfc08a627d827", 
+                             "5f600ae96ac58a28e1862544", 
+                             "60be7eba0cfa734406650c33")
 
 # Group the data by 'User.Id' and find the first and last survey dates
-even_survey_data <- read.csv("data/mental_surveys/Evening_Survey_220223.csv") %>% 
-  rename(userId = User.Id, date = Survey.Started.Date) %>% 
-  mutate(date = as.Date(format(dmy(date), "%Y-%m-%d"))) %>% 
-  group_by(userId) %>% 
-  summarise(FirstSurveyDate = min(date),
-            LastSurveyDate = max(date),
-            total_responses = n()) %>%
+# Read the CSV file and rename columns
+even_survey_data <- read_csv("data/mental_surveys/Evening_Survey_220223.csv", col_select = c("User Id", "Survey Started Date"))
+
+# Rename the columns
+colnames(even_survey_data) <- c("userId", "date")
+
+# Continue with the data processing
+even_survey_data <- even_survey_data %>%
+  mutate(date = dmy(date)) %>%
+  group_by(userId) %>%
+  summarise(
+    First_Survey_Date = min(date),
+    Last_Survey_Date = max(date),
+    Total_Responses = n()
+  ) %>%
   arrange(userId) %>%
-  filter(!userId %in% user_ids_to_remove) %>% 
-  mutate(DaysBetween = as.numeric(difftime(LastSurveyDate, FirstSurveyDate, units = "days")))
- 
+  filter(!userId %in% user_ids_to_remove_even) %>%
+  mutate(Days_Between = as.numeric(difftime(Last_Survey_Date, First_Survey_Date, units = "days")) + 1) %>%
+  mutate(Per_Resp_Even = Total_Responses / Days_Between)
+
+# MORNING ~ list of userIds that we not included in the study
+user_ids_to_remove_morn <- c("5ce457e340c7ec3c62f0bf0b",
+                             "5cf80a3e39b0af75d30f8a9a",
+                             "5d012e9194fc444819b759df",
+                             "5d0be0795c9e01405be7a410",
+                             "5f4eb5c0df4cfc08a627d827",
+                             "5f600ae96ac58a28e1862544",
+                             "60be7eba0cfa734406650c33",
+                             "5ce58b8fb806a3095b02825d",
+                             "5ce81b11df98d115d6a6d533",
+                             "5d01492cac3695481f754b11",
+                             "5d01495eac3695481f754b14",
+                             "5d56c21c03448c58bbe4b6c8")
+
+# Group the data by 'User.Id' and find the first and last survey dates
+
+# Read the CSV file and rename columns
+morn_survey_data <- read_csv("data/mental_surveys/Morning_Survey_220223.csv", col_select = c("User Id", "Survey Started Date"))
+
+# Rename the columns
+colnames(morn_survey_data) <- c("userId", "date")
+
+morn_survey_data <- morn_survey_data %>%
+  mutate(date = dmy(date)) %>%
+  group_by(userId) %>%
+  summarise(
+    First_Survey_Date = min(date),
+    Last_Survey_Date = max(date),
+    Total_Responses = n()
+  ) %>%
+  arrange(userId) %>%
+  filter(!userId %in% user_ids_to_remove_morn) %>%
+  mutate(Days_Between = as.numeric(difftime(Last_Survey_Date, First_Survey_Date, units = "days")) + 1) %>%
+  mutate(Per_Resp_Morn = Total_Responses / Days_Between)
+
+# Combined table with userId and the percent of responses from each userId
+survey_days <- inner_join(even_survey_data, morn_survey_data, by = "userId") 
+  
+survey_percentages <- survey_days %>% 
+  select(userId, Per_Resp_Even, Per_Resp_Morn) 
+
 
 as.data.frame(even_survey_data)
 
