@@ -232,6 +232,33 @@ survey_date_range <- left_join(ultimate_start_end_dates, overlapping_days, by = 
   mutate(Date_Coverage = Overlapping_Days/Combined_Dates)
   
 
+### MASTER SURVEY w/ GPS
 
-as.data.frame(even_survey_data)
+# Combine the data frames by userId
+combined_data <- left_join(survey_date_range, gps_days, by = "userId")
+
+# Calculate the combined number of days
+ultimate_start_end_dates1 <- combined_data %>%
+  mutate(
+    com_start_date = pmin(Start_Date, Minimum_Date),
+    com_end_date = pmax(End_Date, Maximum_Date),
+    com_days = as.numeric(difftime(com_end_date, com_start_date, units = "days")) + 1
+  ) %>% 
+  select(userId, Per_Resp_Even, Per_Resp_Morn, Date_Coverage, Per_GPS_Days, com_start_date, com_end_date, com_days)
+
+# Determine overlapping days
+overlapping_days1 <- combined_data %>%
+  mutate(
+    com_ol_start_date = pmax(Start_Date, Minimum_Date),
+    com_ol_end_date = pmin(End_Date, Maximum_Date),
+    com_ol_days = as.numeric(difftime(com_ol_end_date, com_ol_start_date, units = "days")) + 1
+  ) %>% 
+  mutate(com_ol_days = ifelse(com_ol_days < 0, 0, com_ol_days)) %>% 
+  select(userId, com_ol_start_date, com_ol_end_date, com_ol_days)
+
+gps_survey_date_range <- left_join(ultimate_start_end_dates1, overlapping_days1, by = join_by(userId)) %>% 
+  mutate(Date_Coverage_All = com_ol_days/com_days) %>% 
+  select(userId, Per_Resp_Morn, Per_Resp_Even, Date_Coverage, Per_GPS_Days, Date_Coverage_All)
+
+
 
