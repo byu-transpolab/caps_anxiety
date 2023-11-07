@@ -355,4 +355,55 @@ ggplot(survey_map, aes(x = date, y = Surveys)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+# GPS HEAT MAP
+
+gps_map <- activity_types %>%
+  group_by(date) %>%
+  summarise(Activities = sum(numTrips))
+
+# Print the resulting tibble
+print(gps_map)
+
+# Create a heat map calendar
+gps_map$MonthYear <- format(gps_map$date, "%Y-%m")
+ggplot(gps_map, aes(x = MonthYear, y = format(date, "%d"))) +
+  geom_tile(aes(fill = Activities)) +
+  scale_fill_gradient(low = "white", high = "red") +
+  theme_minimal() +
+  labs(
+    title = "Heat Map Calendar for Activities",
+    x = "Month",
+    y = "Day",
+    fill = "Activities"
+  ) +
+  coord_fixed(ratio = 1) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+
+# Create a histogram
+ggplot(gps_map, aes(x = date, y = Activities)) +
+  geom_bar(stat = "identity", fill = "red") +
+  labs(
+    title = "Activities Over Time",
+    x = "Date",
+    y = "Total Number of Trips"
+  )
+
+# Combine and melt survey and GPS data
+together <- as.data.frame(full_join(gps_map %>% select(-MonthYear), survey_map %>% select(-MonthYear), by = join_by(date)))
+together <- melt(together, id = "date")
+
+# Create a histogram with different colors
+ggplot(data = together, aes(x = date, y = value, fill = variable)) +
+  geom_bar(stat = "identity") +
+  scale_x_date(date_labels = "%b %Y", date_breaks = "1 month") +
+  scale_fill_manual(values = c("blue", "red")) +  
+  labs(
+    title = "Combined Plot of Activities and Survey Responses Over Time",
+    x = "Date",
+    y = "Count"
+  ) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
 
