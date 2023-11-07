@@ -22,27 +22,10 @@ tar_option_set(packages = c("dplyr","tools", "hms", "lubridate", "gpsactivs",
 # List of target objects
 list(
   
-  # Read in the demographic data
-  tar_target(demographics, readDemographicData("data/mental_surveys/Demographic_Breakdown.xlsx")),
-  
-  # Create frame of userIds and date
-  tar_target(frame, make_frame(demographics, "2020-04-25", "2021-04-24")),
-  
-  # Add the demographic data to the frame
-  tar_target(demo_data, addDemographicData(frame, demographics)),
-  
-  # Add the mental health responses to the demographic data
-  tar_target(survey_data, addMentalHealthResponses(demo_data)),
-  
-  # Read in and clean GPS data
+  # Create list of GPS csv files
   tar_target(fileslist,
     command =
-      list.files("data/caps_data", pattern = "*.csv", full.names = TRUE)
-    ),
-  
-  tar_target(cleaned_data, process_caps_data(fileslist), resources = tar_resources(
-    future = tar_resources_future(resources = list(n_cores = threads))
-  )),
+      list.files("data/caps_data", pattern = "*.csv", full.names = TRUE)),
   
   # Read in the data
   tar_target(read_in, read_data(fileslist), resources = tar_resources(
@@ -50,6 +33,21 @@ list(
   
   # Determine the number of GPS points before cleaning
   tar_target(gps_points, gps_points_process(read_in)),
+  
+  # Read in the demographic data
+  tar_target(demographics, readDemographicData("data/mental_surveys/Demographic_Breakdown.xlsx")),
+  
+  # Create frame of userIds and date
+  tar_target(frame, make_frame(demographics, "2019-05-01", "2022-03-01")),
+  
+  # Add the demographic data to the frame
+  tar_target(demo_data, addDemographicData(frame, demographics)),
+  
+  # Add the mental health responses to the demographic data
+  tar_target(survey_data, addMentalHealthResponses(demo_data)),
+
+  # clean the data 
+  tar_target(cleaned_data, process_caps_data(read_in)),
   
   # Make activity clusters using the optimized parameters
   tar_target(clustered_data, makeClusters(cleaned_manual_table = cleaned_data,
