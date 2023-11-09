@@ -46,8 +46,11 @@ list(
   # Add the mental health responses to the demographic data
   tar_target(survey_data, addMentalHealthResponses(demo_data)),
 
-  # clean the data 
-  tar_target(cleaned_data, process_caps_data(read_in)),
+  # Process the data 
+  tar_target(processed_data, process_caps_data(read_in)),
+  
+  # Clean the data
+  tar_target(cleaned_data, clean_caps_data(processed_data)),
   
   # Make activity clusters using the optimized parameters
   tar_target(clustered_data, makeClusters(cleaned_manual_table = cleaned_data,
@@ -77,5 +80,4 @@ list(
   
   # Estimate models
   tar_target(models, estimate_models(clean_comp_table))
-  
 )
