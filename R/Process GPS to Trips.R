@@ -126,20 +126,24 @@ clean_caps_data <- function(processed_data) {
 }
 
 
-#' Function to compute meaningful day
+#' Adjust Timestamp to Previous Day
 #'
+#' This function adjusts a timestamp to the previous day if the recorded hour is
+#' before 3 AM. It helps correct for instances where the timestamp corresponds to
+#' the previous calendar date due to activities past midnight.
 #'
-#' @param timestamp vector of timestamp
-#' @return the day number of the timestamp
-#' 
-#' @details if a timestamp occurs during midnight or 3 AM, it will be assigned to the
-#'    previous calendar date
+#' @param timestamp A vector of timestamps.
+#' @return A vector of dates adjusted for the previous day if
+#' the recorded hour is before 3 AM.
+#'
+#' @details The function checks if the recorded hour in the timestamp is before
+#' 3 AM. If true, it subtracts one day from the timestamp to adjust it to the
+#' previous day. The resulting dates are returned as a vector.
 
 yesterday <- function(timestamp) {
-  if (hour(timestamp) < 3) {
-    timestamp <- timestamp - ddays(1)
-  }
-  as_date(timestamp)
+  is_previous_day <- hour(timestamp) < 3
+  timestamp[is_previous_day] <- timestamp[is_previous_day] - ddays(1)
+  as.Date(timestamp)
 }
 
 
