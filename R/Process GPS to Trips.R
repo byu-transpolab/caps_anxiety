@@ -59,61 +59,70 @@ gps_points_process <- function(gps_points) {
 }
 
 
-#' Function to clean the CAPS gps data
+#' Process CAPS GPS data
 #'
-#' Read in raw GPS data for participants in the CAPS survey. Each file
-#' contains the GPS points for a single day and a single respondent.
+#' This function preprocesses raw GPS data for participants in the CAPS survey.
+#' It creates new columns for data manipulation, extracts relevant columns for analysis,
+#' and samples data to reduce the number of observations per minute. The resulting
+#' tibble is returned.
 #'
-#' @param file_names A vector of file paths to CSV files containing CAPS data.
-#' @return cleaned_data A nested tibble with preprocessed CAPS data.
+#' @param gps_points A tibble of raw GPS data.
+#' @return A tibble with preprocessed GPS data.
 #'
-#' @details The function reads and combines all CSV files into a data table. 
-#'    It then preprocesses the data by separating date and time, selecting 
-#'    specific columns, sampling data to reduce the number of observations per 
-#'    minute, and creating nested tibbles for each day/user combination.
+#' @details The function extracts information such as timestamp, activity day, hour,
+#' minute, latitude, and longitude. It samples the data to include a few observations
+#' per minute and is suitable for further analysis.
 
 process_caps_data <- function(gps_points) {
-  new_caps_data <- gps_points %>%
-    # Separate date and time into columns
+  processed_data <- gps_points %>%
+    # Create a few new columns for data manipulation
     mutate(
-      timestamp = lubridate::as_datetime(time),
-      date = lubridate::date(timestamp),
-      minute = str_c(
-        str_pad(lubridate::hour(timestamp), width = 2, pad = "0"),
-        str_pad(lubridate::minute(timestamp), width = 2, pad = "0")
-      )
-    ) %>%
-    # Select out only these columns
+      timestamp_new = as_datetime(time),
+      activityDay = yesterday(timestamp_new),
+      hour = hour(timestamp_new),
+      minute = minute(timestamp_new)) %>%
+    # Keep these columns for analysis
     select(
       userId,
-      time,
+      activityDay,
+      timestamp_new,
+      hour,
+      minute,
       lat,
-      lon,
-      timestamp,
-      date,
-      minute
-    ) %>%
-    
+      lon) %>%
     # Sample down to get a few observations per minute rather than all observations
-    arrange(userId, date, minute) %>% 
-    group_by(userId, date, minute) %>% 
-    slice_sample(n = 10, replace = FALSE) %>%
-    
-    # The travel day is not the same as the calendar date, because people 
-    # frequently are out past midnight. See the 'yesterday()' function for details.
-    mutate(activityDay = yesterday(timestamp)) %>%
-    group_by(activityDay) %>% 
-    mutate(date = min(date)) %>%
-    
-    # Make a nested tibble for each day / userId combination
-    arrange(timestamp) %>% 
-    group_by(userId, date) %>%
+    group_by(userId, activityDay, hour, minute) %>%
+    slice_sample(n = 10, replace = FALSE)
+  
+  return(processed_data)
+}
+
+
+#' Clean Processed CAPS GPS Data
+#'
+#' This function cleans processed GPS data by creating a nested tibble for each
+#' day/user combination, filtering out entries with fewer than 500 data points,
+#' and converting the nested tibble to simple features (sf) format.
+#'
+#' @param processed_data A tibble with preprocessed GPS data.
+#' @return cleaned_data A tibble with cleaned GPS data in sf format.
+#'
+#' @details The function organizes the data into nested tibbles for each unique
+#' day and user combination. It then filters out entries with fewer than 500 data
+#' points and converts the nested tibble to simple features format.
+
+clean_caps_data <- function(processed_data) {
+  cleaned_data <- processed_data %>% 
+  # Make a nested tibble for each day / userId combination
+    group_by(userId, activityDay) %>%
     nest() %>% 
     ungroup() %>%
     rename(cleaned = data) %>%
     mutate(num_points = purrr::map_int(cleaned, nrow)) %>%
-    filter(num_points > 1000)  %>% 
+    filter(num_points > 500)  %>% 
     mutate(cleaned = purrr::map(cleaned, makeSf))
+  
+  return(cleaned_data)
 }
 
 
