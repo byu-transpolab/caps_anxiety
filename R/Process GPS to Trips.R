@@ -241,9 +241,9 @@ addTripType <- function(tibble, parksSf, grocerySf, librarySf){
   t2$park = purrr::map_int(t2$algorithm, ~add_location(.x, variable = id, sf = parksSf))
   t2$grocery = purrr::map_int(t2$algorithm, ~add_location(.x, variable = SITE_NAME, sf = grocerySf))
   t2$library = purrr::map_int(t2$algorithm, ~add_location(.x, variable = fid, sf = librarySf))
-  
   t2
 }
+
 
 #' Function to Add Location Information
 #'
