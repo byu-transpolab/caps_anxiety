@@ -92,30 +92,58 @@ presliced_caps_data <- function(gps_points) {
       hour,
       minute,
       lat,
-      lon) %>%
-    # Sample down to get a few observations per minute rather than all observations
-    group_by(userId, activityDay, hour, minute) %>%
-    slice_sample(n = 10, replace = FALSE)
+      lon) %>% 
+    group_by(userId, activityDay) %>%
+    nest() %>% 
+    ungroup() %>%
+    rename(cleaned = data) %>%
+    mutate(num_points = purrr::map_int(cleaned, nrow))
   
-  return(processed_data)
+  return(presliced_data)
 }
 
 
-#' Clean Processed CAPS GPS Data
+#' Slice and nest preprocessed CAPS GPS data.
 #'
-#' This function cleans processed GPS data by creating a nested tibble for each
-#' day/user combination, filtering out entries with fewer than 500 data points,
-#' and converting the nested tibble to simple features (sf) format.
+#' This function takes a preprocessed CAPS GPS dataset and performs slicing and 
+#' nesting operations.
 #'
-#' @param processed_data A tibble with preprocessed GPS data.
-#' @return cleaned_data A tibble with cleaned GPS data in sf format.
+#' @param presliced_data A dataset containing preprocessed CAPS GPS data.
+#' @return sliced_data A tibble with sliced and nested CAPS GPS data.
 #'
-#' @details The function organizes the data into nested tibbles for each unique
-#' day and user combination. It then filters out entries with fewer than 500 data
-#' points and converts the nested tibble to simple features format.
+#' @details The function randomly slices the preprocessed data, keeping a subset 
+#' of observations. It then groups the data by user and activity day, nests the 
+#' data for each combination, and calculates the number of data points in each nest.
 
-clean_caps_data <- function(processed_data) {
-  cleaned_data <- processed_data %>% 
+sliced_caps_data <- function(presliced_data) {
+  sliced_data <- presliced_data %>%
+    slice_sample(n = 10, replace = FALSE) %>% 
+    # Make a nested tibble for each day / userId combination
+    group_by(userId, activityDay) %>%
+    nest() %>% 
+    ungroup() %>%
+    rename(cleaned = data) %>%
+    mutate(num_points = purrr::map_int(cleaned, nrow))
+  
+  return(sliced_data)
+}
+
+
+#' Clean and nest sliced CAPS GPS data.
+#'
+#' This function takes a sliced CAPS GPS dataset and performs cleaning and 
+#' nesting operations.
+#'
+#' @param sliced_data A dataset containing sliced CAPS GPS data.
+#' @return cleaned_data A tibble with cleaned and nested CAPS GPS data.
+#'
+#' @details The function groups the sliced data by user and activity day, nests 
+#' the data for each combination, calculates the number of data points in each 
+#' nest, and filters the nests with fewer than 500 data points. It also converts
+#'  the nested data into simple feature (sf) objects using the `makeSf` function.
+
+clean_caps_data <- function(sliced_data) {
+  cleaned_data <- sliced_data %>% 
   # Make a nested tibble for each day / userId combination
     group_by(userId, activityDay) %>%
     nest() %>% 
@@ -151,7 +179,6 @@ yesterday <- function(timestamp) {
 
 
 #' Make an sf object out of lat / long tabular data
-#'
 #'
 #' @param cleaned_data tibble of GPS points including columns `lat` and `lon`. These
 #'   should be in WGS84 coordinate system.
