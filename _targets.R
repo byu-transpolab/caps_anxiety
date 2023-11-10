@@ -32,7 +32,7 @@ list(
     future = tar_resources_future(resources = list(n_cores = threads)))),
   
   # Determine the number of GPS points before cleaning
-  tar_target(gps_points, gps_points_process(read_in)),
+  tar_target(num_gps_points, gps_points_process(read_in)),
   
   # Read in the demographic data
   tar_target(demographics, readDemographicData("data/mental_surveys/Demographic_Breakdown.xlsx")),
@@ -46,11 +46,14 @@ list(
   # Add the mental health responses to the demographic data
   tar_target(survey_data, addMentalHealthResponses(demo_data)),
 
+  # Inspect the presliced data
+  tar_target(presliced_data, presliced_caps_data(read_in)),
+  
   # Process the data 
-  tar_target(processed_data, process_caps_data(read_in)),
+  tar_target(sliced_data, sliced_caps_data(presliced_data)),
   
   # Clean the data
-  tar_target(cleaned_data, clean_caps_data(processed_data)),
+  tar_target(cleaned_data, clean_caps_data(sliced_data)),
   
   # Make activity clusters using the optimized parameters
   tar_target(clustered_data, makeClusters(cleaned_manual_table = cleaned_data,
