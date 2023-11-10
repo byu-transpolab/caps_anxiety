@@ -40,7 +40,7 @@ read_data <- function(file_names) {
 #' "date" and "GPS_Points."
 
 gps_points_process <- function(gps_points) {
-  processed_data <- gps_points %>%
+  num_gps_points <- gps_points %>%
     # Separate date and time into columns
     mutate(
       timestamp = lubridate::as_datetime(time),
@@ -55,26 +55,29 @@ gps_points_process <- function(gps_points) {
     group_by(date) %>% 
     summarise(GPS_Points = n())
   
-  return(processed_data)
+  return(num_gps_points)
 }
 
 
-#' Process CAPS GPS data
+#' Preprocess and slice CAPS GPS data.
 #'
-#' This function preprocesses raw GPS data for participants in the CAPS survey.
-#' It creates new columns for data manipulation, extracts relevant columns for analysis,
-#' and samples data to reduce the number of observations per minute. The resulting
-#' tibble is returned.
+#' This function takes a dataset of raw GPS data and performs preprocessing steps,
+#' including creating new columns for data manipulation, separating date and time,
+#' and selecting specific columns of interest. It then groups the data by user and
+#' activity day, nests the data for each combination, and calculates the number of
+#' data points in each nest.
 #'
-#' @param gps_points A tibble of raw GPS data.
-#' @return A tibble with preprocessed GPS data.
+#' @param gps_points A dataset containing raw GPS data.
+#' @return presliced_data A tibble with preprocessed and nested CAPS data.
 #'
-#' @details The function extracts information such as timestamp, activity day, hour,
-#' minute, latitude, and longitude. It samples the data to include a few observations
-#' per minute and is suitable for further analysis.
+#' @details The function first converts the timestamp to the activity day and 
+#' separates hour and minute. It keeps a subset of columns for analysis. The data
+#' is then grouped by user and activity day, and each group is nested to form a 
+#' list-column. The number of data points in each nested group is calculated and
+#' stored in the 'num_points' column.
 
-process_caps_data <- function(gps_points) {
-  processed_data <- gps_points %>%
+presliced_caps_data <- function(gps_points) {
+  presliced_data <- gps_points %>%
     # Create a few new columns for data manipulation
     mutate(
       timestamp_new = as_datetime(time),
