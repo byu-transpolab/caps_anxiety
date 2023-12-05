@@ -117,10 +117,14 @@ presliced_caps_data <- function(gps_points) {
 
 sliced_caps_data <- function(presliced_data) {
   sliced_data <- presliced_data %>%
-    slice_sample(n = 10, replace = FALSE) %>% 
+    ungroup() %>%
+    unnest(cleaned) %>% 
+    select(-num_points) %>% 
+    group_by(userId, activityDay, hour, minute) %>%
+    slice_sample(n = 20, replace = FALSE) %>%
     # Make a nested tibble for each day / userId combination
     group_by(userId, activityDay) %>%
-    nest() %>% 
+    nest() %>%
     ungroup() %>%
     rename(cleaned = data) %>%
     mutate(num_points = purrr::map_int(cleaned, nrow))
@@ -144,13 +148,16 @@ sliced_caps_data <- function(presliced_data) {
 
 clean_caps_data <- function(sliced_data) {
   cleaned_data <- sliced_data %>% 
+    ungroup() %>%
+    unnest(cleaned) %>%
+    select(-num_points) %>% 
   # Make a nested tibble for each day / userId combination
     group_by(userId, activityDay) %>%
     nest() %>% 
     ungroup() %>%
     rename(cleaned = data) %>%
     mutate(num_points = purrr::map_int(cleaned, nrow)) %>%
-    filter(num_points > 500)  %>% 
+    filter(num_points > 1000)  %>% 
     mutate(cleaned = purrr::map(cleaned, makeSf))
   
   return(cleaned_data)
@@ -216,6 +223,7 @@ makeClusters <- function(cleaned_manual_table, params) {
   print(params)
   cleaned_manual_table %>%
     ungroup() %>%
+    rename(timestamp = timestamp_new) %>% 
     mutate(algorithm = purrr::map(cleaned, makeClusters_1T, 
                            params = params))
 }
