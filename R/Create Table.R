@@ -71,6 +71,7 @@ addMentalHealthResponses <- function(tibble){
   morningResponses <- read.csv("data/mental_surveys/Morning_Survey_220223.csv") %>%
     rename(userId = User.Id, date = Survey.Started.Date) %>% 
     mutate(date = as.Date(format(dmy(date), "%Y-%m-%d"))) %>% 
+    mutate(date = yesterday(date)) %>% 
     select(
       userId,
       Survey.Name,
@@ -81,6 +82,7 @@ addMentalHealthResponses <- function(tibble){
   eveningResponses <- read.csv("data/mental_surveys/Evening_Survey_220223.csv") %>% 
     rename(userId = User.Id, date = Survey.Started.Date) %>% 
     mutate(date = as.Date(format(dmy(date), "%Y-%m-%d"))) %>% 
+    mutate(date = yesterday(date)) %>% 
     select(
       userId,
       Survey.Name,
@@ -93,8 +95,8 @@ addMentalHealthResponses <- function(tibble){
       TRUE ~ as.logical(NA)
     ))
   
-  morning <- left_join(tibble, morningResponses, by = c('userId', 'date'))
-  evening <- left_join(morning, eveningResponses, by = c('userId', 'date'))
+  morning <- left_join(tibble, morningResponses, by = c('userId', 'date'), relationship = "one-to-one")
+  evening <- left_join(morning, eveningResponses, by = c('userId', 'date'), relationship = "many-to-many")
   
   return(evening)
 }
