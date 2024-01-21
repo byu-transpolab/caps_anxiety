@@ -24,134 +24,38 @@ read_data <- function(file_names) {
 }
 
 
-#' Function to determine Num of GPS Points
+#' Process GPS points data
+#'
+#' This function processes GPS points data by separating date and time, 
+#' selecting relevant columns, grouping by specified variables, 
+#' sampling points, and creating spatial features.
 #' 
-#' This function takes a data.table of GPS data, separates date and time 
-#' information, selects specific columns, groups the data by date, and 
-#' summarizes the number of GPS points for each date.
-#'
-#' @param gps_points A data.table containing GPS data.
-#' @return processed_data A summarized data.table with date and GPS point counts.
-#'
-#' @details The function processes the GPS data to obtain summary information 
-#' about the number of GPS points recorded for each date. It extracts the date 
-#' and time information from the original data, selects relevant columns, and 
-#' groups the data by date. The resulting data.table contains two columns: 
-#' "date" and "GPS_Points."
+#' @param gps_points A tibble containing GPS points data.
+#' 
+#' @return A tibble containing processed GPS points data.
 
 gps_points_process <- function(gps_points) {
-  num_gps_points <- gps_points %>%
+  processed <- gps_points %>%
     # Separate date and time into columns
     mutate(
-      timestamp = lubridate::as_datetime(time),
-      date = lubridate::date(timestamp),
-      minute = str_c(
-        str_pad(lubridate::hour(timestamp), width = 2, pad = "0"),
-        str_pad(lubridate::minute(timestamp), width = 2, pad = "0")
-      )
-    ) %>%
-    # Select out only these columns
-    select(date, lat, lon) %>% 
-    group_by(date) %>% 
-    summarise(GPS_Points = n())
-  
-  return(num_gps_points)
-}
-
-
-#' Preprocess and slice CAPS GPS data.
-#'
-#' This function takes a dataset of raw GPS data and performs preprocessing steps,
-#' including creating new columns for data manipulation, separating date and time,
-#' and selecting specific columns of interest. It then groups the data by user and
-#' activity day, nests the data for each combination, and calculates the number of
-#' data points in each nest.
-#'
-#' @param gps_points A dataset containing raw GPS data.
-#' @return presliced_data A tibble with preprocessed and nested CAPS data.
-#'
-#' @details The function first converts the timestamp to the activity day and 
-#' separates hour and minute. It keeps a subset of columns for analysis. The data
-#' is then grouped by user and activity day, and each group is nested to form a 
-#' list-column. The number of data points in each nested group is calculated and
-#' stored in the 'num_points' column.
-
-presliced_caps_data <- function(gps_points) {
-  presliced_data <- gps_points %>%
-    # Create a few new columns for data manipulation
-    mutate(
-      timestamp_new = as_datetime(time),
-      activityDay = yesterday(timestamp_new),
-      hour = hour(timestamp_new),
-      minute = minute(timestamp_new)) %>%
+      timestamp = as_datetime(time),
+      activityDay = yesterday(timestamp),
+      hour = hour(timestamp),
+      minute = minute(timestamp)) %>%
     # Keep these columns for analysis
     select(
       userId,
       activityDay,
-      timestamp_new,
+      timestamp,
       hour,
       minute,
       lat,
       lon) %>% 
-    group_by(userId, activityDay) %>%
-    nest() %>% 
-    ungroup() %>%
-    rename(cleaned = data) %>%
-    mutate(num_points = purrr::map_int(cleaned, nrow))
-  
-  return(presliced_data)
-}
-
-
-#' Slice and nest preprocessed CAPS GPS data.
-#'
-#' This function takes a preprocessed CAPS GPS dataset and performs slicing and 
-#' nesting operations.
-#'
-#' @param presliced_data A dataset containing preprocessed CAPS GPS data.
-#' @return sliced_data A tibble with sliced and nested CAPS GPS data.
-#'
-#' @details The function randomly slices the preprocessed data, keeping a subset 
-#' of observations. It then groups the data by user and activity day, nests the 
-#' data for each combination, and calculates the number of data points in each nest.
-
-sliced_caps_data <- function(presliced_data) {
-  sliced_data <- presliced_data %>%
-    ungroup() %>%
-    unnest(cleaned) %>% 
-    select(-num_points) %>% 
+    arrange(userId, activityDay, hour, minute) %>% 
     group_by(userId, activityDay, hour, minute) %>%
-    slice_sample(n = 20, replace = FALSE) %>%
-    # Make a nested tibble for each day / userId combination
-    group_by(userId, activityDay) %>%
-    nest() %>%
-    ungroup() %>%
-    rename(cleaned = data) %>%
-    mutate(num_points = purrr::map_int(cleaned, nrow))
-  
-  return(sliced_data)
-}
-
-
-#' Clean and nest sliced CAPS GPS data.
-#'
-#' This function takes a sliced CAPS GPS dataset and performs cleaning and 
-#' nesting operations.
-#'
-#' @param sliced_data A dataset containing sliced CAPS GPS data.
-#' @return cleaned_data A tibble with cleaned and nested CAPS GPS data.
-#'
-#' @details The function groups the sliced data by user and activity day, nests 
-#' the data for each combination, calculates the number of data points in each 
-#' nest, and filters the nests with fewer than 500 data points. It also converts
-#'  the nested data into simple feature (sf) objects using the `makeSf` function.
-
-clean_caps_data <- function(sliced_data) {
-  cleaned_data <- sliced_data %>% 
-    ungroup() %>%
-    unnest(cleaned) %>%
-    select(-num_points) %>% 
-  # Make a nested tibble for each day / userId combination
+    slice_sample(n = 10, replace = FALSE) %>%
+    
+    ungroup() %>% 
     group_by(userId, activityDay) %>%
     nest() %>% 
     ungroup() %>%
@@ -159,9 +63,10 @@ clean_caps_data <- function(sliced_data) {
     mutate(num_points = purrr::map_int(cleaned, nrow)) %>%
     filter(num_points > 1000)  %>% 
     mutate(cleaned = purrr::map(cleaned, makeSf))
-  
-  return(cleaned_data)
+    
+  return(processed)
 }
+
 
 
 #' Adjust Timestamp to Previous Day
@@ -223,7 +128,7 @@ makeClusters <- function(cleaned_manual_table, params) {
   print(params)
   cleaned_manual_table %>%
     ungroup() %>%
-    rename(timestamp = timestamp_new) %>% 
+    # rename(timestamp = timestamp_new) %>% 
     mutate(algorithm = purrr::map(cleaned, makeClusters_1T, 
                            params = params))
 }
@@ -243,8 +148,8 @@ makeClusters <- function(cleaned_manual_table, params) {
 
 addNumTrips <- function(df){
   tibble <- as_tibble(df) %>%
-    select(userId, date, cleaned, algorithm) %>%
-    group_by(userId, date) %>%
+    select(userId, activityDay, cleaned, algorithm) %>%
+    group_by(userId, activityDay) %>%
     rowwise() %>%
     # Calculate the total number of trips someone made in a day
     mutate(numTrips = length(algorithm[[1]]))
