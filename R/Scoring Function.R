@@ -195,12 +195,10 @@ calculate_daily_score <- function(data) {
     mutate(
       hour_multiplier = ifelse(hour %in% 8:23, 3, 1),
       points_multiplier = case_when(
-        num_points <= 500 ~ 1,
-        num_points <= 1000 ~ 2,
-        num_points <= 1500 ~ 3,
-        num_points <= 2000 ~ 4,
-        num_points <= 2500 ~ 5,
-        TRUE ~ 6
+        num_points <= 500 ~ 0,
+        num_points <= 1500 ~ 1,
+        num_points <= 2500 ~ 2,
+        TRUE ~ 3
       ),
       daily_score = hour_multiplier * points_multiplier
     ) %>% 
