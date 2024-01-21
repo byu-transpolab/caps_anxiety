@@ -240,31 +240,15 @@ ggplot(summary_stats_all, aes(x = avg_total_daily_score)) +
        x = "Average Total Daily Score",
        y = "Frequency")
 
-# userIds that are not actual participants
-user_ids_to_remove <- c("5ce457e340c7ec3c62f0bf0b", 
-                        "5cf80a3e39b0af75d30f8a9a", 
-                        "5d012e9194fc444819b759df", 
-                        "5d0be0795c9e01405be7a410", 
-                        "5dd74879c275fa51872433c4", 
-                        "5f4eb5c0df4cfc08a627d827", 
-                        "5f600ae96ac58a28e1862544", 
-                        "60be7eba0cfa734406650c33", 
-                        "5ce58b8fb806a3095b02825d",
-                        "5ce81b11df98d115d6a6d533",
-                        "5d01492cac3695481f754b11",
-                        "5d01495eac3695481f754b14",
-                        "5d56c21c03448c58bbe4b6c8",
-                        "5f29a58184b80f5e2521f4ee")
 
 # determine total_daily_scores were above a particular threshold and the 
 # corresponding unique userIds
 high_scores <- presliced_data_hour_score %>% 
-  filter(!userId %in% user_ids_to_remove) %>% # reduced the total from 4,736 to 4,500
-  filter(total_daily_score > 200)
+  filter(total_daily_score > 50)
 
 unique_userIds_high <- distinct(high_scores, userId)
 
-# summary states for the high scores
+# summary stats for the high scores
 summary_stats_high <- high_scores %>%
   group_by(userId) %>%
   summarize(
