@@ -310,6 +310,19 @@ survey_even/all
 survey_both <- nrow(high_scores_demo_survey) - nrow(rows_with_blank_surveys)
 survey_both/all
 
+table(is.na(high_scores_demo_survey$Survey.Name.x), is.na(high_scores_demo_survey$Survey.Name.y))/nrow(high_scores_demo_survey)
+
+result <- high_scores_demo_survey %>%
+  group_by(userId) %>%
+  summarise(
+    num_surveys = n(),
+    min_date = min(date),
+    max_date = max(date),
+    elapsed_days = as.numeric(difftime(max_date, min_date, units = "days") +1),
+    percent_comp_surveys = num_surveys / elapsed_days
+  )
+
+
 
 set.seed(10)
 
