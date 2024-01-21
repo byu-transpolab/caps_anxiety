@@ -211,15 +211,11 @@ calculate_daily_score <- function(data) {
 # Apply the function to your data
 presliced_data_hour_score <- calculate_daily_score(presliced_data_hour)
 
-# Display the result
-head(select(presliced_data_hour_score, userId, activityDay, total_daily_score))
-
-
 # Assuming your data frame is called 'presliced_data_hour_score'
 ggplot(presliced_data_hour_score, aes(x = total_daily_score)) +
   geom_histogram(binwidth = 5, fill = "blue", color = "black", alpha = 0.7) +
   scale_x_continuous(breaks = seq(0, 350, by = 25)) +
-  scale_y_continuous(breaks = seq(0, 1500, by = 100)) +
+  scale_y_continuous(breaks = seq(0, 4500, by = 100)) +
   labs(title = "Distribution of Total Daily Scores",
        x = "Total Daily Score",
        y = "Frequency") +
