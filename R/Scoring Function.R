@@ -34,6 +34,59 @@ clean_userids <- function(gps_points) {
 }
 
 
+#' Calculate scores for relevant GPS points data.
+#'
+#' This function takes a tibble of relevant GPS points and calculates scores
+#' based on the number and spread of GPS points during a day for each user and day.
+#'
+#' @param relevant_ids A tibble containing relevant GPS points data.
+#'
+#' @return A tibble with calculated scores for each user and day.
+
+scoring <- function(relevant_ids) {
+  scored <- relevant_ids %>% 
+    mutate(
+      timestamp = as_datetime(time),
+      activityDay = yesterday(timestamp),
+      hour = hour(timestamp),
+      minute = minute(timestamp)) %>%
+    # Keep these columns for analysis
+    select(
+      userId,
+      activityDay,
+      timestamp,
+      hour,
+      minute,
+      lat,
+      lon) %>% 
+    # Calculate the score for the day based on number and spread of gps points
+    arrange(userId, activityDay, hour) %>% 
+    group_by(userId, activityDay, hour) %>%
+    nest() %>% 
+    ungroup() %>% 
+    rename(cleaned = data) %>%
+    mutate(num_points = purrr::map_int(cleaned, nrow)) %>%
+    mutate(
+      hour_multiplier = ifelse(hour %in% 8:23, 3, 1),
+      points_multiplier = case_when(
+        num_points <= 500 ~ 0,
+        num_points <= 1500 ~ 1,
+        num_points <= 2500 ~ 2,
+        TRUE ~ 3
+      ),
+      daily_score = hour_multiplier * points_multiplier
+    ) %>% 
+    group_by(userId, activityDay) %>%
+    summarize(total_daily_score = sum(daily_score)) %>% 
+  # Keep rows with total_daily_score >= 160
+    ungroup() %>% 
+    filter(total_daily_score >= 160) %>% 
+    select(-c(hour_multiplier, points_multiplier, daily_score,total_daily_score)) %>% 
+    unnest()
+  
+  return(scored)
+}
+
 
 ### SCORING FUNCTION ###
 
