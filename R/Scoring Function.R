@@ -3,6 +3,15 @@ library(dplyr)
 library(ggridges)
 library(tidyverse)
 library(targets)
+library(readr)
+
+
+
+tar_target(cleaned_ids, clean_userids(read_in))
+
+tar_target(scored_days, scoring(cleaned_ids))
+
+tar_target(cleaned_data, gps_points_process(scored_days))
 
 #' Clean GPS points data by removing specified userIds.
 #'
