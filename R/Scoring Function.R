@@ -311,5 +311,17 @@ survey_both <- nrow(high_scores_demo_survey) - nrow(rows_with_blank_surveys)
 survey_both/all
 
 
+set.seed(10)
 
+# Filter rows with total_daily_score >= 160
+filtered_data <- presliced_data_hour_score %>%
+  ungroup() %>% 
+  filter(total_daily_score >= 160) %>% 
+  sample_n(50, replace = FALSE) %>% 
+  select( -total_daily_score)
 
+# View the randomly selected sample
+print(filtered_data)
+
+# Assuming your tibble is called my_tibble
+write_csv(filtered_data, "data/high_score_sample.csv")
