@@ -32,7 +32,7 @@ list(
     future = tar_resources_future(resources = list(n_cores = threads)))),
   
   # Determine the number of GPS points before cleaning
-  tar_target(num_gps_points, gps_points_process(read_in)),
+  tar_target(cleaned_data, gps_points_process(read_in)),
   
   # Read in the demographic data
   tar_target(demographics, readDemographicData("data/mental_surveys/Demographic_Breakdown.xlsx")),
@@ -46,18 +46,8 @@ list(
   # Add the mental health responses to the demographic data
   tar_target(survey_data, addMentalHealthResponses(demo_data)),
 
-  # Inspect the presliced data
-  tar_target(presliced_data, presliced_caps_data(read_in)),
-  
-  # Process the data 
-  tar_target(sliced_data, sliced_caps_data(presliced_data)),
-  
-  # Clean the data
-  tar_target(cleaned_data, clean_caps_data(sliced_data)),
-  
   # Make activity clusters using the optimized parameters
-  tar_target(clustered_data, makeClusters(cleaned_manual_table = cleaned_data,
-                                                params = c(11.7,3,300,1))),
+  tar_target(clustered_data, makeClusters(cleaned_data, params = c(11.7,3,300,1))),
   
   # Determine the number of trips made on a given day by a given user
   tar_target(num_trips, addNumTrips(clustered_data)),
@@ -76,11 +66,11 @@ list(
   tar_target(activity_types, addTripType(num_trips, parksSf, grocerySf, librarySf)),
   
   # Make a final table with all of the data
-  tar_target(complete_table, combine_data(survey_data, activity_types)),
+  tar_target(complete_table, combine_data(survey_data, activity_types))
   
   # Keep rows that have survey responses
-  tar_target(clean_comp_table, clean_table(complete_table)),
+  # tar_target(clean_comp_table, clean_table(complete_table)),
   
   # Estimate models
-  tar_target(models, estimate_models(clean_comp_table))
+  # tar_target(models, estimate_models(clean_comp_table))
 )
