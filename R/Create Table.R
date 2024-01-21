@@ -77,7 +77,9 @@ addMentalHealthResponses <- function(tibble){
       Survey.Name,
       date,
       `bed_time_q1`:`safety_request_q17_morn` 
-    )
+    ) %>% 
+  group_by(userId, date) %>%
+    slice(1)
   
   eveningResponses <- read.csv("data/mental_surveys/Evening_Survey_220223.csv") %>% 
     rename(userId = User.Id, date = Survey.Started.Date) %>% 
@@ -93,10 +95,15 @@ addMentalHealthResponses <- function(tibble){
       suicidal_ideation_q31_even == "Yes" ~ TRUE,
       suicidal_ideation_q31_even == "No" ~ FALSE,
       TRUE ~ as.logical(NA)
-    ))
+    )) %>% 
+    group_by(userId, date) %>%
+    slice(1)
   
   morning <- left_join(tibble, morningResponses, by = c('userId', 'date'), relationship = "one-to-one")
-  evening <- left_join(morning, eveningResponses, by = c('userId', 'date'), relationship = "many-to-many")
+  evening <- left_join(morning, eveningResponses, by = c('userId', 'date'), relationship = "one-to-one")
+  
+  evening <- evening %>% 
+    mutate(activityDay = date)
   
   return(evening)
 }
@@ -113,7 +120,7 @@ addMentalHealthResponses <- function(tibble){
 #' survey and activities data.
 
 combine_data <- function(survey, activities){
-  all_data <- left_join(survey, activities, by = c('userId', 'date'))
+  all_data <- left_join(survey, activities, by = c('userId', 'activityDay'))
   return(all_data)
 }
 
