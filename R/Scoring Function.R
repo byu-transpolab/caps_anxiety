@@ -137,9 +137,26 @@ mean(presliced_subset$num_points)
 median(presliced_subset$num_points)
 hist(presliced_subset$num_points)
 
+# userIds that are not actual participants
+user_ids_to_remove <- c("5ce457e340c7ec3c62f0bf0b", 
+                        "5cf80a3e39b0af75d30f8a9a", 
+                        "5d012e9194fc444819b759df", 
+                        "5d0be0795c9e01405be7a410", 
+                        "5dd74879c275fa51872433c4", 
+                        "5f4eb5c0df4cfc08a627d827", 
+                        "5f600ae96ac58a28e1862544", 
+                        "60be7eba0cfa734406650c33", 
+                        "5ce58b8fb806a3095b02825d",
+                        "5ce81b11df98d115d6a6d533",
+                        "5d01492cac3695481f754b11",
+                        "5d01495eac3695481f754b14",
+                        "5d56c21c03448c58bbe4b6c8",
+                        "5f29a58184b80f5e2521f4ee")
+
 presliced_data_hour <- presliced_data %>% 
   unnest(cols = c(cleaned)) %>% 
   select(-num_points) %>% 
+  filter(!userId %in% user_ids_to_remove) %>%
   group_by(userId, activityDay, hour) %>%
   nest() %>% 
   ungroup() %>%
