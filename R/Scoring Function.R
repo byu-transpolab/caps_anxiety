@@ -88,6 +88,40 @@ scoring <- function(relevant_ids) {
 }
 
 
+#' Process scored GPS points data.
+#'
+#' This function takes a tibble of scored GPS points and performs various
+#' processing steps including sampling, grouping, and creating Simple Features.
+#'
+#' @param scored A tibble containing scored GPS points data.
+#'
+#' @return A processed tibble with sampled, grouped, and transformed data.
+
+gps_points_process <- function(scored) {
+  processed <- scored %>%
+    arrange(userId, activityDay, hour, minute) %>% 
+    group_by(userId, activityDay, hour, minute) %>%
+    slice_sample(n = 10, replace = FALSE) %>%
+    
+    ungroup() %>% 
+    group_by(userId, activityDay) %>%
+    nest() %>% 
+    ungroup() %>%
+    rename(cleaned = data) %>%
+    mutate(num_points = purrr::map_int(cleaned, nrow)) %>%
+    filter(num_points > 1000)  %>% 
+    mutate(cleaned = purrr::map(cleaned, makeSf))
+  
+  return(processed)
+}
+
+
+
+
+
+
+
+
 ### SCORING FUNCTION ###
 
 mean(presliced_subset$num_points)
