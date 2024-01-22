@@ -24,19 +24,47 @@ read_data <- function(file_names) {
 }
 
 
-#' Process GPS points data
+#' Clean GPS points data by removing specified userIds.
 #'
-#' This function processes GPS points data by separating date and time, 
-#' selecting relevant columns, grouping by specified variables, 
-#' sampling points, and creating spatial features.
-#' 
+#' This function takes a tibble of GPS points and removes rows corresponding to
+#' specified userIds. The userIds to be removed are hardcoded in the function.
+#'
 #' @param gps_points A tibble containing GPS points data.
 #' 
-#' @return A tibble containing processed GPS points data.
+#' @return A tibble with rows corresponding to specified userIds removed.
+#'
+clean_userids <- function(gps_points) {
+  relevant_ids <- gps_points %>% 
+    filter(!userId %in% c("5ce457e340c7ec3c62f0bf0b", 
+                          "5cf80a3e39b0af75d30f8a9a", 
+                          "5d012e9194fc444819b759df", 
+                          "5d0be0795c9e01405be7a410", 
+                          "5dd74879c275fa51872433c4", 
+                          "5f4eb5c0df4cfc08a627d827", 
+                          "5f600ae96ac58a28e1862544", 
+                          "60be7eba0cfa734406650c33", 
+                          "5ce58b8fb806a3095b02825d",
+                          "5ce81b11df98d115d6a6d533",
+                          "5d01492cac3695481f754b11",
+                          "5d01495eac3695481f754b14",
+                          "5d56c21c03448c58bbe4b6c8",
+                          "5f29a58184b80f5e2521f4ee"))
+  
+  return(relevant_ids)
+}
 
-gps_points_process <- function(gps_points) {
-  processed <- gps_points %>%
-    # Separate date and time into columns
+
+#' Calculate scores for relevant GPS points data.
+#'
+#' This function takes a tibble of relevant GPS points and calculates scores
+#' based on the number and spread of GPS points during a day for each user and day.
+#'
+#' @param relevant_ids A tibble containing relevant GPS points data.
+#'
+#' @return A tibble with calculated scores for each user and day.
+
+scoring <- function(relevant_ids) {
+  scored <- relevant_ids %>% 
     mutate(
       timestamp = as_datetime(time),
       activityDay = yesterday(timestamp),
@@ -51,6 +79,46 @@ gps_points_process <- function(gps_points) {
       minute,
       lat,
       lon) %>% 
+    # Calculate the score for the day based on number and spread of gps points
+    arrange(userId, activityDay, hour) %>% 
+    group_by(userId, activityDay, hour) %>%
+    nest() %>% 
+    ungroup() %>% 
+    rename(cleaned = data) %>%
+    mutate(num_points = purrr::map_int(cleaned, nrow)) %>%
+    mutate(
+      hour_multiplier = ifelse(hour %in% 8:23, 3, 1),
+      points_multiplier = case_when(
+        num_points <= 500 ~ 0,
+        num_points <= 1500 ~ 1,
+        num_points <= 2500 ~ 2,
+        TRUE ~ 3
+      ),
+      daily_score = hour_multiplier * points_multiplier
+    ) %>% 
+    group_by(userId, activityDay) %>%
+    mutate(total_daily_score = sum(daily_score)) %>% 
+    # Keep rows with total_daily_score >= 160
+    ungroup() %>% 
+    filter(total_daily_score >= 160) %>% 
+    select(-c(total_daily_score, hour_multiplier, points_multiplier, daily_score, num_points)) %>% 
+    unnest(cols = c(cleaned))
+  
+  return(scored)
+}
+
+
+#' Process scored GPS points data.
+#'
+#' This function takes a tibble of scored GPS points and performs various
+#' processing steps including sampling, grouping, and creating Simple Features.
+#'
+#' @param scored A tibble containing scored GPS points data.
+#'
+#' @return A processed tibble with sampled, grouped, and transformed data.
+
+gps_points_process <- function(scored) {
+  processed <- scored %>%
     arrange(userId, activityDay, hour, minute) %>% 
     group_by(userId, activityDay, hour, minute) %>%
     slice_sample(n = 10, replace = FALSE) %>%
@@ -63,9 +131,57 @@ gps_points_process <- function(gps_points) {
     mutate(num_points = purrr::map_int(cleaned, nrow)) %>%
     filter(num_points > 1000)  %>% 
     mutate(cleaned = purrr::map(cleaned, makeSf))
-    
+  
   return(processed)
 }
+
+
+
+
+
+
+#' #' Process GPS points data
+#' #'
+#' #' This function processes GPS points data by separating date and time, 
+#' #' selecting relevant columns, grouping by specified variables, 
+#' #' sampling points, and creating spatial features.
+#' #' 
+#' #' @param gps_points A tibble containing GPS points data.
+#' #' 
+#' #' @return A tibble containing processed GPS points data.
+#' 
+#' gps_points_process <- function(gps_points) {
+#'   processed <- gps_points %>%
+#'     # Separate date and time into columns
+#'     mutate(
+#'       timestamp = as_datetime(time),
+#'       activityDay = yesterday(timestamp),
+#'       hour = hour(timestamp),
+#'       minute = minute(timestamp)) %>%
+#'     # Keep these columns for analysis
+#'     select(
+#'       userId,
+#'       activityDay,
+#'       timestamp,
+#'       hour,
+#'       minute,
+#'       lat,
+#'       lon) %>% 
+#'     arrange(userId, activityDay, hour, minute) %>% 
+#'     group_by(userId, activityDay, hour, minute) %>%
+#'     slice_sample(n = 10, replace = FALSE) %>%
+#'     
+#'     ungroup() %>% 
+#'     group_by(userId, activityDay) %>%
+#'     nest() %>% 
+#'     ungroup() %>%
+#'     rename(cleaned = data) %>%
+#'     mutate(num_points = purrr::map_int(cleaned, nrow)) %>%
+#'     filter(num_points > 1000)  %>% 
+#'     mutate(cleaned = purrr::map(cleaned, makeSf))
+#'     
+#'   return(processed)
+#' }
 
 
 
