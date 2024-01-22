@@ -31,8 +31,17 @@ list(
   tar_target(read_in, read_data(fileslist), resources = tar_resources(
     future = tar_resources_future(resources = list(n_cores = threads)))),
   
-  # Determine the number of GPS points before cleaning
-  tar_target(cleaned_data, gps_points_process(read_in)),
+  # Remove the irrelevant userIds
+  tar_target(cleaned_ids, clean_userids(read_in)),
+  
+  # Implement the scoring algorithm to have higher quality userId activityDay combos
+  tar_target(scored_days, scoring(cleaned_ids)),
+  
+  # Clean the remaining GPS data before creating activity clusters
+  tar_target(cleaned_data, gps_points_process(scored_days)),
+  
+  # # Determine the number of GPS points before cleaning
+  # tar_target(cleaned_data, gps_points_process(read_in)),
   
   # Read in the demographic data
   tar_target(demographics, readDemographicData("data/mental_surveys/Demographic_Breakdown.xlsx")),
