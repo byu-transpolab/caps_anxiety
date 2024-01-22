@@ -86,12 +86,12 @@ scoring <- function(relevant_ids) {
       daily_score = hour_multiplier * points_multiplier
     ) %>% 
     group_by(userId, activityDay) %>%
-    summarize(total_daily_score = sum(daily_score)) %>% 
+    mutate(total_daily_score = sum(daily_score)) %>% 
   # Keep rows with total_daily_score >= 160
     ungroup() %>% 
     filter(total_daily_score >= 160) %>% 
-    select(-c(hour_multiplier, points_multiplier, daily_score,total_daily_score)) %>% 
-    unnest()
+    select(-c(total_daily_score, hour_multiplier, points_multiplier, daily_score, num_points)) %>% 
+    unnest(cols = c(cleaned))
   
   return(scored)
 }
