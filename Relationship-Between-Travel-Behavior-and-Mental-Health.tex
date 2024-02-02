@@ -145,7 +145,7 @@
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
   pdftitle={Relationship Between Travel Behavior and Mental Health},
-  pdfauthor={Gregory S. Macfarlane; Emily K. Blanchard},
+  pdfauthor={Gregory S. Macfarlane; Emily Kae Youngs},
   colorlinks=true,
   linkcolor={blue},
   filecolor={Maroon},
@@ -162,7 +162,7 @@
 %
 }
  \ead{gregmacfarlane@gmail.com} 
-\author[1]{Emily K. Blanchard%
+\author[1]{Emily Kae Youngs%
 %
 }
  \ead{ekblnchrd@gmail.com} 
@@ -197,7 +197,7 @@ Written by ChatGPT
 
 
 \end{frontmatter}
-    \ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[borderline west={3pt}{0pt}{shadecolor}, interior hidden, breakable, frame hidden, sharp corners, enhanced, boxrule=0pt]}{\end{tcolorbox}}\fi
+    \ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[breakable, enhanced, sharp corners, frame hidden, interior hidden, boxrule=0pt, borderline west={3pt}{0pt}{shadecolor}]}{\end{tcolorbox}}\fi
 
 \bookmarksetup{startatroot}
 
@@ -247,30 +247,135 @@ Journal Templates GitHub} repository.
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-The introduction of your report is not simply an ``introduction'', but
-rather a \textbf{motivation} of why your project matters. What is the
-cost of not solving this problem? What have been previous attempts to
-solve this problem? The \emph{why} is more important than the
-\emph{what}. Why is this article worthy of archiving?
+\hypertarget{purpose}{%
+\subsection{Purpose}\label{purpose}}
 
-The introduction to an article is usually three or so paragraphs long.
-First, state the overall context of the problem, with citations to basic
-statistics and previous major findings. Then, Discuss the specific
-context of your research; why have previous methods or research not
-addressed your specific issue? You also need to have citations here.
+Mental health is a crucial component of holistic well-being,
+encompassing emotional, psychological, and social dimensions. The World
+Health Organization (WHO) defines mental health as ``a state of
+well-being in which an individual realizes their own abilities, can cope
+with the normal stresses of life, can work productively, and is able to
+contribute to their community'' \citep{MentalHealthPAHO}. Mental health
+plays a critical role in shaping individuals' overall well-being and
+influences various aspects of daily life, including personal
+relationships, work productivity, and lifestyle choices.
 
-In the third paragraph, you can introduce the purpose of your research
-and the new method or data you bring to the issue. This paragraph often
-begins with a statement similar to ``In this paper, we present\ldots{}''
+Mental health has been under increasing strain, partially due to the
+effects of urbanization and the recent COVID-19 pandemic. Lockdowns and
+social distancing measures restricted access to the natural environment
+and drastically affected travel habits which brought up additional
+interest in the connection between individual travel behavior and mental
+health \citep{pousoContactBluegreenSpaces2021}. Recent research supports
+that there are beneficial effects of contact with green and blue spaces
+on mental health. These spaces are associated with reduced stress,
+anxiety, and improved mood and cognitive function
+\citep{pousoContactBluegreenSpaces2021, whiteAssociationsGreenBlue2021}.
+Furthermore, social isolation and exclusion have been linked to travel
+behavior and can negatively impact well-being
+\citep{delboscExploringRelativeInfluences2011, stanleyMobilitySocialExclusion2011}.
+Recognizing mental health as a key component of overall well-being
+motivates the need to analyze the relationship between mental health and
+travel behavior.~
 
-An outline of the article is then usually a good idea, even though the
-outline might change little from article to article. A Literature Review
-details prior research in this area, and discusses its strengths and
-limitations. A Methodology section identifies the data, models, and
-other elements you use, while a Results section presents the outcomes of
-your methodology with tables and figures and a comprehensive discussion
-of their meanings. Discussions, and Conclusions sections may present
-your interpretations of your findings for future research, policy, etc.
+Determining the relationship between individual travel behavior and
+their mental well-being can offer valuable insights for those
+susceptible to mental health challenges By understanding the impact of
+travel behavior on one's mental health, people can make informed choices
+to travel in a way to promote good mental health, avoiding travel
+behavior that may be detrimental to their mental health. Travel behavior
+encapsulates the patterns, choices, and experiences related to
+individuals' movements from their origin to destination. These travel
+behaviors include factors such as the number of trips made on a given
+day and the specific locations where activities occur can influence
+individual mental health outcomes. Understanding how these travel
+patterns align with mental health is crucial for designing interventions
+that foster positive well-being and enhance the quality of life.~
+
+To establish these connections between travel behavior and mental
+health, it is essential to gather location data for individuals
+alongside information about their mental well-being. Since raw GPS data
+lacks details about the nature of activities or travel, the GPS data
+needs to be transformed into daily activity patterns and trip types.
+When paired with reported mental health and mood information, this trip
+data forms a powerful data set, enabling the analysis of the intricate
+relationship between mental well-being and travel behavior by exploring
+the interconnectedness of travel patterns and overall wellness.
+
+\hypertarget{scope}{%
+\subsection{Scope}\label{scope}}
+
+\citet{lanDailySpacetimeActivities2022} explored the connection between
+daily activities, environmental exposures, and anxiety symptoms using
+mobile phone-based sensing. Their study identified that activities in
+different environmental settings can impact anxiety levels, with air
+pollution and noise associated with higher anxiety, while green spaces,
+physical activity, and social interaction were linked to lower anxiety.
+It is important to understand how an individual's daily travel behavior
+can affect the individual's mental health. In this research, we pair a
+longitudinal survey of mental health collected via a mobile device
+application with location-based services information on the same device.
+This unique data set allows us to investigate the relationship between
+changing mental health and changing travel behavior. Understanding the
+nuanced connections between mental health and travel can inform targeted
+interventions to address mental health challenges and enhance
+individuals' overall life satisfaction.
+
+Data for this study come from a longitudinal treatment experiment where
+78 study volunteers completed a regular attitudinal survey administered
+via a mobile device application. This application also collected
+cellular location-based services (LBS) data from the same individuals,
+who live in Utah County, Utah. The data was collected for 1 to 6 months.
+The participants provided metal health information by answering surveys
+in the mornings and evenings. Questions included: ``Have you felt
+stressed since you last took a survey?'', ``How would you rate your
+overall sleep quality last night?'', and ``Have you thought about
+killing yourself in the past 12 hours or since you last took a survey?''
+among others. Each of the 78 participants was assigned to one of three
+groups based on a psychological evaluation: control, social anxiety, and
+autism. This allows the data set to be beneficial to see not only how
+individual travel behavior affects mental wellness, but specifically how
+travel behavior affects individuals from neurodiverse groups and vice
+versa. The LBS data were distilled into semantic activities and
+locations using a DBSCAN-TE algorithm \citep{riches2022}.
+
+After joining together the semantic activities and the responses to the
+surveys, statistical models were created to investigate both sides of
+the relationship between mental health and travel behavior.~ Using the
+Poisson Model, we explore how mental health influences the number of
+activities individuals undertake. This model incorporates demographic
+attributes and mental health responses as independent variables, aiming
+to quantify the influence of mental health on trip frequency. The number
+of trips serve as the dependent variable. \textbf{We also include a
+longitudinal analysis where we examine the relationship between a
+person's daily travel behavior and their mental health status a week
+later.} Using either a linear regression or a logit choice model, our
+exploration focuses on understanding how travel behavior shapes mental
+health or mood. Factors considered may include the specific location of
+activities and the overall number of activities. These variables are
+used to predict the mental health outcomes through either a linear
+regression or logit choice model. The identification of a relationship
+between travel behavior and mental health has the potential to open up
+therapeutic and mitigative activities for individuals suffering from
+depression and suicidality.
+
+\hypertarget{outline}{%
+\subsection{Outline}\label{outline}}
+
+This thesis will begin by exploring the significance of mental health
+and its correlation with travel behavior, specifically focusing on the
+types of activities that a person's participated in throughout the day.
+Subsequently, it will outline the techniques employed to identify the
+activities and journeys of the 78 participants, utilizing the DBSCAN-TE
+algorithm \citep{riches2022} . The discussion will encompass the data
+cleaning process and the compilation of the final dataset containing
+information on trips and mental health. Following this, the thesis will
+delve into the creation and analysis of models, shedding light on the
+insights they provide into the relationship between mental health and
+individual travel behavior. A subsequent section will merge discussions
+on travel patterns and mental health outcomes, addressing how to
+navigate the implications of the newfound information. The conclusion
+will feature suggestions for future research, a reflection on the
+study's limitations, and a summary of the key findings.
 
 \bookmarksetup{startatroot}
 
@@ -282,41 +387,43 @@ mental health is decreasing (as urbanization is increasing, as a result
 of COVID-19).}
 
 Mental health is a complex issue that can be influenced by various
-determinants, including social, economic, and environmental factors.
+factors, including social, economic, and environmental factors.
 Addressing the determinants of positive mental health is crucial in
-promoting well-being \citep{barry2009} . The relationship between
-natural environments and positive mental health has been a topic of
-interest for researchers for decades and has worked towards addressing
-the determinants of positive mental health. Barry reviews the
-determinants of positive mental health, emphasizing the importance of
-social support and social connectedness, a sense of control and
-autonomy, self-esteem, and meaning and purpose in life. She argues that
-mental health promotion should focus on building resilience, enhancing
-positive emotions, and developing skills and competencies to manage
-adversity \citep{barry2009} . \citet{white2021} adds that poor mental
-health creates more of a challenge for those in high-income countries
-which may be a consequence of urbanization and lack of natural
-environment \citep{white2021}.
+promoting well-being \citep{barryAddressingDeterminantsPositive2009}.
+The relationship between natural environments and positive mental health
+has been a topic of interest for researchers for decades and has worked
+towards addressing the determinants of positive mental health. Barry
+reviews the determinants of positive mental health, emphasizing the
+importance of social support and social connectedness, a sense of
+control and autonomy, self-esteem, and meaning and purpose in life. She
+argues that mental health promotion should focus on building resilience,
+enhancing positive emotions, and developing skills and competencies to
+manage adversity \citep{barryAddressingDeterminantsPositive2009} .
+\citet{whiteAssociationsGreenBlue2021} adds that poor mental health
+creates more of a challenge for those in high-income countries which may
+be a consequence of urbanization and lack of natural environment.
 
 During the COVID-19 pandemic, access to natural environments became more
 limited for many people due to lock downs and social distancing
-measures. However, a study conducted by \citet{pouso2021} found that
-contact with blue-green spaces during the pandemic lock down was
-beneficial for mental health. The study was conducted in Spain and
-surveyed individuals who had access to blue-green spaces, such as
-coastal areas or parks, during the lock down. The results showed that
-those who had contact with these spaces reported lower levels of stress
-and anxiety. Similarly, additional research supports the idea that
-access to natural environments can contribute to positive mental health
-outcomes, independent of the COVID-19 pandemic. A study conducted by
-\citet{white2021} investigated the associations between green and blue
-spaces and mental health across 18 countries. The study found that
-individuals who had access to more green and blue spaces reported higher
-levels of mental health and well-being. Specifically, exposure to green
-spaces was associated with lower levels of depression and anxiety, while
-exposure to blue spaces was associated with improved mood and cognitive
-function. Access to green and blue spaces could serve as a coping
-strategy during stressful situations like pandemics.
+measures. However, a study conducted by
+\citet{pousoContactBluegreenSpaces2021} found that contact with
+blue-green spaces during the pandemic lock down was beneficial for
+mental health. The study was conducted in Spain and surveyed individuals
+who had access to blue-green spaces, such as coastal areas or parks,
+during the lock down. The results showed that those who had contact with
+these spaces reported lower levels of stress and anxiety. Similarly,
+additional research supports the idea that access to natural
+environments can contribute to positive mental health outcomes,
+independent of the COVID-19 pandemic. A study conducted by
+\citet{whiteAssociationsGreenBlue2021} investigated the associations
+between green and blue spaces and mental health across 18 countries. The
+study found that individuals who had access to more green and blue
+spaces reported higher levels of mental health and well-being.
+Specifically, exposure to green spaces was associated with lower levels
+of depression and anxiety, while exposure to blue spaces was associated
+with improved mood and cognitive function. Access to green and blue
+spaces could serve as a coping strategy during stressful situations like
+pandemics.
 
 Overall, the research suggests that access to natural environments can
 have a positive impact on mental health and well-being. These findings
@@ -328,29 +435,29 @@ stress and adversity such as the COVID-19 pandemic.
 \textbf{Social isolation or social exclusion is affected by one's
 ability to travel and in turn affects mental health.}
 
-\citet{stanley2011} investigates the link between mobility, social
-exclusion, and well-being. The authors conducted a survey among
-residents of Melbourne, Australia, to analyze the impact of social
-exclusion on well-being and how mobility can mediate this relationship.
-The study found that mobility can improve well-being and reduce social
-exclusion, which can have a positive impact on individual mental health.
-Similarly, \citet{delbosc2011} explored the influence of transport
-disadvantage and social exclusion on well-being. The authors used data
-from a survey of individuals in Melbourne, Australia, to examine the
-relationship between transport disadvantage and well-being, as well as
-the relationship between social exclusion and well-being. The study
-found that both transport disadvantage and social exclusion can
-negatively affect well-being, with social exclusion having a stronger
-impact. The ability and choice to make trips affects well-being and
-mental health of individuals.
+\citet{stanleyMobilitySocialExclusion2011} investigates the link between
+mobility, social exclusion, and well-being. The authors conducted a
+survey among residents of Melbourne, Australia, to analyze the impact of
+social exclusion on well-being and how mobility can mediate this
+relationship. The study found that mobility can improve well-being and
+reduce social exclusion, which can have a positive impact on individual
+mental health. Similarly, \citet{delboscExploringRelativeInfluences2011}
+explored the influence of transport disadvantage and social exclusion on
+well-being. The authors used data from a survey of individuals in
+Melbourne, Australia, to examine the relationship between transport
+disadvantage and well-being, as well as the relationship between social
+exclusion and well-being. The study found that both transport
+disadvantage and social exclusion can negatively affect well-being, with
+social exclusion having a stronger impact. The ability and choice to
+make trips affects well-being and mental health of individuals.
 
 When looking specifically at the effects of the COVID-19 pandemic,
-\citet{loades2020} , focused on the impact of social isolation and
-loneliness on the mental health of children and adolescents. The authors
-conducted a rapid systematic review of existing literature on the topic
-and found that social isolation and loneliness can have a negative
-impact on mental health, including increased symptoms of anxiety,
-depression, and post-traumatic stress disorder.
+\citet{loadesRapidSystematicReview2020} , focused on the impact of
+social isolation and loneliness on the mental health of children and
+adolescents. The authors conducted a rapid systematic review of existing
+literature on the topic and found that social isolation and loneliness
+can have a negative impact on mental health, including increased
+symptoms of anxiety, depression, and post-traumatic stress disorder.
 
 Overall, these articles suggest that social exclusion and isolation,
 transport disadvantage, and loneliness can negatively impact individual
@@ -366,41 +473,41 @@ mental health.} (built environment)
 In recent years, a growing body of research has explored the
 relationship between the built environment and mental health. Several
 studies have explored the association between the built environment and
-mental health \citep{pelgrims2021}, \citep{white2021},
-\citep{pouso2021}, \citep{rautio2018}, \citep{gascon2018},
-\citep{engemann2019}, \citep{hoisington2019}. The findings of these
-studies specifically investigate the association between the urban
-environment, green and blue spaces, and mental health.
+mental health
+\citep{pelgrimsAssociationUrbanEnvironment2021, whiteAssociationsGreenBlue2021, rautioLivingEnvironmentIts2018, pousoContactBluegreenSpaces2021, gasconLongtermExposureResidential2018, engemann2019, hoisingtonTenQuestionsConcerning2019}.
+The findings of these studies specifically investigate the association
+between the urban environment, green and blue spaces, and mental health.
 
-\citet{pelgrims2021} conducted a study in Brussels, Belgium, to
-investigate the association between the urban environment and mental
-health. The study found that exposure to noise pollution, air pollution,
-and lack of green space were associated with higher levels of depressive
-symptoms and stress. In contrast, living close to green space was
-associated with lower levels of stress and depressive symptoms.
-Similarly, \citet{white2021} conducted a cross-country study in 18
-countries to investigate the relationship between green and blue spaces
-and mental health. The study found that exposure to green and blue
-spaces was associated with better mental health outcomes, including
-lower levels of stress, anxiety, and depression. In addition,
-\citet{pouso2021} investigated the impact of contact with blue-green
-spaces during the COVID-19 pandemic lock down on mental health. The
-study found that individuals who had more contact with blue-green spaces
-reported better mental health outcomes, including lower levels of stress
-and anxiety.
+\citet{pelgrimsAssociationUrbanEnvironment2021} conducted a study in
+Brussels, Belgium, to investigate the association between the urban
+environment and mental health. The study found that exposure to noise
+pollution, air pollution, and lack of green space were associated with
+higher levels of depressive symptoms and stress. In contrast, living
+close to green space was associated with lower levels of stress and
+depressive symptoms. Similarly, \citet{whiteAssociationsGreenBlue2021}
+conducted a cross-country study in 18 countries to investigate the
+relationship between green and blue spaces and mental health. The study
+found that exposure to green and blue spaces was associated with better
+mental health outcomes, including lower levels of stress, anxiety, and
+depression. In addition, \citet{pousoContactBluegreenSpaces2021}
+investigated the impact of contact with blue-green spaces during the
+COVID-19 pandemic lock down on mental health. The study found that
+individuals who had more contact with blue-green spaces reported better
+mental health outcomes, including lower levels of stress and anxiety.
 
-\citet{rautio2018} conducted a systematic review of the literature on
-the relationship between the living environment and depressive mood. The
-review found that several environmental factors, including noise
-pollution, air pollution, and lack of green space, were associated with
-higher levels of depressive symptoms. The review also found that access
-to green spaces, such as parks and gardens, was associated with lower
-levels of depressive symptoms. In addition to the literature review by
-\citet{rautio2018} , \citet{gascon2018} conducted a cross-sectional
-study to investigate the relationship between long-term exposure to
-residential green and blue spaces and anxiety and depression in adults.
-The study found that exposure to green and blue spaces was associated
-with lower levels of anxiety and depression in adults.
+\citet{rautioLivingEnvironmentIts2018} conducted a systematic review of
+the literature on the relationship between the living environment and
+depressive mood. The review found that several environmental factors,
+including noise pollution, air pollution, and lack of green space, were
+associated with higher levels of depressive symptoms. The review also
+found that access to green spaces, such as parks and gardens, was
+associated with lower levels of depressive symptoms. In addition to the
+literature review by \citet{rautioLivingEnvironmentIts2018},
+\citet{gasconLongtermExposureResidential2018} conducted a
+cross-sectional study to investigate the relationship between long-term
+exposure to residential green and blue spaces and anxiety and depression
+in adults. The study found that exposure to green and blue spaces was
+associated with lower levels of anxiety and depression in adults.
 
 \citet{engemann2019} conducted a study to investigate the relationship
 between residential green space in childhood and the risk of psychiatric
@@ -413,11 +520,12 @@ future.
 Overall, the literature suggests that exposure to green and blue spaces
 is associated with better mental health outcomes, while exposure to
 noise and air pollution is associated with higher levels of stress,
-anxiety, and depression. \citet{hoisington2019} reviewed the literature
-on the relationship between the built environment and mental health and
-identified ten questions concerning this relationship. Their review
-highlighted the need for further research to understand the complex
-interactions between the built environment and mental health outcomes.
+anxiety, and depression. \citet{hoisingtonTenQuestionsConcerning2019}
+reviewed the literature on the relationship between the built
+environment and mental health and identified ten questions concerning
+this relationship. Their review highlighted the need for further
+research to understand the complex interactions between the built
+environment and mental health outcomes.
 
 \textbf{Types of activities or travel affect people's mental health
 differently.}
@@ -427,38 +535,41 @@ social and mental health among individuals. The following discussion
 aims to explore the relationship between travel behavior and mental
 well-being outcomes by analyzing findings from four relevant studies.
 
-\citet{syahputri2022} conducted a study in the Bandung Metropolitan area
-to investigate the effect of travel satisfaction and activity-travel
-patterns of other household members on social and mental health. This
-model showed that those who stay at home to work, or study tend to
-experience high travel satisfaction and in turn high social and mental
-health. These people appreciate the time that they spend outside of the
-home, which results in an increase in their social and mental health.
-However, if people spend too much time at home studying or working, then
-they typically experience lower mental health because they are unable to
-interact with others outside of the home. But when these people have the
-opportunity to leave the home to travel, they experience better travel
-satisfaction and in turn better social and mental health. Similarly,
-\citet{friman2017} investigated how travel affects emotional well-being
-and life satisfaction. They pointed out that those who regularly
-traveled to work experienced less life satisfaction than those who
-worked from home. However, the study revealed a positive association
-between travel and emotional well-being, indicating that travel
-experiences contribute to improved mood and overall life satisfaction.
+\citet{syahputriEffectTravelSatisfaction2022} conducted a study in the
+Bandung Metropolitan area to investigate the effect of travel
+satisfaction and activity-travel patterns of other household members on
+social and mental health. This model showed that those who stay at home
+to work, or study tend to experience high travel satisfaction and in
+turn high social and mental health. These people appreciate the time
+that they spend outside of the home, which results in an increase in
+their social and mental health. However, if people spend too much time
+at home studying or working, then they typically experience lower mental
+health because they are unable to interact with others outside of the
+home. But when these people have the opportunity to leave the home to
+travel, they experience better travel satisfaction and in turn better
+social and mental health. Similarly, \citet{frimanHowDoesTravel2017}
+investigated how travel affects emotional well-being and life
+satisfaction. They pointed out that those who regularly traveled to work
+experienced less life satisfaction than those who worked from home.
+However, the study revealed a positive association between travel and
+emotional well-being, indicating that travel experiences contribute to
+improved mood and overall life satisfaction.
 
 When exploring the relationship between gender, mental health, and
-travel, \citet{mackett2022} conducted a comprehensive study. The study
-found that women tend to experience higher levels of mental health
-issues related to travel, such as anxiety and stress, due to various
-factors, including route finding, safety concerns, and interacting with
-others. In another study \citet{mackett2021} explored the relationship
-between mental health and travel behavior. The study found that travel
-behavior, such as active travel (e.g., walking or cycling) and public
+travel, \citet{mackettGenderMentalHealth2022} conducted a comprehensive
+study. The study found that women tend to experience higher levels of
+mental health issues related to travel, such as anxiety and stress, due
+to various factors, including route finding, safety concerns, and
+interacting with others. In another study
+\citet{mackettMentalHealthTravel2021} explored the relationship between
+mental health and travel behavior. The study found that travel behavior,
+such as active travel (e.g., walking or cycling) and public
 transportation use, was associated with better mental health outcomes,
-including reduced stress and improved well-being. \citet{mackett2021}
-pointed at that the ``relationship between mental health and travel is
-complex'' because mental health issues can affect one's ability to
-travel and travel can worsen mental health issues.
+including reduced stress and improved well-being.
+\citet{mackettMentalHealthTravel2021} pointed at that the ``relationship
+between mental health and travel is complex'' because mental health
+issues can affect one's ability to travel and travel can worsen mental
+health issues.
 
 The reviewed studies highlight the significant influence of travel
 behavior on social and mental health outcomes. Factors such as travel
@@ -473,12 +584,12 @@ mental health and travel.
 daily activities and environmental exposures and the connection to
 anxiety symptoms.}
 
-The article by \citet{lan2022} investigates the relationship between
-daily space-time activities, multiple environmental exposures, and
-anxiety symptoms. The study utilizes a cross-sectional mobile
-phone-based sensing approach to gather data. The goal was to understand
-how individuals' activities in different environmental settings
-contribute to their anxiety levels.
+The article by \citet{lanDailySpacetimeActivities2022} investigates the
+relationship between daily space-time activities, multiple environmental
+exposures, and anxiety symptoms. The study utilizes a cross-sectional
+mobile phone-based sensing approach to gather data. The goal was to
+understand how individuals' activities in different environmental
+settings contribute to their anxiety levels.
 
 The study collected data from participants using mobile phone sensors,
 including GPS and accelerometers, to track their spatial movements and
@@ -534,7 +645,7 @@ practical relevance.
 \markboth{References}{References}
 
 \renewcommand{\bibsection}{}
-\bibliography{references.bib}
+\bibliography{groupreferences.bib}
 
 
 
