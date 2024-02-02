@@ -20,6 +20,43 @@ readDemographicData <- function(file_path) {
 }
 
 
+#' Find unique values in a specified column.
+#'
+#' This function takes a data frame and a column name as input,
+#' and returns the unique userIds that scored high.
+#'
+#' @param data A data frame containing the data.
+#' @param column_name A character string specifying the column name.
+#'
+#' @return A vector of unique values in the specified column.
+
+find_high_scorers <- function(data, column_name) {
+  column_name <- "userId"
+  unique_userIds <- unique(data[[column_name]])
+  
+  return(unique_userIds)
+}
+
+
+#' Process demo data by filtering based on high scorers.
+#'
+#' This function takes a demo data frame and a vector of high scorers' userIds,
+#' filters the data to include only rows with userIds present in the high scorers vector,
+#' and returns the processed data frame.
+#'
+#' @param demo_data A data frame containing demo data.
+#' @param high_scorers A vector of userIds corresponding to high scorers.
+#'
+#' @return A data frame with rows containing userIds present in the high scorers vector.
+
+demo_data_process <- function(demo_data, high_scorers) {
+  processed_data <- demo_data %>%
+    filter(userId %in% high_scorers)
+  
+  return(processed_data)
+}
+
+
 #' Create a Data Frame with User IDs and Dates
 #'
 #'
