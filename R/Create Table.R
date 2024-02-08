@@ -169,3 +169,35 @@ clean_table <- function(table){
     
   return(clean)
 }
+
+
+#' Count the number of days based on survey and trips conditions.
+#'
+#' This function takes a tibble with survey information and trips data and calculates
+#' the counts of days based on specified conditions:
+#' - Days with both morning survey (Survey.Name.x) and evening survey (Survey.Name.y) not NA, and numTrips not NA.
+#' - Days where either morning survey (Survey.Name.x) or evening survey (Survey.Name.y) is not NA (but not both),
+#'   and numTrips is not NA.
+#' - Days where both morning survey (Survey.Name.x) and evening survey (Survey.Name.y) are NA, but numTrips is not NA.
+#'
+#' @param final A tibble containing survey information with columns Survey.Name.x,
+#' Survey.Name.y, and numTrips.
+#'
+#' @return A tibble with counts of days based on the specified conditions.
+
+summarize_final_data <- function(final) {
+  summary <- final %>%
+    mutate(
+      condition1 = !is.na(Survey.Name.x) & !is.na(Survey.Name.y) & !is.na(numTrips),
+      condition2 = (!is.na(Survey.Name.x) | !is.na(Survey.Name.y)) & !(!is.na(Survey.Name.x) & !is.na(Survey.Name.y)) & !is.na(numTrips),
+      condition3 = is.na(Survey.Name.x) & is.na(Survey.Name.y) & !is.na(numTrips)
+    ) %>%
+    summarize(
+      condition1_days = sum(condition1),
+      condition2_days = sum(condition2),
+      condition3_days = sum(condition3)
+    )
+  
+  return(summary)
+}
+
