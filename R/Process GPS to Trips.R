@@ -71,17 +71,41 @@ clean_userids <- function(gps_points) {
 }
 
 
-#' Calculate scores for relevant GPS points data.
+#' Adjust Timestamp to Previous Day
 #'
-#' This function takes a tibble of relevant GPS points and calculates scores
-#' based on the number and spread of GPS points during a day for each user and day.
+#' This function adjusts a timestamp to the previous day if the recorded hour is
+#' before 3 AM. It helps correct for instances where the timestamp corresponds to
+#' the previous calendar date due to activities past midnight.
 #'
-#' @param relevant_ids A tibble containing relevant GPS points data.
+#' @param timestamp A vector of timestamps.
+#' @return A vector of dates adjusted for the previous day if
+#' the recorded hour is before 3 AM.
 #'
-#' @return A tibble with calculated scores for each user and day.
+#' @details The function checks if the recorded hour in the timestamp is before
+#' 3 AM. If true, it subtracts one day from the timestamp to adjust it to the
+#' previous day. The resulting dates are returned as a vector.
 
-scoring <- function(relevant_ids) {
-  scored <- relevant_ids %>% 
+yesterday <- function(timestamp) {
+  is_previous_day <- hour(timestamp) < 3
+  timestamp[is_previous_day] <- timestamp[is_previous_day] - ddays(1)
+  as.Date(timestamp)
+}
+
+
+#' Perform preprocessing on relevant user data.
+#'
+#' This function takes a dataset of relevant user IDs (`relevant_ids`) and performs
+#' preprocessing steps, including modifying timestamp-related columns and selecting
+#' specific columns for further analysis.
+#'
+#' @param relevant_ids A dataset containing relevant user IDs and associated information.
+#'
+#' @return A tibble with preprocessed data, including modified timestamp-related
+#' columns and selected columns for analysis.
+
+preprocessing <- function(relevant_ids) {
+  raw_data <- relevant_ids %>% 
+    # Modify some of the columns
     mutate(
       timestamp = as_datetime(time),
       activityDay = yesterday(timestamp),
