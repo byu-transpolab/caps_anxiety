@@ -257,40 +257,16 @@ gps_points_process <- function(scored) {
 }
 
 
-#' Adjust Timestamp to Previous Day
+#' Summarize prepared data for each unique userId.
 #'
-#' This function adjusts a timestamp to the previous day if the recorded hour is
-#' before 3 AM. It helps correct for instances where the timestamp corresponds to
-#' the previous calendar date due to activities past midnight.
+#' This function takes a dataset of processed information (`processed`) and performs 
+#' summary calculations, including the total number of unique activity days for each user.
 #'
-#' @param timestamp A vector of timestamps.
-#' @return A vector of dates adjusted for the previous day if
-#' the recorded hour is before 3 AM.
+#' @param processed A dataset containing processed information with userIds and activityDay.
 #'
-#' @details The function checks if the recorded hour in the timestamp is before
-#' 3 AM. If true, it subtracts one day from the timestamp to adjust it to the
-#' previous day. The resulting dates are returned as a vector.
+#' @return A tibble summarizing processed data, including the total number of unique 
+#' activity days for each unique userId.
 
-yesterday <- function(timestamp) {
-  is_previous_day <- hour(timestamp) < 3
-  timestamp[is_previous_day] <- timestamp[is_previous_day] - ddays(1)
-  as.Date(timestamp)
-}
-
-
-#' Make an sf object out of lat / long tabular data
-#'
-#' @param cleaned_data tibble of GPS points including columns `lat` and `lon`. These
-#'   should be in WGS84 coordinate system.
-#' @param crs The EPSG code for the desired projection. Defaults to 32612, UTM 
-#'   Zone 12N (meters), which is appropriate for many locations in Utah.
-#' @return an sf point object where the lat and long columns are replaced with a 
-#'   single geometric coordinates column called "geometry"
-
-makeSf <- function(df, crs = 32612) {
-  df %>%
-    st_as_sf(coords = c("lon", "lat"), crs = 4327) %>%
-    st_transform(crs)
 }
 
 
