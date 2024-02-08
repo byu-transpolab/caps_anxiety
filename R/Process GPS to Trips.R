@@ -395,4 +395,10 @@ addTripType <- function(tibble, parksSf, grocerySf, librarySf){
 #' @return A tibble summarizing trip data, including the total number of unique 
 #' activity days for each unique userId.
 
+summarize_trip_data <- function(activities) {
+  summary <- activities %>% 
+    # summarize(unique_userIds = n_distinct(userId)) %>% 
+    group_by(userId) %>% 
+    summarize(total_activityDays = n_distinct(activityDay))
 }
+
