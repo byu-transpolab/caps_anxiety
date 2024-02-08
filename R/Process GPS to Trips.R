@@ -192,6 +192,25 @@ scoring <- function(raw_data) {
 }
 
 
+#' Summarize scored data for each unique userId.
+#'
+#' This function takes a dataset of scored information (`scored`) and performs 
+#' summary calculations on the data, including the total number of unique 
+#' activity days for each user.
+#'
+#' @param scored A dataset containing scored information with userIds and associated data.
+#'
+#' @return A tibble summarizing scored data, including the total number of unique 
+#' activity days for each unique userId.
+
+summarize_scored_data <- function(scored) {
+  summary <- scored %>% 
+    # summarize(unique_userIds = n_distinct(userId)) %>% 
+    group_by(userId) %>% 
+    summarize(total_activityDays = n_distinct(activityDay))
+  
+  return(summary)
+}
 #' Process scored GPS points data.
 #'
 #' This function takes a tibble of scored GPS points and performs various
