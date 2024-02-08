@@ -162,10 +162,10 @@ combine_data <- function(survey, activities){
 #' @details Filters the table to retain rows with either where either the
 #' evening survey or the morning survey was taken on a given day.
 
-clean_table <- function(table){
+clean_final_table <- function(table){
   clean <- table %>%
     filter(status != "Withdrawn") %>% 
-    filter(!is.na(Survey.Name.x) | !is.na(Survey.Name.y) | !is.na(numTrips))
+    filter(!(is.na(Survey.Name.x) & is.na(Survey.Name.y) & is.na(numTrips)))
     
   return(clean)
 }
