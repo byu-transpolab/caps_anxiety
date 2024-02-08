@@ -24,6 +24,23 @@ read_data <- function(file_names) {
 }
 
 
+#' Summarize raw data by counting unique user IDs.
+#'
+#' This function takes a tibble with raw data and calculates the count of unique
+#' user IDs, providing a summary of the raw data.
+#'
+#' @param raw_data A tibble containing raw data with user ID information.
+#'
+#' @return A tibble with a summary count of unique user IDs.
+
+summarize_raw_data <- function(raw_data) {
+  summary <- raw_data %>% 
+    summarize(unique_userIds = n_distinct(userId))
+    
+  return(summary)
+}
+
+
 #' Clean GPS points data by removing specified userIds.
 #'
 #' This function takes a tibble of GPS points and removes rows corresponding to
