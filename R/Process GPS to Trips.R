@@ -385,29 +385,14 @@ addTripType <- function(tibble, parksSf, grocerySf, librarySf){
 }
 
 
-#' Function to Add Location Information
+#' Summarize trip data for each unique userId.
 #'
-#' This function adds location information based on spatial features data.
+#' This function takes a dataset of activities (`activities`) and performs 
+#' summary calculations, including the total number of unique activity days for each user.
 #'
-#' @param x A data frame containing location information.
-#' @param variable The name of the location variable to be added.
-#' @param sf Spatial features data to join with.
-#' @return A vector with the added location information.
+#' @param activities A dataset containing activity information with userIds and activityDay.
 #'
-#' @details The function performs a spatial join between the input data frame 
-#' and the specified spatial features (sf). It calculates the number of 
-#' non-missing entries in the specified variable for each row.
+#' @return A tibble summarizing trip data, including the total number of unique 
+#' activity days for each unique userId.
 
-add_location <- function(x, variable, sf){
-  if(is.null(nrow(x))) {
-    a <- NA
-  } else {
-    a <- st_join(x, sf) %>% 
-      st_set_geometry(NULL) %>% 
-      ungroup() %>% 
-      summarise(s = sum(!is.na({{variable}})) ) %>% 
-      pull(s)
-  }
-  
-  return(a)
 }
