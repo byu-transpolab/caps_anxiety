@@ -211,6 +211,24 @@ summarize_scored_data <- function(scored) {
   
   return(summary)
 }
+
+
+#' Make an sf object out of lat / long tabular data
+#'
+#' @param cleaned_data tibble of GPS points including columns `lat` and `lon`. These
+#'   should be in WGS84 coordinate system.
+#' @param crs The EPSG code for the desired projection. Defaults to 32612, UTM 
+#'   Zone 12N (meters), which is appropriate for many locations in Utah.
+#' @return an sf point object where the lat and long columns are replaced with a 
+#'   single geometric coordinates column called "geometry"
+
+makeSf <- function(df, crs = 32612) {
+  df %>%
+    st_as_sf(coords = c("lon", "lat"), crs = 4327) %>%
+    st_transform(crs)
+}
+
+
 #' Process scored GPS points data.
 #'
 #' This function takes a tibble of scored GPS points and performs various
