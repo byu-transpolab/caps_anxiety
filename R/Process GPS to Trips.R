@@ -257,55 +257,6 @@ gps_points_process <- function(scored) {
 }
 
 
-
-
-
-
-#' #' Process GPS points data
-#' #'
-#' #' This function processes GPS points data by separating date and time, 
-#' #' selecting relevant columns, grouping by specified variables, 
-#' #' sampling points, and creating spatial features.
-#' #' 
-#' #' @param gps_points A tibble containing GPS points data.
-#' #' 
-#' #' @return A tibble containing processed GPS points data.
-#' 
-#' gps_points_process <- function(gps_points) {
-#'   processed <- gps_points %>%
-#'     # Separate date and time into columns
-#'     mutate(
-#'       timestamp = as_datetime(time),
-#'       activityDay = yesterday(timestamp),
-#'       hour = hour(timestamp),
-#'       minute = minute(timestamp)) %>%
-#'     # Keep these columns for analysis
-#'     select(
-#'       userId,
-#'       activityDay,
-#'       timestamp,
-#'       hour,
-#'       minute,
-#'       lat,
-#'       lon) %>% 
-#'     arrange(userId, activityDay, hour, minute) %>% 
-#'     group_by(userId, activityDay, hour, minute) %>%
-#'     slice_sample(n = 10, replace = FALSE) %>%
-#'     
-#'     ungroup() %>% 
-#'     group_by(userId, activityDay) %>%
-#'     nest() %>% 
-#'     ungroup() %>%
-#'     rename(cleaned = data) %>%
-#'     mutate(num_points = purrr::map_int(cleaned, nrow)) %>%
-#'     filter(num_points > 1000)  %>% 
-#'     mutate(cleaned = purrr::map(cleaned, makeSf))
-#'     
-#'   return(processed)
-#' }
-
-
-
 #' Adjust Timestamp to Previous Day
 #'
 #' This function adjusts a timestamp to the previous day if the recorded hour is
