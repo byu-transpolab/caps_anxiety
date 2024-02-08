@@ -149,12 +149,27 @@ summarize_filtered_data <- function(filtered_data) {
   return(summary)
 }
 
+
+#' Calculate scores for relevant GPS points data.
+#'
+#' This function takes a tibble of relevant GPS points and calculates scores
+#' based on the number and spread of GPS points during a day for each user and day.
+#'
+#' @param relevant_ids A tibble containing relevant GPS points data.
+#'
+#' @return A tibble with calculated scores for each user and day.
+
+scoring <- function(raw_data) {
+  scored <- raw_data %>%
+    # Determine how many GPS points there are per userID-activityDay by hour
+    ungroup() %>% 
     arrange(userId, activityDay, hour) %>% 
     group_by(userId, activityDay, hour) %>%
     nest() %>% 
     ungroup() %>% 
     rename(cleaned = data) %>%
     mutate(num_points = purrr::map_int(cleaned, nrow)) %>%
+    # Calculate the score for the day based on number and spread of gps points
     mutate(
       hour_multiplier = ifelse(hour %in% 8:23, 3, 1),
       points_multiplier = case_when(
