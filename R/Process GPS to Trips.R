@@ -326,6 +326,34 @@ addNumTrips <- function(df){
 }
 
 
+#' Function to Add Location Information
+#'
+#' This function adds location information based on spatial features data.
+#'
+#' @param x A data frame containing location information.
+#' @param variable The name of the location variable to be added.
+#' @param sf Spatial features data to join with.
+#' @return A vector with the added location information.
+#'
+#' @details The function performs a spatial join between the input data frame 
+#' and the specified spatial features (sf). It calculates the number of 
+#' non-missing entries in the specified variable for each row.
+
+add_location <- function(x, variable, sf){
+  if(is.null(nrow(x))) {
+    a <- NA
+  } else {
+    a <- st_join(x, sf) %>% 
+      st_set_geometry(NULL) %>% 
+      ungroup() %>% 
+      summarise(s = sum(!is.na({{variable}})) ) %>% 
+      pull(s)
+  }
+  
+  return(a)
+}
+
+
 #' Function to Add Trip Types
 #'
 #' This function takes a tibble with numTrips and adds trip type based on 
