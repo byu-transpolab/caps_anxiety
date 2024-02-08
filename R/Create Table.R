@@ -109,6 +109,33 @@ addMentalHealthResponses <- function(tibble){
 }
 
 
+#' Count the number of morning and evening survey days.
+#'
+#' This function takes a tibble with survey information and calculates the counts
+#' of morning survey days, evening survey days, and days with both surveys filled out.
+#'
+#' @param survey A tibble containing survey information with columns Survey.Name.x and Survey.Name.y.
+#'
+#' @return A tibble with counts of morning survey days, evening survey days, and days
+#' with both morning and evening surveys filled out.
+
+summarize_survey_data <- function(survey) {
+  summary <- survey %>%
+    mutate(
+      morning_survey = !is.na(Survey.Name.x),
+      evening_survey = !is.na(Survey.Name.y),
+      both_surveys = !is.na(Survey.Name.x) & !is.na(Survey.Name.y)
+    ) %>%
+    summarize(
+      morning_survey_days = sum(morning_survey),
+      evening_survey_days = sum(evening_survey),
+      both_surveys_days = sum(both_surveys)
+    )
+  
+  return(summary)
+}
+
+
 #' Combine Survey Data with Activities Data
 #'
 #'
