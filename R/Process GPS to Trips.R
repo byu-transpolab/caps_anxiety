@@ -119,8 +119,10 @@ preprocessing <- function(relevant_ids) {
       hour,
       minute,
       lat,
-      lon) %>% 
-    # Calculate the score for the day based on number and spread of gps points
+      lon)
+  
+  return(raw_data)
+}
     arrange(userId, activityDay, hour) %>% 
     group_by(userId, activityDay, hour) %>%
     nest() %>% 
