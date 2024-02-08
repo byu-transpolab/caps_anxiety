@@ -123,6 +123,32 @@ preprocessing <- function(relevant_ids) {
   
   return(raw_data)
 }
+
+
+#' Summarize raw data for each unique userId.
+#'
+#' This function takes a dataset of raw data (`raw_data`) and performs 
+#' summary calculations, including the total number of unique activity days for each user.
+#'
+#' @param raw_data A dataset containing raw user data with userIds and timestamp information.
+#'
+#' @return A tibble summarizing raw data, including the total number of unique 
+#' activity days for each unique userId.
+
+summarize_filtered_data <- function(filtered_data) {
+   summary <- filtered_data %>% 
+    # summarize(unique_userIds = n_distinct(userId)) %>% 
+    group_by(userId) %>%
+    summarize(total_activityDays = n_distinct(activityDay)) %>% 
+    # summarize(total_activityDays = total_activityDays,
+    #           avg_activityDays = mean(total_activityDays),
+    #           min_activityDays = min(total_activityDays),
+    #           max_activityDays = max(total_activityDays))
+              
+  
+  return(summary)
+}
+
     arrange(userId, activityDay, hour) %>% 
     group_by(userId, activityDay, hour) %>%
     nest() %>% 
