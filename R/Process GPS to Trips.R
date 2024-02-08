@@ -267,6 +267,11 @@ gps_points_process <- function(scored) {
 #' @return A tibble summarizing processed data, including the total number of unique 
 #' activity days for each unique userId.
 
+summarize_prepared_data <- function(processed) {
+  summary <- processed %>% 
+    # summarize(unique_userIds = n_distinct(userId)) %>% 
+    group_by(userId) %>% 
+    summarize(total_activityDays = n_distinct(activityDay))
 }
 
 
