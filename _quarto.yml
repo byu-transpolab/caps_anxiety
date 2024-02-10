@@ -51,15 +51,11 @@ bibliography: groupreferences.bib
 format:
   html:
     theme: cosmo
-  elsevier-pdf:
+  ieee-conference-pdf:
     include-in-header: 
       - packages.tex
-    journal:
-      name: 17th International Conference on Travel Behaviour Research
-      cite-style: authoryear
     keep-tex: true
     top-level-division: section
-    toc: false
 
 editor: visual
 
