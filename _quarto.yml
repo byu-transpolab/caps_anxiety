@@ -3,7 +3,7 @@ project:
 
 # This defines the .qmd files that are in your document
 book:
-  title: "Exploring the link between travel behavior and suicidal ideation."
+  title: "Exploring the link between travel behavior and mental health."
   author:
     - name: Gregory S. Macfarlane
       orcid: 0000-0003-3999-7584
@@ -46,7 +46,7 @@ book:
   keyword: "active mobility, life-stages, and quality of life"
   abstract: |
 
-bibliography: references.bib
+bibliography: groupreferences.bib
 
 format:
   html:
