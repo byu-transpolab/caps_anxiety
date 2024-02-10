@@ -9,20 +9,20 @@
     ]
   },
   "Packages": {
+    "CRediTas": {
+      "Package": "CRediTas",
+      "Version": "0.2.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "4677727cf569ac0daaa07d0c5fbe0452",
+      "Requirements": []
+    },
     "DBI": {
       "Package": "DBI",
       "Version": "1.1.3",
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "b2866e62bab9378c3cc9476a1954226b",
-      "Requirements": []
-    },
-    "Formula": {
-      "Package": "Formula",
-      "Version": "1.2-5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "7a29697b75e027767a53fde6c903eca7",
       "Requirements": []
     },
     "KernSmooth": {
@@ -82,16 +82,6 @@
       "Repository": "CRAN",
       "Hash": "ae6cbbe1492f4de79c45fce06f967ce8",
       "Requirements": []
-    },
-    "Rdpack": {
-      "Package": "Rdpack",
-      "Version": "2.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "0ddbe51591ab1d3e7362e0da3727c837",
-      "Requirements": [
-        "rbibutils"
-      ]
     },
     "abind": {
       "Package": "abind",
@@ -448,17 +438,6 @@
       "Hash": "860e6724c3bcdf194e8e043b97ab6f6e",
       "Requirements": []
     },
-    "dfidx": {
-      "Package": "dfidx",
-      "Version": "0.0-5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "49f9f01cdd130811483af9ef00463427",
-      "Requirements": [
-        "Formula",
-        "dplyr"
-      ]
-    },
     "digest": {
       "Package": "digest",
       "Version": "0.6.31",
@@ -687,6 +666,18 @@
         "scales",
         "tibble",
         "vctrs",
+        "withr"
+      ]
+    },
+    "ggridges": {
+      "Package": "ggridges",
+      "Version": "0.5.6",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "66488692cb8621bc78df1b9b819497a6",
+      "Requirements": [
+        "ggplot2",
+        "scales",
         "withr"
       ]
     },
@@ -1111,16 +1102,6 @@
       "Hash": "4fbd3679ec8ee169ba28d4b1ea7d0e8f",
       "Requirements": []
     },
-    "lmtest": {
-      "Package": "lmtest",
-      "Version": "0.9-40",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "c6fafa6cccb1e1dfe7f7d122efd6e6a7",
-      "Requirements": [
-        "zoo"
-      ]
-    },
     "lubridate": {
       "Package": "lubridate",
       "Version": "1.9.2",
@@ -1180,22 +1161,6 @@
       "Repository": "CRAN",
       "Hash": "18e9c28c1d3ca1560ce30658b22ce104",
       "Requirements": []
-    },
-    "mlogit": {
-      "Package": "mlogit",
-      "Version": "1.1-1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "314e016755f75f0a6f1ba91ac7b0441a",
-      "Requirements": [
-        "Formula",
-        "MASS",
-        "Rdpack",
-        "dfidx",
-        "lmtest",
-        "statmod",
-        "zoo"
-      ]
     },
     "modelr": {
       "Package": "modelr",
@@ -1533,14 +1498,6 @@
         "terra"
       ]
     },
-    "rbibutils": {
-      "Package": "rbibutils",
-      "Version": "2.2.13",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "62e3171e3c0ac826602aae0944ad0372",
-      "Requirements": []
-    },
     "readr": {
       "Package": "readr",
       "Version": "2.1.4",
@@ -1630,6 +1587,16 @@
         "PROJ",
         "crsmeta",
         "proj4"
+      ]
+    },
+    "reshape": {
+      "Package": "reshape",
+      "Version": "0.8.9",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "603d56041d7d4fa3ceb1864b3f6ee6b1",
+      "Requirements": [
+        "plyr"
       ]
     },
     "rgdal": {
@@ -1801,14 +1768,6 @@
         "lattice"
       ]
     },
-    "statmod": {
-      "Package": "statmod",
-      "Version": "1.5.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "26e158d12052c279bdd4ba858b80fb1f",
-      "Requirements": []
-    },
     "stringi": {
       "Package": "stringi",
       "Version": "1.7.12",
@@ -1875,10 +1834,10 @@
     },
     "targets": {
       "Package": "targets",
-      "Version": "1.2.0",
+      "Version": "1.4.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "a1e56d84e94c41a03391aea66c32b732",
+      "Hash": "760c8dcdf3a21b7131c181f02705101c",
       "Requirements": [
         "R6",
         "base64url",
@@ -2171,16 +2130,6 @@
       "Repository": "CRAN",
       "Hash": "0d0056cc5383fbc240ccd0cb584bf436",
       "Requirements": []
-    },
-    "zoo": {
-      "Package": "zoo",
-      "Version": "1.8-12",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "5c715954112b45499fb1dadc6ee6ee3e",
-      "Requirements": [
-        "lattice"
-      ]
     }
   }
 }
