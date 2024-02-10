@@ -102,37 +102,6 @@ num_trips %>%
 
 
 
-### From Gillian's Optimize.R file
-
-#' Read manually-defined activities
-#'
-#' @param folder of GeoJSON files named by Date_ID that include the number of clusters
-#' @return A nested tibble with person ID, date, and an SF points object.
-#' 
-#' 
-makeManualTable <- function(folder){
-  files <- dir(folder, pattern = ".geojson")
-  manualList <- lapply(files, function(file) {
-    st_read(file.path(folder, file)) %>%
-      st_transform(32612)
-  })
-  
-  tibble(manual = manualList,
-         name_of_file = file_path_sans_ext(files)) %>% 
-    separate(name_of_file, c("date", "id"), sep = c("_")) 
-}
-
-#' Function to join the manual_table with the algorithm_table by ID and date
-#'
-#'
-#' @param manual_table and algorithm_table targets
-#' @return alg_manual_table target which includes the id, date
-#' and the nested clusters column from both the manual table and algorithm table
-joinTables <- function(manual_table,cleaned_data) {
-  cleaned_data$date <- as.character(cleaned_data$date)
-  inner_join(manual_table, cleaned_data, by = c("date","id")) %>%
-    as_tibble() 
-}
 
 
 #' Function to return the error between algorithm and manual clusters
@@ -242,19 +211,6 @@ number_of_points_in_cluster <- function(manual_centers, algorithm_centers,
   
 }
 
-#' Function to minimize the RMSE between algorithm clusters and manual clusters
-#' and find the optimum values for each parameters that does so
-#'
-#'
-#' @param initial vector for params and the calculateError function to be minimized
-#' @return vector of optimized parameters 
-#' @details param[1,2,3,4] are eps, minpts,delta_t, and entr_t respectively
-
-optimize <- function(cleaned_manual_table, params = c(10,3,36000,1.3)) {
-  sannbox(par = params, fn = calculateError, cleaned_manual_table = cleaned_manual_table,
-          control = list(upper = c(100, 300, 24 * 3600, 4), lower = c(10,3,300, 1),
-                         maxit = 100, parscale = c(25,75,21600,1)))
-}
 
 optimize2 <- function(cleaned_manual_table, params = c(10,3,36000,1.3)) {
   optim(par = params, fn = calculateError, cleaned_manual_table = cleaned_manual_table,
