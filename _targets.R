@@ -11,6 +11,7 @@ threads <- future::availableCores() - 1
 source("R/Process GPS to Trips.R")
 source("R/Create Table.R")
 source("R/Estimate Models.R")
+source("R/optimization.R")
 
 # Set target-specific options such as packages.
 # Install gpsactivs from github with remotes::install_github("byu-transpolab/gpsactivs")
@@ -35,6 +36,19 @@ list(
   
   # Subset for TESTING
   # tar_target(subset, dplyr::slice_sample(read_in, prop = 0.01)),
+  
+  # Optimization ==========
+  # This set of targets deals with the optimization analysis. First,
+  # we load both the manually labeled and raw GPS data, and join them into 
+  # a common nested dataframe
+  tar_target(labeled_files, "data/labeled_geojson", format = "file"),
+  tar_target(unlabeled_files, "data/unlabeled_geojson", format = "file"),
+  tar_target(labeled_data, read_labeled_data(labeled_files)),
+  tar_target(unlabeled_data, read_unlabeled_data(unlabeled_files)),
+  tar_target(optim_frame, make_optim_frame(labeled_data, unlabeled_data)),
+  tar_target(results, optimize_sann(optim_frame, params = c(25,15,3000,1.75))),
+  
+  
   
   # SUMMARIZE THE RAW DATA
   tar_target(raw_data_summary, summarize_raw_data(read_in)),
