@@ -18,7 +18,8 @@ source("R/optimization.R")
 tar_option_set(packages = c("dplyr","tools", "hms", "lubridate", "gpsactivs",
                             "tidyverse", "leaflet", "sf", "purrr", "stringr",
                             "ggspatial", "data.table", "plotly", "future.apply",
-                            "viridis", "pomp", "stats", "osmdata"),
+                            "viridis", "pomp", "stats", "osmdata",
+                            "future", "furrr"),
                memory = "transient",
                garbage_collection = TRUE)
 
@@ -46,7 +47,11 @@ list(
   tar_target(labeled_data, read_labeled_data(labeled_files)),
   tar_target(unlabeled_data, read_unlabeled_data(unlabeled_files)),
   tar_target(optim_frame, make_optim_frame(labeled_data, unlabeled_data)),
+  
+  # then, we run the simulated annealing algorithm with a set of starting parameters
   tar_target(results, optimize_sann(optim_frame, params = c(25,15,3000,1.75))),
+  # and take the optimized parameters and apply them back to the frame
+  tar_target(predicted, apply_dbscante(optim_frame, params = results$par)),
   
   
   

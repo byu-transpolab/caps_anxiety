@@ -128,6 +128,19 @@ optimize_sann <- function(optim_frame, params = c(10,3,36000,1.3)) {
   results
 }
 
+#' Apply dbscan_te
+#' 
+#' @param frame A nested data frame with raw points
+#' @param params
+apply_dbscante <- function(frame, params = c(25, 15, 300, 1.75)){
+  future::plan(multisession, workers = 4)
+  frame$predicted <- frame$raw |> 
+    furrr::future_map(\(x) gpsactivs::dbscan_te(
+      x,  eps = params[1], minpts = params[2], delta_t = params[3], entr_t = params[4])
+    )
+  
+  frame
+}
 
 #' Calculate error between prediction and labeled points
 #' 
@@ -135,8 +148,9 @@ optimize_sann <- function(optim_frame, params = c(10,3,36000,1.3)) {
 #'   together.
 #' 
 calculate_activity_error <- function(optim_frame, params = c(25, 15, 300, 1.75)){
+  future::plan(multisession, workers = 4)
   optim_frame$predicted <- optim_frame$raw |> 
-    purrr::map(\(x) gpsactivs::dbscan_te(
+    furrr::future_map(\(x) gpsactivs::dbscan_te(
       x,  eps = params[1], minpts = params[2], delta_t = params[3], entr_t = params[4])
       )
   
@@ -157,7 +171,7 @@ calculate_activity_error <- function(optim_frame, params = c(25, 15, 300, 1.75))
   line <- c(params, error) |> set_names(c('eps', 'minpts', 'delta_t', 'entr_t', 'error')) |> 
     bind_rows()
   readr::write_delim(line, 
-              file="data/optim_scaled_2024-02-11.csv", delim = ",",
+              file="data/optim_scaled_2024-02-12.csv", delim = ",",
               append = TRUE)
   
   error
@@ -206,15 +220,9 @@ number_of_points_in_cluster <- function(labelled, predicted,
       agree = labeled == predict
     ) 
   
-  # calculate percent of FALSE agreement
-  stat <- table(agree$agree)
+  # calculate percent that agree
+  ptrue <- sum(agree$agree) / length(agree$agree)
   
-  # if there are no FALSE occurances, return FALSE percentage as 0 instead of
-  # the default percent TRUE = 1
-  if(stat[1] == nrow(agree)){
-    return(0)
-  }
-  
-  stat[1] / sum(stat)
+  1 - ptrue
 }
 
