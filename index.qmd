@@ -1,15 +1,39 @@
-# Research Goals
+# Introduction
 
-The mental health of young adults is a major public concern in much of the world,
-with increasing numbers and rates of young adult suicides. The causes of this
-public health concern are not straightforward, and multiple hypotheses have been
-proposed.
+Location-based services (LBS) data contain the spatial locations of many mobile
+phone users, but they do not independently describe travel behavior [@du2007]. A 
+classification of the LBS data from raw location points to semantic activities
+is potentially desirable for many reasons, including removing error from travel diaries, 
+making improving the quality of travel models, and providing insights into
+traveler decision processes [@bohte2009;@usyukov2017]. 
 
-Travel behavior is proposed as an element in individual mental health in a number
-of dimensions. First, participating in activities outside of the home may limi
+The the most basic attempts at classifying activities relied on heuristic, rule-based
+algorithms. 
+Common heuristics include the implied speed between consecutive points, or the randomness of 
+the direction between series of points [@deng2012].
+It can be difficult for conclusive rules to be made, however: it is difficult 
+to determine whether a person is moving slowly because they are waiting for a
+traffic signal or because they are doing an activity. 
+Decision trees can expand the number and types of rules that are applied [@lee2014],
+potentially increasing the accuracy of the classification, but 
+More advanced methods have been developed that rely on various 
+machine learning algorithms [@xiao2016], but these can be difficult to deploy at 
+smaller scales, or to develop when the data is not yet properly labeled.
+An intermediate approach of density-based clustering algorithms [@duan2007; @luo2017;@gong2018] 
+shows some promise for
+particular applications where a neural network may be unwieldy or difficult to
+train, but where classifying activities from location points is nonetheless
+an important issue. But applying these methods requires estimating or asserting
+particular parameters that may not be immediately intuitive.
 
-In this research, we explore a unique dataset of young adults who have expressed
-suicide ideation in professional therapy contexts. Using data from a mobile 
-application revealing the individual's moods and travel behaviors over a 
-six-month period, we examine the relationship between travel behavior and
-expressed suicidal ideation.
+In this research, we develop a method to evaluate the accuracy of activity locations
+classified by a density-based spatial clustering with additional noise and time entropy
+(DBSCAN-TE) algorithm. We calibrate the parameters of this algorithm by optimizing 
+the error observed against manually-labeled activity locations.
+
+The paper proceeds as follows. A Methodology section describes the DBSCAN-TE algorithm,
+our error function, and the data we use in the calibration. A Results section describes
+the outcomes of the calibration process, alongside an application of the calibrated
+parameters to the larger, unlabeled data. A Conclusions section describes the
+contributions and limitations of this work and proposes associated future research.
+
