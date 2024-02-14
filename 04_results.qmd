@@ -1,1 +1,33 @@
 ## Applications
+```{r setup, file = "R/chapter_start.R", include = FALSE}
+# a number of commands need to run at the beginning of each chapter. This
+# includes loading libraries that I always use, as well as options for 
+# displaying numbers and text.
+```
+
+```{r setup2, include = FALSE}
+# Other packages ------
+# These are packages that get used in this chapter but aren't part of the default set.
+```
+
+
+```{r optim}
+res <- read_csv("data/optim_scaled_2024-02-12.csv", col_names = c('eps', 'minpts', 'delta_t', 'entr_t', 'error')) |> 
+  mutate(iteration = row_number()) 
+
+res |> 
+  pivot_longer(-iteration) |> 
+  ggplot(aes(x = iteration, y = value)) + 
+  geom_line() + 
+  facet_wrap(~name, scales = "free_y")
+```
+
+```{r}
+final <- res |> filter(iteration == max(iteration)) 
+```
+
+Final values are `r final$error/13`
+
+
+
+

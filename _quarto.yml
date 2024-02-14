@@ -3,7 +3,7 @@ project:
 
 # This defines the .qmd files that are in your document
 book:
-  title: "Exploring the link between travel behavior and mental health."
+  title: "Classifying GPS Points to Daily Activities using Simultaneously Optimized DBSCAN-TE Parameters."
   author:
     - name: Gregory S. Macfarlane
       orcid: 0000-0003-3999-7584
@@ -16,12 +16,12 @@ book:
           state: UT
           country: USA
           postal-code: 84602
-    - name: Emily Blanchard
-      email: emmykae@byu.edu
-      affiliations:
-        - ref: byuce
     - name: Gillian Martin
       email: gregmacfarlane@gmail.com
+      affiliations:
+        - ref: byuce
+    - name: Emily Blanchard
+      email: emmykae@byu.edu
       affiliations:
         - ref: byuce
     - name: Jared Nielsen
@@ -45,8 +45,22 @@ book:
     - references.qmd
   keyword: "active mobility, life-stages, and quality of life"
   abstract: |
+    Location-based services data collected from mobile phones represents a potentially
+    powerful source of travel behavior data, but transforming the raw location data
+    into semantic activities --- where and when activities occurred --- is non-trivial.
+    In particular, existing algorithms to label activities require multiple parameters
+    that require calibration to a particular dataset. In this research, we apply a 
+    simulated annealing optimization procedure to identify the values of four parameters
+    used in a density-based spatial clustering with additional noise and time entropy
+    (DBSCAN-TE) algorithm. We develop a spatial accuracy scoring function to use 
+    in the calibration methodology, and apply the calibrated parameters to a complete
+    dataset of individuals participating in a psychological study, revealing a significant
+    relationship between the number of daily activities and neurotypology.
 
-bibliography: groupreferences.bib
+
+
+bibliography: [byu-capsanxiety.bib, packages.bib]
+csl: ieee-with-url.csl
 
 format:
   html:
@@ -54,6 +68,7 @@ format:
   ieee-conference-pdf:
     include-in-header: 
       - packages.tex
+    natbib: false
     keep-tex: true
     top-level-division: section
 
