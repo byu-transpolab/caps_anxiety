@@ -275,33 +275,6 @@ summarize_prepared_data <- function(processed) {
 }
 
 
-#' Compute activity locations for one day
-#'
-#' @param df sf points object containing points and timepoints of GPS points for
-#'   a single individual in a single day.
-#' @param params a vector of parameters passed to the `gpsactivs::dbscan_te()`
-#'   function.
-#' @return clustered_data An sf points object with labeled and ordered imputed 
-#'   activities, including start and end times.
-#'   
-#' @details param[1,2,3,4] are eps, minpts, delta_t, and entr_t respectively.
-#'   This function is a convenience wrapper to the `gpsactivs::dbscan_te()` 
-#'   function; more information can be found there.
-
-makeClusters_1T <- function(df, params) {
-  gpsactivs::dbscan_te(df, eps = params[1], minpts = params[2],
-                       delta_t = params[3], entr_t = params[4])
-}
-
-makeClusters <- function(cleaned_manual_table, params) {
-  print(params)
-  cleaned_manual_table %>%
-    ungroup() %>%
-    # rename(timestamp = timestamp_new) %>% 
-    mutate(algorithm = purrr::map(cleaned, makeClusters_1T, 
-                           params = params))
-}
-
 
 #' Function to Add Number of Trips
 #'

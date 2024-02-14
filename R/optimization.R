@@ -112,20 +112,56 @@ make_optim_frame <- function(labeled_data, unlabeled_data) {
 #' 
 #' @param cleaned_table
 #' @param params initial vector for params and the calculateError function to be minimized
+#' @param outfile file to place output estimates
 #' @return vector of optimized parameters 
 #' @details param[1,2,3,4] are eps, minpts,delta_t, and entr_t respectively
 #' Function to minimize the RMSE between algorithm clusters and manual clusters
 #' and find the optimum values for each parameters that does so
-
-optimize_sann <- function(optim_frame, params = c(10,3,36000,1.3)) {
-  results <- pomp::sannbox(par = params, 
-                           fn = calculate_activity_error, 
-                           optim_frame = optim_frame,
-                           control = list(upper = c(100, 300, 12 * 3600, 4), 
-                                          lower = c( 10,   3,       300, 1),
-                                          maxit = 100, 
-                                          parscale = c(25, 75,     3600, 1)))
+#' 
+#' @examples
+#' tar_pattern(
+#'  cross(radius, minpts, deltat, entrop), 
+#'  radius = 4,
+#'  minpts = 4,
+#'  deltat = 4,
+#'  entrop = 4
+#' )
+#' 
+#' 
+optimize_sann <- function(optim_frame, radius, minpts, deltat, entrop) {
   
+  # put the parameters back into the vector
+  params <-  c(radius, minpts, deltat, entrop)
+  pnames <- c("radius", "minpts", "deltat", "entrop")
+  
+  # get a file to store the intermediate outputs of the optimization,
+  # and write the initial parameters + column header
+  outfile = tempfile(fileext = ".csv")
+  error = NA
+  line <- c(params, error) |> set_names(c(pnames, 'error')) |> 
+    bind_rows()
+  readr::write_delim(line,  file=outfile, delim = ",")
+  
+  
+  # execute the simulated annealing optimization
+  # the calculate_activity_error() function will write the parameter values
+  # and total error with each iteration
+  results <- pomp::sannbox(par = params,
+                           fn = calculate_activity_error,
+                           optim_frame = optim_frame,
+                           outfile = outfile,
+                           control = list(
+                             upper = c(100, 300, 12 * 3600, 4),
+                             lower = c( 10,   3,       300, 1),
+                             maxit = 200,
+                             parscale = c(25, 75,     3600, 1)))
+  
+  # read in the temporary file that contains the path of the annealing 
+  # optimization
+  param_list <- read_csv(outfile) |> 
+    mutate(iteration = row_number()-1) 
+  
+  results$param_list <- param_list
   results
 }
 
@@ -134,7 +170,8 @@ optimize_sann <- function(optim_frame, params = c(10,3,36000,1.3)) {
 #' @param frame A nested data frame with raw points
 #' @param params
 apply_dbscante <- function(frame, params = c(25, 15, 300, 1.75)){
-  future::plan(multisession, workers = 4)
+  nthreads <- 
+  future::plan(multisession, workers = future::availableCores() - 1)
   frame$predicted <- frame$raw |> 
     furrr::future_map(\(x) gpsactivs::dbscan_te(
       x,  eps = params[1], minpts = params[2], delta_t = params[3], entr_t = params[4])
@@ -148,8 +185,9 @@ apply_dbscante <- function(frame, params = c(25, 15, 300, 1.75)){
 #' @param optim_frame A dataframe with labeled clusters and raw gps points joined
 #'   together.
 #' 
-calculate_activity_error <- function(optim_frame, params = c(25, 15, 300, 1.75)){
-  future::plan(multisession, workers = 4)
+calculate_activity_error <- function(optim_frame, params = c(25, 15, 300, 1.75),
+                                     outfile){
+  future::plan(multisession, workers = future::availableCores() - 1)
   optim_frame$predicted <- optim_frame$raw |> 
     furrr::future_map(\(x) gpsactivs::dbscan_te(
       x,  eps = params[1], minpts = params[2], delta_t = params[3], entr_t = params[4])
@@ -171,9 +209,7 @@ calculate_activity_error <- function(optim_frame, params = c(25, 15, 300, 1.75))
   #' remember to change the name of the file for each kind of optimization
   line <- c(params, error) |> set_names(c('eps', 'minpts', 'delta_t', 'entr_t', 'error')) |> 
     bind_rows()
-  readr::write_delim(line, 
-              file="data/optim_scaled_2024-02-12.csv", delim = ",",
-              append = TRUE)
+  readr::write_delim(line,  file=outfile, delim = ",", append = TRUE)
   
   error
 }

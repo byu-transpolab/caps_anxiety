@@ -23,6 +23,11 @@ tar_option_set(packages = c("dplyr","tools", "hms", "lubridate", "gpsactivs",
                memory = "transient",
                garbage_collection = TRUE)
 
+# set a seed for the dynamic branching (see "Optimization")
+# https://books.ropensci.org/targets/random.html#reproducibility
+tar_option_set(seed = 3)
+
+
 # List of target objects
 list(
   
@@ -48,11 +53,24 @@ list(
   tar_target(unlabeled_data, read_unlabeled_data(unlabeled_files)),
   tar_target(optim_frame, make_optim_frame(labeled_data, unlabeled_data)),
   
-  # then, we run the simulated annealing algorithm with a set of starting parameters
-  tar_target(results, optimize_sann(optim_frame, params = c(25,15,3000,1.75))),
-  # and take the optimized parameters and apply them back to the frame
-  tar_target(predicted, apply_dbscante(optim_frame, params = results$par)),
+  # Run the simulated annealing algorithm with a set of starting parameters
+  # we want to start the process in multiple different places, so we are going
+  # to use target's dynamic branching, described in https://books.ropensci.org/targets/dynamic.html#example
+  # first, generate a handful of starting values for each parameter
+  tar_target(radius, sample(10:100, 3)),
+  tar_target(minpts, sample(3:300, 3)),
+  tar_target(deltat, sample(300:(12*3600), 3)),
+  tar_target(entrop, sample(seq(1, 4, by = 0.2), 2)),
   
+  # The `cross` function makes a set of parameters by combining all combinations of
+  # the drawn values. So targets will run optimize_sann as many times as you 
+  # give sets of parameters for. In this case, I am presently running 3*3*3*2 = 54
+  # different optimization
+  tar_target(sann, 
+             optimize_sann(optim_frame, radius, minpts,  
+                           deltat, entrop),
+             pattern = cross(radius, minpts, deltat, entrop),
+  ),
   
   
   # SUMMARIZE THE RAW DATA
