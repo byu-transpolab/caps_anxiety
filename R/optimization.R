@@ -80,14 +80,15 @@ read_unlabeled_data <- function(directory){
 read_labeled_data <- function(directory){
   
   # List of shp file paths 
-  file_list <- list.files(directory, pattern = ".shp")
+  file_list <- list.files(directory, pattern = ".geojson")
   
   # Loop through each file
   lapply(file_list, function(file){
     sf_data <- sf::st_read(file.path(directory, file), quiet = TRUE) |> 
-      sf::st_transform(32612)
+      sf::st_transform(32612) |> 
+      sf::st_centroid()
   }) |> 
-    purrr::set_names(gsub(".shp", "", file_list)) |> 
+    purrr::set_names(gsub(".geojson", "", file_list)) |> 
     dplyr::bind_rows(.id = "referenceid") |> 
     tidyr::nest(.by = referenceid) |> 
     dplyr::rename(labeled = data)
@@ -102,7 +103,7 @@ read_labeled_data <- function(directory){
 #'   column of gps points, ready for optimization analysis.
 #' 
 make_optim_frame <- function(labeled_data, unlabeled_data) {
-  left_join(labeled_data, unlabeled_data, by = "referenceid")
+  dplyr::inner_join(labeled_data, unlabeled_data, by = "referenceid") 
 }
 
 

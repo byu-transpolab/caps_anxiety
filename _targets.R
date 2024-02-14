@@ -42,7 +42,7 @@ list(
   # This set of targets deals with the optimization analysis. First,
   # we load both the manually labeled and raw GPS data, and join them into 
   # a common nested dataframe
-  tar_target(labeled_files, "data/labeled_geojson", format = "file"),
+  tar_target(labeled_files, "data/labeled_pgons", format = "file"),
   tar_target(unlabeled_files, "data/unlabeled_geojson", format = "file"),
   tar_target(labeled_data, read_labeled_data(labeled_files)),
   tar_target(unlabeled_data, read_unlabeled_data(unlabeled_files)),
