@@ -119,13 +119,6 @@ make_optim_frame <- function(labeled_data, unlabeled_data) {
 #' and find the optimum values for each parameters that does so
 #' 
 #' @examples
-#' tar_pattern(
-#'  cross(radius, minpts, deltat, entrop), 
-#'  radius = 4,
-#'  minpts = 4,
-#'  deltat = 4,
-#'  entrop = 4
-#' )
 #' 
 #' 
 optimize_sann <- function(optim_frame, radius, minpts, deltat, entrop) {
@@ -153,7 +146,7 @@ optimize_sann <- function(optim_frame, radius, minpts, deltat, entrop) {
                            control = list(
                              upper = c(100, 300, 12 * 3600, 4),
                              lower = c( 10,   3,       300, 1),
-                             maxit = 200,
+                             maxit = 100,
                              parscale = c(25, 75,     3600, 1)))
   
   # read in the temporary file that contains the path of the annealing 
@@ -167,8 +160,10 @@ optimize_sann <- function(optim_frame, radius, minpts, deltat, entrop) {
 
 #' Apply dbscan_te
 #' 
-#' @param frame A nested data frame with raw points
-#' @param params
+#' @param frame A nested data frame with a list vector called "$raw" to 
+#' @param params a vector of parameters for the dbscan-te algorithm.
+#' 
+#' 
 apply_dbscante <- function(frame, params = c(25, 15, 300, 1.75)){
   nthreads <- 
   future::plan(multisession, workers = future::availableCores() - 1)
