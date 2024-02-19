@@ -1,4 +1,4 @@
-## Applications
+## Results
 ```{r setup, file = "R/chapter_start.R", include = FALSE}
 # a number of commands need to run at the beginning of each chapter. This
 # includes loading libraries that I always use, as well as options for 
@@ -8,26 +8,41 @@
 ```{r setup2, include = FALSE}
 # Other packages ------
 # These are packages that get used in this chapter but aren't part of the default set.
+theme_set(theme_bw())
 ```
 
 
-```{r optim}
-res <- read_csv("data/optim_scaled_2024-02-12.csv", col_names = c('eps', 'minpts', 'delta_t', 'entr_t', 'error')) |> 
-  mutate(iteration = row_number()) 
+```{r sann_results}
+tar_load(sann_results)
+```
 
-res |> 
-  pivot_longer(-iteration) |> 
-  ggplot(aes(x = iteration, y = value)) + 
-  geom_line() + 
+We ran the simulated annealing algorithm for 1000 iterations each, beginning with 
+`r nrow(sann_results$params)` randomly sampled sets of starting values. 
+@fig-sann-process shows the path of the parameters for each of the starting 
+sets --- as well as the measure of error --- across the 100 iterations.
+None of the paths seem to converge to a single value 
+
+```{r sann_process}
+#| label: fig-sann-process
+#| fig-cap: "Parameter values across simulated annealing iterations."
+sann_results$run_list |> 
+  pivot_longer(cols = c(-run, -iteration)) |> 
+  ggplot(aes(x = iteration, y = value, group = run)) + 
+  geom_line(alpha = 0.2) +
   facet_wrap(~name, scales = "free_y")
 ```
 
-```{r}
-final <- res |> filter(iteration == max(iteration)) 
+
+```{r sann_outcomes}
+#| label: fig-sann-outcomes
+#| fig-cap: "Distribution of lowest error simulated annealing parameters."
+sann_results$params |> 
+  filter(error < 1.5) |> 
+  select(-error) |> 
+  pivot_longer(cols = c(-run)) |> 
+  ggplot(aes(x = value)) +
+  geom_density() + 
+  facet_wrap(~name, scales = "free")
 ```
-
-Final values are `r final$error/13`
-
-
 
 

@@ -107,6 +107,44 @@ make_optim_frame <- function(labeled_data, unlabeled_data) {
 }
 
 
+#' Clean up and process SANN results
+#' 
+#' @param sann Results of SANN optimization
+process_sann_results <- function(sann){
+  
+  # get the names of the runs
+  scenarios <- sann[grepl("_convergence", names(sann))] |> 
+    names() |> 
+    str_remove("_convergence")
+  
+  run_list <- sann[str_c(scenarios, "_param_list")] |> 
+    set_names(scenarios) |> 
+    bind_rows(.id = "run")
+  
+  params <- lapply(sann[str_c(scenarios, "_par")], function(x){
+    x |>  
+      set_names(c("radius", "minpts", "deltat", "entrop"))
+  }) |> 
+    bind_rows(.id = "run")
+  
+  params$error <- sann[str_c(scenarios, "_value")] |> 
+    unlist()
+  
+  mean_params <- params |> 
+    select(radius:error) |> 
+    summarise(across(radius:entrop, ~ weighted.mean(.x, 1/error)))
+  
+  
+  list(
+    mean_params = mean_params,
+    params = params,
+    run_list = run_list
+  )
+}
+
+#' get
+
+
 
 #' Identify optimal parameters
 #' 

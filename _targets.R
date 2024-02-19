@@ -64,13 +64,15 @@ list(
   
   # The `cross` function makes a set of parameters by combining all combinations of
   # the drawn values. So targets will run optimize_sann as many times as you 
-  # give sets of parameters for. In this case, I am presently running 3*3*3*2 = 54
-  # different optimization
+  # give sets of parameters for. In this case, I am presently running 
+  # 3*3*3*2 = 54
+  # different optimizations
   tar_target(sann, 
              optimize_sann(optim_frame, radius, minpts,  
                            deltat, entrop),
              pattern = cross(radius, minpts, deltat, entrop),
   ),
+  tar_target(sann_results, process_sann_results(sann)),
   
   
   # SUMMARIZE THE RAW DATA
