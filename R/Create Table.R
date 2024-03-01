@@ -147,7 +147,7 @@ summarize_survey_data <- function(survey) {
 #' survey and activities data.
 
 combine_data <- function(survey, activities){
-  all_data <- right_join(survey, activities, by = c('userId', 'activityDay'))
+  all_data <- left_join(survey, activities, by = c('userId', 'activityDay'))
   return(all_data)
 }
 
