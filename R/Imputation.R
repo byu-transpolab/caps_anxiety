@@ -1,6 +1,7 @@
 library(zoo)
 library(tidyverse)
 library(ggplot2)
+library(targets)
 
 tar_load(complete_table)
 View(complete_table)
@@ -35,17 +36,18 @@ numTrips_plot <-filtered_complete_table %>%
 
 
 relevant_days <- filtered_complete_table %>%
-  mutate(numTrips = ifelse(is.na(numTrips), 0, numTrips)) %>%
+  # mutate(numTrips = ifelse(is.na(numTrips), 0, numTrips)) %>%
   group_by(userId) %>%
   mutate(
     sev_day_avg = zoo::rollapply(numTrips, width = 7, partial = TRUE, FUN = function(x) ifelse(all(is.na(x)), NA, mean(x, na.rm = TRUE)), align = "left", fill = NA),
-    sev_day_sum = zoo::rollapply(numTrips, width = 7, partial = TRUE, FUN = sum, align = "left", fill = NA),
+    sev_day_sum = zoo::rollapply(numTrips, width = 7, partial = TRUE, FUN = function(x) sum(x, na.rm = TRUE), align = "left", fill = NA),
     fourteen_day_avg = zoo::rollapply(numTrips, width = 14, partial = TRUE, FUN = function(x) ifelse(all(is.na(x)), NA, mean(x, na.rm = TRUE)), align = "left", fill = NA),
-    fourteen_day_sum = zoo::rollapply(numTrips, width = 14, partial = TRUE, FUN = sum, align = "left", fill = NA),
+    fourteen_day_sum = zoo::rollapply(numTrips, width = 14, partial = TRUE, FUN = function(x) sum(x, na.rm = TRUE), align = "left", fill = NA),
     thirty_day_avg = zoo::rollapply(numTrips, width = 30, partial = TRUE, FUN = function(x) ifelse(all(is.na(x)), NA, mean(x, na.rm = TRUE)), align = "left", fill = NA),
-    thirty_day_sum = zoo::rollapply(numTrips, width = 30, partial = TRUE, FUN = sum, align = "left", fill = NA)
+    thirty_day_sum = zoo::rollapply(numTrips, width = 30, partial = TRUE, FUN = function(x) sum(x, na.rm = TRUE), align = "left", fill = NA)
   ) %>%
-  ungroup() 
+  ungroup() %>% 
+  arrange(userId, date)
 
 
 sev_day_avg_plot <- relevant_days %>%
