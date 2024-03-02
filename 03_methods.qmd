@@ -103,7 +103,7 @@ objective function we will try to minimize in our calibration.
 To conduct the optimization, we use a simulated annealing algorithm encoded in
 the `sannbox` function for R [@pomp]. Simulated annealing is particularly useful
 in finding global optima in the presence of large numbers of local optima. The
-term “annealing” refers to the cooling of metal in thermodynamics [34]. Hence,
+term “annealing” refers to the cooling of metal in thermodynamics [@bertsimas1993]. Hence,
 simulated annealing uses the objective function of an optimization problem
 instead of the energy of a metal. The algorithm is given an initial set of
 parameters and then selects a random move, or random changes in all the given
@@ -122,11 +122,13 @@ different units --- the gap between time stamps in separate activities
 $\Delta T$  may be many thousands of seconds while the entropy parameters $\tau$ is
 typically a small number between 1 and 5 [@gong2018]. As such, we scale the
 parameters in the search algorithm so that the steps made in all parameters are
-essentially the same. The starting, lower bound, upper bound, and scale parameters are all given in @tbl-constraints.
+essentially the same. The starting, lower bound, upper bound, and scale
+parameters are all given in @tbl-constraints. 
 
 ```{r tbl-constraints}
 #| label: tbl-constraints
 #| tbl-cap: Parameter Search Boundaries
+#| tbl-env: "table*"
 tb <- tibble(`Parameter` = c("$\\varepsilon$", "$\\rho$", 
                              "$\\Delta T$", "$\\tau$"),
              `Definition` = c(
@@ -144,7 +146,6 @@ library(kableExtra)
 kbl(tb, booktabs = TRUE, escape = FALSE) |> 
   kable_styling()
 ```
-
 
 
 
