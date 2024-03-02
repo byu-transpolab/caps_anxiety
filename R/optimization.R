@@ -185,7 +185,7 @@ optimize_sann <- function(optim_frame, radius, minpts, deltat, entrop) {
                            control = list(
                              upper = c(100, 300, 12 * 3600, 4),
                              lower = c( 10,   3,       300, 1),
-                             maxit = 100,
+                             maxit = 5000,
                              parscale = c(25, 75,     3600, 1)))
   
   # read in the temporary file that contains the path of the annealing 

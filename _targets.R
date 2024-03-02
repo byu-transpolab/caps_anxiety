@@ -57,9 +57,9 @@ list(
   # we want to start the process in multiple different places, so we are going
   # to use target's dynamic branching, described in https://books.ropensci.org/targets/dynamic.html#example
   # first, generate a handful of starting values for each parameter
-  tar_target(radius, sample(10:100, 3)),
-  tar_target(minpts, sample(3:300, 3)),
-  tar_target(deltat, sample(300:(12*3600), 3)),
+  tar_target(radius, sample(10:100, 1)),
+  tar_target(minpts, sample(3:300, 1)),
+  tar_target(deltat, sample(300:(12*3600), 2)),
   tar_target(entrop, sample(seq(1, 4, by = 0.2), 2)),
   
   # The `cross` function makes a set of parameters by combining all combinations of
