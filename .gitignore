@@ -21,14 +21,12 @@ elsarticle-harv.bst
 *.run.xml
 *.synctex.gz
 *.tex
-
 data/mental_surveys/
 data/caps_data/
-
 Term Project Proposal.Rmd
 Term-Project-Proposal.html
-
 data/unlabeled_csv/
 data/unlabeled_geojson/
 data/labeled_geojson/
 data/labeled_pgons/
+cache

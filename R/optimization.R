@@ -131,6 +131,7 @@ process_sann_results <- function(sann){
     unlist()
   
   mean_params <- params |> 
+    filter(error < 1.5) |> 
     select(radius:error) |> 
     summarise(across(radius:entrop, ~ weighted.mean(.x, 1/error)))
   

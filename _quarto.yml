@@ -60,17 +60,18 @@ book:
 
 
 bibliography: [byu-capsanxiety.bib, packages.bib]
-csl: ieee-with-url.csl
+cite-method: citeproc
+csl: apa.csl
 
 format:
   html:
     theme: cosmo
-  ieee-conference-pdf:
+  elsevier-pdf:
     include-in-header: 
       - packages.tex
-    natbib: false
+    journal:
+      name: Transportation Research Part A
     keep-tex: true
     top-level-division: section
-
-editor: visual
+    toc: false
 
