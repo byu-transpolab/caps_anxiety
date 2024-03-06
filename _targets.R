@@ -106,9 +106,12 @@ list(
 
   # Make a final table with all of the data
   tar_target(complete_table, combine_data(survey_data, activity_types)),
+  
+  # Impute the trip data to render a more complete dataset
+  tar_target(imputed_trips, imputation(complete_table)),
 
   # Keep rows that have survey responses
-  tar_target(final_table, clean_final_table(complete_table)),
+  tar_target(final_table, clean_final_table(imputed_trips)),
   
   # SUMMARIZE THE FINAL DATA
   tar_target(final_data_summary, summarize_final_data(final_table)),
