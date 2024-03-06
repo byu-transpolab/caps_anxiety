@@ -402,3 +402,34 @@ summarize_trip_data <- function(activities) {
     summarize(total_activityDays = n_distinct(activityDay))
 }
 
+
+#' Imputation of Averages
+#'
+#' This function performs imputation on a dataset containing trips and activities. It calculates rolling averages for different time windows and for various activity types.
+#'
+#' @param trips_activities A tibble containing user trips and activities data.
+#' @return A tibble with imputed averages for specified time windows and activity types.
+
+imputation <- function(trips_activities) {
+  imputed_trips <- trips_activities %>% 
+    group_by(userId) %>%
+    mutate(
+      sev_day_avg = zoo::rollapply(numTrips, width = 7, partial = TRUE, FUN = function(x) ifelse(all(is.na(x)), NA, mean(x, na.rm = TRUE)), align = "left", fill = NA),
+      fourteen_day_avg = zoo::rollapply(numTrips, width = 14, partial = TRUE, FUN = function(x) ifelse(all(is.na(x)), NA, mean(x, na.rm = TRUE)), align = "left", fill = NA),
+      thirty_day_avg = zoo::rollapply(numTrips, width = 30, partial = TRUE, FUN = function(x) ifelse(all(is.na(x)), NA, mean(x, na.rm = TRUE)), align = "left", fill = NA),
+      sev_day_avg_park = zoo::rollapply(park, width = 7, partial = TRUE, FUN = function(x) ifelse(all(is.na(x)), NA, mean(x, na.rm = TRUE)), align = "left", fill = NA),
+      fourteen_day_avg_park = zoo::rollapply(park, width = 14, partial = TRUE, FUN = function(x) ifelse(all(is.na(x)), NA, mean(x, na.rm = TRUE)), align = "left", fill = NA),
+      thirty_day_avg_park = zoo::rollapply(park, width = 30, partial = TRUE, FUN = function(x) ifelse(all(is.na(x)), NA, mean(x, na.rm = TRUE)), align = "left", fill = NA),
+      sev_day_avg_grocery = zoo::rollapply(grocery, width = 7, partial = TRUE, FUN = function(x) ifelse(all(is.na(x)), NA, mean(x, na.rm = TRUE)), align = "left", fill = NA),
+      fourteen_day_avg_grocery = zoo::rollapply(grocery, width = 14, partial = TRUE, FUN = function(x) ifelse(all(is.na(x)), NA, mean(x, na.rm = TRUE)), align = "left", fill = NA),
+      thirty_day_avg_grocery = zoo::rollapply(grocery, width = 30, partial = TRUE, FUN = function(x) ifelse(all(is.na(x)), NA, mean(x, na.rm = TRUE)), align = "left", fill = NA),
+      sev_day_avg_library = zoo::rollapply(library, width = 7, partial = TRUE, FUN = function(x) ifelse(all(is.na(x)), NA, mean(x, na.rm = TRUE)), align = "left", fill = NA),
+      fourteen_day_avg_library = zoo::rollapply(library, width = 14, partial = TRUE, FUN = function(x) ifelse(all(is.na(x)), NA, mean(x, na.rm = TRUE)), align = "left", fill = NA),
+      thirty_day_avg_library = zoo::rollapply(library, width = 30, partial = TRUE, FUN = function(x) ifelse(all(is.na(x)), NA, mean(x, na.rm = TRUE)), align = "left", fill = NA)
+    ) %>%
+    ungroup() %>% 
+    arrange(userId, date)
+  
+  return(imputed_trips)
+}
+
