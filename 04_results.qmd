@@ -1,48 +1,140 @@
-## Results
+## Findings
 ```{r setup, file = "R/chapter_start.R", include = FALSE}
 # a number of commands need to run at the beginning of each chapter. This
 # includes loading libraries that I always use, as well as options for 
 # displaying numbers and text.
 ```
 
-```{r setup2, include = FALSE}
+```{r setup2, include = FALSE, cache = FALSE}
 # Other packages ------
 # These are packages that get used in this chapter but aren't part of the default set.
 theme_set(theme_bw())
+
+modes <- function(d){
+    i <- which(diff(sign(diff(d$y))) < 0) + 1
+    data.frame(x = d$x[i], y = d$y[i])
+}
+
+
+get_mode <- function(d){
+    i <- which.max(d$y)
+    d$x[i]
+}
+
 ```
 
 
 ```{r sann_results}
+#| label: tbl-sann-results
+#| tbl-cap: Simulated Annealing Results
 tar_load(sann_results)
+pt <- bind_rows(
+  sann_results$params |> 
+    mutate(run = as.character(1:4)),
+  sann_results$params |> 
+    ungroup() |> 
+    summarise(across(radius:entrop, ~mean(.))) |> 
+    mutate(run = "MEAN")
+) |> 
+  rename(
+    `$\\rho$`     = minpts,
+    `$\\Delta T$` = deltat,
+    `$\\varepsilon$` = radius,
+    `$\\tau$` = entrop,
+    `Error` = error,
+    `Run` = run
+  )
+kbl(pt, booktabs = TRUE, escape = FALSE, digits = 2) |> 
+  kable_styling()
 ```
 
-We ran the simulated annealing algorithm for 1000 iterations each, beginning with 
-`r nrow(sann_results$params)` randomly sampled sets of starting values. 
-@fig-sann-process shows the path of the parameters for each of the starting 
-sets --- as well as the measure of error --- across the 100 iterations.
-None of the paths seem to converge to a single value 
+We ran the simulated annealing algorithm for 5000 iterations each, beginning with 
+`r nrow(sann_results$params)` randomly sampled sets of starting values. @tbl-sann-results
+shows the results of each of the four runs alongside a mean value
+of the four different results. For most parameters, there is some level of agreement
+on the scale of the parameters, with three of the four runs agreeing on at least
+the first or second significant digit. Which run is off from the others differs,
+however, as run 3 has an anomalous value of $\rho$, and run four is somewhat
+different in its $\tau$ parameter.
 
-```{r sann_process}
-#| label: fig-sann-process
-#| fig-cap: "Parameter values across simulated annealing iterations."
+```{r sann-function}
+#| label: fig-sann-function
+#| fig-cap: "Value of objective function, averaged across last 1000 iterations."
+#| fig-width: 9
+#| fig-height: 5
 sann_results$run_list |> 
-  pivot_longer(cols = c(-run, -iteration)) |> 
-  ggplot(aes(x = iteration, y = value, group = run)) + 
-  geom_line(alpha = 0.2) +
-  facet_wrap(~name, scales = "free_y")
+  filter(error< 1.5) |> 
+  mutate(
+    run = factor(run, labels = 1:4),
+    radius = plyr::round_any(radius, 5),
+    minpts = plyr::round_any(minpts, 10)
+  ) |> 
+  group_by(run, radius, minpts) |> 
+  summarise(Error = mean(error)) |> 
+  ungroup() |> 
+  ggplot(aes(x = minpts, fill = Error, y = radius)) + 
+  geom_tile()  +
+  facet_wrap(~run) +
+  scale_fill_viridis_c(option = "inferno", direction = -1) + 
+  xlab("$\\rho$ - Minimum points") + 
+  ylab("$\\varepsilon$ - Radius")
 ```
 
-
-```{r sann_outcomes}
+```{r sann-outcomes, warning=FALSE}
 #| label: fig-sann-outcomes
 #| fig-cap: "Distribution of lowest error simulated annealing parameters."
-sann_results$params |> 
-  filter(error < 1.5) |> 
-  select(-error) |> 
-  pivot_longer(cols = c(-run)) |> 
-  ggplot(aes(x = value)) +
+#| fig-width: 9
+#| fig-height: 5
+ethld <- 1.31
+sr <- sann_results$run_list|> 
+  filter(error < ethld) |> 
+  select(-iteration) 
+
+# get modes
+dl <- sr |> 
+  select(-run) |> 
+  pivot_longer(radius:entrop) |> 
+  group_by(name) |> 
+  nest()  |> 
+  mutate(
+    density = purrr::map(data, \(x) density(x$value, weights = 1/(x$error^2))),
+    max     = purrr::map_dbl(density, \(d) get_mode(d)),
+    modes   = purrr::map(density, \(d) modes(d))
+  )
+
+sr |> 
+  rename(
+    `$\\rho$`     = minpts,
+    `$\\Delta T$` = deltat,
+    `$\\varepsilon$` = radius,
+    `$\\tau$` = entrop
+  ) |> 
+  pivot_longer(cols = c(-run, -error)) |> 
+  ggplot(aes(x = value, weight = 1/(error^2))) +
   geom_density() + 
   facet_wrap(~name, scales = "free")
 ```
 
+@fig-sann-function shows the mean value of the objective function 
+across the parameter space of $(\rho, \varepsilon)$. If the cell is blank, then
+it was not used in that run of the simulated annealing algorithm, or its error
+was greater than 1.5. This figure only shows two dimensions of the four in the
+objective function, so there will be some variance at the same $(\rho, \varepsilon)$ 
+coordinate. Nevertheless, there is a consistently lower error for small values of
+$\varepsilon$ and around $\rho=200$.
+@fig-sann-outcomes shows a weighted density distribution of each of the four
+parameters across all four runs with a resultant error of less than `r ethld`. 
+The results of `r nrow(sr)` runs are included in this figure.
+The distribution is weighted by the square of the inverse error, $w_j = 1/E_j^2$
+with $j$ an index for the optimization iteration.
+Other weight constructions did not result in substantially different interpretations of 
+this figure. The modes of this density plot are a strong candidate for the preferred
+parameter values
+$\{\varepsilon = `r dl$max[1]` \mathrm{\ m}, \rho = `r dl$max[2]`\mathrm{\ points}, \Delta T = `r dl$max[3]`\mathrm{\ s}, \tau = `r dl$max[4]`\}$
+
+A different error function could be developed that includes not only the location
+but also the duration of activities, as well as their sequence in a time-space 
+framework. This would improve the accuracy of the calibration but also 
+increase the difficulty of the labeling task. Similarly, data with a different
+temporal or spatial resolution may lead to different optimal parameters.
 
