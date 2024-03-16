@@ -48,14 +48,13 @@ kbl(pt, booktabs = TRUE, escape = FALSE, digits = 2) |>
   kable_styling()
 ```
 
-We ran the simulated annealing algorithm for 5000 iterations each, beginning with 
-`r nrow(sann_results$params)` randomly sampled sets of starting values. @tbl-sann-results
-shows the results of each of the four runs alongside a mean value
-of the four different results. For most parameters, there is some level of agreement
-on the scale of the parameters, with three of the four runs agreeing on at least
-the first or second significant digit. Which run is off from the others differs,
-however, as run 3 has an anomalous value of $\rho$, and run four is somewhat
-different in its $\tau$ parameter.
+We ran the simulated annealing algorithm for 5000 iterations, beginning with 
+four randomly sampled sets of starting values. @tbl-sann-results
+shows the results of each run alongside a mean value. For most
+parameters, there is some level of agreement on the scale of the parameters,
+with three of the four runs matching in the first or second significant
+digit. The anomalous value differs between runs however, as Run 3 has a
+low $\rho$, and Run 4 a low $\tau$.
 
 ```{r sann-function}
 #| label: fig-sann-function
@@ -97,7 +96,7 @@ dl <- sr |>
   group_by(name) |> 
   nest()  |> 
   mutate(
-    density = purrr::map(data, \(x) density(x$value, weights = 1/(x$error^2))),
+    density = purrr::map(data, \(x) density(x$value, weights = 1/(x$error))),
     max     = purrr::map_dbl(density, \(d) get_mode(d)),
     modes   = purrr::map(density, \(d) modes(d))
   )
@@ -110,31 +109,30 @@ sr |>
     `$\\tau$` = entrop
   ) |> 
   pivot_longer(cols = c(-run, -error)) |> 
-  ggplot(aes(x = value, weight = 1/(error^2))) +
+  ggplot(aes(x = value, weight = 1/(error))) +
   geom_density() + 
   facet_wrap(~name, scales = "free")
 ```
 
-@fig-sann-function shows the mean value of the objective function 
-across the parameter space of $(\rho, \varepsilon)$. If the cell is blank, then
-it was not used in that run of the simulated annealing algorithm, or its error
-was greater than 1.5. This figure only shows two dimensions of the four in the
-objective function, so there will be some variance at the same $(\rho, \varepsilon)$ 
-coordinate. Nevertheless, there is a consistently lower error for small values of
-$\varepsilon$ and around $\rho=200$.
-@fig-sann-outcomes shows a weighted density distribution of each of the four
-parameters across all four runs with a resultant error of less than `r ethld`. 
-The results of `r nrow(sr)` runs are included in this figure.
-The distribution is weighted by the square of the inverse error, $w_j = 1/E_j^2$
+@fig-sann-function shows the mean value of the error function 
+across the parameters $(\rho, \varepsilon)$. If a cell is blank, then
+the simulated annealing algorithm did not search there, or the error
+exceeded 1.5. This figure only shows two dimensions of the four in the
+objective function, so there is variance at each $(\rho, \varepsilon)$ 
+coordinate. Nevertheless, the plot shows consistently lower error 
+for low $\varepsilon$ and $\rho \approx 200$.
+@fig-sann-outcomes shows a density of each parameter across all four runs with 
+$E < `r ethld`$.
+The results of `r nrow(sr)` iterations are included.
+The distribution is weighted by the inverse error, $w_j = 1/E_j$
 with $j$ an index for the optimization iteration.
 Other weight constructions did not result in substantially different interpretations of 
-this figure. The modes of this density plot are a strong candidate for the preferred
-parameter values
-$\{\varepsilon = `r dl$max[1]` \mathrm{\ m}, \rho = `r dl$max[2]`\mathrm{\ points}, \Delta T = `r dl$max[3]`\mathrm{\ s}, \tau = `r dl$max[4]`\}$
+this figure. The modes of this density plot 
+$\{\varepsilon = `r dl$max[1]` \mathrm{\ m}, \rho = `r dl$max[2]`\mathrm{\ points}, \Delta T = `r dl$max[3]`\mathrm{\ s}, \tau = `r dl$max[4]`\}$ are candidates for the preferred values.
 
 A different error function could be developed that includes not only the location
-but also the duration of activities, as well as their sequence in a time-space 
+but the duration of activities, and their sequence in a time-space 
 framework. This would improve the accuracy of the calibration but also 
-increase the difficulty of the labeling task. Similarly, data with a different
+increases the difficulty of the labeling task. Similarly, data with a different
 temporal or spatial resolution may lead to different optimal parameters.
 

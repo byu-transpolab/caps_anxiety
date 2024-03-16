@@ -6,9 +6,6 @@ under IRB protocol F2020-242. The investigators on the overarching grant include
 Terisa Gabrielsen and Jared Nielsen. Myrranda Salmon supported the data cleaning 
 efforts.
 
-Graphics in the document are produced with multiple R packages [@modelsummary;
-@ggplot2].
-
 ## Author Contribution Statement{.unnumbered}
 
 ```{r contrib, results = 'asis', message=FALSE, echo=FALSE}

@@ -1,39 +1,47 @@
-# Introduction
+:::{.callout-note}
+This is a manuscript for the journal [*Findings*](https://findingspress.org),
+which requires 3 sections labeled Question, Methods, and Findings. The total 
+allowed word count in the abstract is 100, and 1000 in the paper body. Current 
+count:
+
+```{r include = FALSE}
+wcq <- 299 - 46 # this callout contains 46 words
+wcm <- 222 + 192 + 57
+wcf <- 254
+wct <- wcq + wcm + wcf
+```
+
+  - Abstract: 96
+  - Question: `r wcq`
+  - Methods: `r wcm`
+  - Findings: `r wcf`
+  - Total: `r wct`
+:::
+# Question
 
 Location-based services (LBS) data contain the spatial locations of many mobile
 phone users, but they do not independently describe travel behavior [@du2007]. A 
 classification of the LBS data from raw location points to semantic activities
 is potentially desirable for many reasons, including removing error from travel diaries, 
-making improving the quality of travel models, and providing insights into
-traveler decision processes [@bohte2009;@usyukov2017]. 
+improving the quality of travel models, and providing insights into
+traveler decisions [@bohte2009;@usyukov2017]. 
 
-The the most basic attempts at classifying activities relied on heuristic, rule-based
-algorithms. 
-Common heuristics include the implied speed between consecutive points, or the randomness of 
-the direction between series of points [@deng2012].
-It can be difficult for conclusive rules to be made, however: it is difficult 
-to determine whether a person is moving slowly because they are waiting for a
-traffic signal or because they are doing an activity. 
-Decision trees can expand the number and types of rules that are applied [@lee2014],
-potentially increasing the accuracy of the classification, but 
-More advanced methods have been developed that rely on various 
-machine learning algorithms [@xiao2016], but these can be difficult to deploy at 
-smaller scales, or to develop when the data is not yet properly labeled.
-An intermediate approach of density-based clustering algorithms [@duan2007; @luo2017;@gong2018] 
-shows some promise for
-particular applications where a neural network may be unwieldy or difficult to
-train, but where classifying activities from location points is nonetheless
-an important issue. But applying these methods requires estimating or asserting
-particular parameters that may not be immediately intuitive.
+The most basic attempts have used heuristic algorithms. 
+Common heuristics include the implied speed between points, or 
+direction between series of points [@deng2012].
+But it is difficult to develop conclusive rules: is a person moving 
+slowly because they are waiting for a traffic signal or because they are doing an activity?
+Decision trees can expand the number and types of rules
+[@lee2014], potentially increasing the classification accuracy.
+More advanced methods rely on artificial intelligence, but these can be
+difficult to deploy at smaller scales, or to train from unlabeled data
+[@xiao2016]. An intermediate approach of density-based clustering algorithms
+[@duan2007; @luo2017;@gong2018] shows promise for
+particular applications where a neural network may be difficult to
+train. But these methods require estimating or asserting
+parameters that may not be immediately intuitive.
 
-In this research, we develop a method to evaluate the accuracy of activity locations
-classified by a density-based spatial clustering with additional noise and time entropy
-(DBSCAN-TE) algorithm. We calibrate the parameters of this algorithm by optimizing 
-the error observed against manually-labeled activity locations.
-
-The paper proceeds as follows. A Methodology section describes the DBSCAN-TE algorithm,
-our error function, and the data we use in the calibration. A Results section describes
-the outcomes of the calibration process, alongside an application of the calibrated
-parameters to the larger, unlabeled data. A Conclusions section describes the
-contributions and limitations of this work and proposes associated future research.
-
+In this research, we develop an error function describing the accuracy of activity
+locations classified by a Density-Based Spatial Clustering with Additional Noise
+and Time Entropy (DBSCAN-TE) algorithm. We calibrate the algorithm's parameters
+by optimizing the function against manually-labeled activity locations.
