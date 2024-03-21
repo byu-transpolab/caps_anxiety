@@ -33,7 +33,7 @@ pt <- bind_rows(
     mutate(run = as.character(1:4)),
   sann_results$params |> 
     ungroup() |> 
-    summarise(across(radius:entrop, ~mean(.))) |> 
+    summarise(across(radius:error, ~mean(.))) |> 
     mutate(run = "MEAN")
 ) |> 
   rename(
@@ -54,7 +54,9 @@ shows the results of each run alongside a mean value. For most
 parameters, there is some level of agreement on the scale of the parameters,
 with three of the four runs matching in the first or second significant
 digit. The anomalous value differs between runs however, as Run 3 has a
-low $\rho$, and Run 4 a low $\tau$.
+low $\rho$, and Run 4 a low $\tau$. The mean error of `r pt[["Error"]][5]` implies
+the algorithm predicts `r 1-pt[["Error"]][5]/25` of points correctly across the 25 
+user-days.
 
 ```{r sann-function}
 #| label: fig-sann-function

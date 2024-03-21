@@ -16,13 +16,13 @@ book:
           state: UT
           country: USA
           postal-code: 84602
-    - name: Gillian Martin
+    - name: Gillian Riches
       affiliations:
         - ref: byuce
-    - name: Emily Blanchard
+    - name: Emily K. Youngs
       affiliations:
         - ref: byuce
-    - name: Jared Nielsen
+    - name: Jared A. Nielsen
       orcid: 0000-0002-2717-193X
       affiliations:
       - id: byupsych

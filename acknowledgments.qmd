@@ -3,8 +3,8 @@
 This data used in this research was collected with help from an
 Interdisciplinary Research Grant at Brigham Young University, and administered
 under IRB protocol F2020-242. The investigators on the overarching grant include
-Terisa Gabrielsen and Jared Nielsen. Myrranda Salmon supported the data cleaning 
-efforts.
+Terisa Gabrielsen, Jared Nielsen, and Mikle South. Myrranda Salmon supported the
+data cleaning efforts.
 
 ## Author Contribution Statement{.unnumbered}
 
