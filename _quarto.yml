@@ -17,9 +17,11 @@ book:
           country: USA
           postal-code: 84602
     - name: Gillian Riches
+      orcid: 0009-0004-1810-5465
       affiliations:
         - ref: byuce
     - name: Emily K. Youngs
+      orcid: 0009-0001-6847-1154
       affiliations:
         - ref: byuce
     - name: Jared A. Nielsen
