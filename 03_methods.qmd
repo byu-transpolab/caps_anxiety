@@ -60,8 +60,13 @@ in finding global optima on non-convex or discontinuous objective functions
 [@bertsimas1993]. Simulated annealing also permits box constraints on the 
 parameters and parameter scaling: 
 $\{\varepsilon, \rho, \Delta T, \tau\}$ are defined on different scales with 
-different units. The constraints and scale parameters are given in
-@tbl-constraints.
+different units. The constraint values are shown in @tbl-constraints values and 
+were set based on an initial search of the literature  [@duan2007;
+@luo2017;@gong2018] supported by intuition. For example, we set a minimum
+$\Delta T = 5$ minutes (300 seconds), believing a gap this short to be an
+unrealistic duration for an intervening activity. The scale parameters were
+set so that the range covered by the parameters was similar across 
+all four dimensions.
 
 ```{r tbl-constraints}
 #| label: tbl-constraints
@@ -86,7 +91,8 @@ kbl(tb, booktabs = TRUE, escape = FALSE) |>
 
 ## Data
 Data for this study come from a comprehensive longitudinal dataset of 78
-volunteers using a mobile application that collects detailed location data. We
-drew a random sample of 25 high-quality user-days --- 24 hours of location
-points with at least 30 points per minute --- and manually labeled these days
-with the points of the visually apparent activities.
+volunteers using a mobile application that collects detailed location-based
+services data. We drew a random sample of 25 high-quality user-days --- defined
+as 24 hours between 3 AM and 2:59 AM the next day, having a time density of
+location points of at least 30 points per minute. We mapped the points in GIS
+software and manually added points at the visually apparent activity locations.

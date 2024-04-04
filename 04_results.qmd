@@ -55,8 +55,8 @@ parameters, there is some level of agreement on the scale of the parameters,
 with three of the four runs matching in the first or second significant
 digit. The anomalous value differs between runs however, as Run 3 has a
 low $\rho$, and Run 4 a low $\tau$. The mean error of `r pt[["Error"]][5]` implies
-the algorithm predicts `r 1-pt[["Error"]][5]/25` of points correctly across the 25 
-user-days.
+the algorithm predicts `r round(100-pt[["Error"]][5]/25*100, 2)` percent of
+points correctly across the 25 user-days.
 
 ```{r sann-function}
 #| label: fig-sann-function
@@ -132,9 +132,20 @@ Other weight constructions did not result in substantially different interpretat
 this figure. The modes of this density plot 
 $\{\varepsilon = `r dl$max[1]` \mathrm{\ m}, \rho = `r dl$max[2]`\mathrm{\ points}, \Delta T = `r dl$max[3]`\mathrm{\ s}, \tau = `r dl$max[4]`\}$ are candidates for the preferred values.
 
+Researchers with unlabeled location-based services data may use the DBSCAN-TE 
+algorithm directly using the parameters identified in this research, but should
+exercise caution. The most sensitive
+parameter in other data sets is likely to be $\rho$, the minimum points to constitute
+a cluster: with less temporally dense data, fewer points will accumulate and 
+the 200 point threshold may not be a viable option. Understanding the relationship
+between data density and the values of these parameters is important future research.
+
 A different error function could be developed that includes not only the location
 but the duration of activities, and their sequence in a time-space 
 framework. This would improve the accuracy of the calibration but also 
 increases the difficulty of the labeling task. Similarly, data with a different
 temporal or spatial resolution may lead to different optimal parameters.
+Further research should also explore how many labeled user-days are sufficient to 
+identify stable parameters in the DBSCAN-TE algorithm versus train an AI to perform
+this task accurately.
 

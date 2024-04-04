@@ -7,8 +7,8 @@ count:
 
 ```{r include = FALSE}
 wcq <- 299 - 46 # this callout contains 46 words
-wcm <- 222 + 192 + 57
-wcf <- 271
+wcm <- 222 + 259 + 78
+wcf <- 378
 wct <- wcq + wcm + wcf
 ```
 
@@ -35,13 +35,14 @@ But it is difficult to develop conclusive rules: is a person moving
 slowly because they are waiting for a traffic signal or because they are doing an activity?
 Decision trees can expand the number and types of rules
 [@lee2014], potentially increasing the classification accuracy.
-More advanced methods rely on artificial intelligence, but these can be
+More advanced methods rely on artificial intelligence (AI), but these can be
 difficult to deploy at smaller scales, or to train from unlabeled data
-[@xiao2016]. An intermediate approach of density-based clustering algorithms
-[@duan2007; @luo2017;@gong2018] shows promise for
-particular applications where a neural network may be difficult to
-train. But these methods require estimating or asserting
-parameters that may not be immediately intuitive.
+[@xiao2016]; it is not clear in the literature how many labeled user-days would
+be necessary to train the AI. An intermediate approach of
+density-based clustering algorithms [@duan2007; @luo2017;@gong2018] shows
+promise for particular applications where a neural network may be difficult to
+train. But these methods require estimating or asserting parameters that may not
+be immediately intuitive.
 
 In this research, we develop an error function describing the accuracy of activity
 locations classified by a Density-Based Spatial Clustering with Additional Noise
