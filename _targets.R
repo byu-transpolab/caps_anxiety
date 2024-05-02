@@ -73,12 +73,15 @@ list(
   tar_target(library_file, "data/resources/libraries.geojson", format = "file"),
   tar_target(librarySf, sf::st_read(library_file) %>% sf::st_transform(32612)),
   
+  tar_target(social_rec_file, "data/resources/social_rec.geojson", format = "file"),
+  tar_target(social_recSf, sf::st_read(social_rec_file) %>% sf::st_transform(32612)),
+  
   # Determine the number of trips for each activity type
-  tar_target(activity_types, addTripType(num_trips, parksSf, grocerySf, librarySf)),
+  tar_target(activity_types, addTripType(num_trips, parksSf, grocerySf, librarySf, social_recSf)),
   
   # SUMMARIZE THE TRIP DATA
   tar_target(trip_data_summary, summarize_trip_data(activity_types)),
-  
+
   
   
   # Read in the demographic data
