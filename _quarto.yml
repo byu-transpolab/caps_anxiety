@@ -16,7 +16,7 @@ book:
           state: UT
           country: USA
           postal-code: 84602
-    - name: Emily Blanchard
+    - name: Emily K. Youngs
       email: emmykae@byu.edu
       affiliations:
         - ref: byuce
@@ -24,7 +24,7 @@ book:
       email: gregmacfarlane@gmail.com
       affiliations:
         - ref: byuce
-    - name: Jared Nielsen
+    - name: Jared A. Nielsen
       orcid: 0000-0002-2717-193X
       email: jarednielsen@byu.edu
       affiliations:
