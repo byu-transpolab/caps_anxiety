@@ -64,7 +64,7 @@ yesterday <- function(timestamp) {
 
 #' Perform preprocessing on relevant user data.
 #'
-#' This function takes a dataset of relevant user IDs (`relevant_ids`) and performs
+#' This function takes a dataset of the raw LBS data and performs
 #' preprocessing steps, including modifying timestamp-related columns and selecting
 #' specific columns for further analysis.
 #'
@@ -73,8 +73,8 @@ yesterday <- function(timestamp) {
 #' @return A tibble with preprocessed data, including modified timestamp-related
 #' columns and selected columns for analysis.
 
-preprocessing <- function(relevant_ids) {
-  raw_data <- relevant_ids %>% 
+preprocessing <- function(read_data) {
+  raw_data <- read_data %>% 
     # Modify some of the columns
     mutate(
       timestamp = as_datetime(time),
