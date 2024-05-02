@@ -116,7 +116,7 @@ list(
   
   
   # Estimate models
-  tar_target(models, estimate_models(final_table))
+  tar_target(models, estimate_models(final_table)),
   
   
   
