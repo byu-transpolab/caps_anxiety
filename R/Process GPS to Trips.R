@@ -339,9 +339,9 @@ add_location <- function(x, variable, sf){
 #'
 #' @details The function first filters out rows where 'algorithm' is not a 
 #' character, and removes the 'cleaned' column. It then adds trip type 
-#' variables ('park', 'grocery', 'library') based location information.
+#' variables ('park', 'grocery', 'library', 'social_rec') based location information.
 
-addTripType <- function(tibble, parksSf, grocerySf, librarySf){
+addTripType <- function(tibble, parksSf, grocerySf, librarySf, social_recSf){
   
   t2 <- tibble %>%
     filter(!is.character(algorithm)) %>%
@@ -350,7 +350,8 @@ addTripType <- function(tibble, parksSf, grocerySf, librarySf){
   # add more land use location variables
   t2$park = purrr::map_int(t2$algorithm, ~add_location(.x, variable = id, sf = parksSf))
   t2$grocery = purrr::map_int(t2$algorithm, ~add_location(.x, variable = SITE_NAME, sf = grocerySf))
-  t2$library = purrr::map_int(t2$algorithm, ~add_location(.x, variable = fid, sf = librarySf))
+  t2$library = purrr::map_int(t2$algorithm, ~add_location(.x, variable = osm_id, sf = librarySf))
+  t2$social_rec = purrr::map_int(t2$algorithm, ~add_location(.x, variable = osm_id, sf = social_recSf))
   t2
 }
 
