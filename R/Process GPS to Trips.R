@@ -194,19 +194,19 @@ summarize_scored_data <- function(scored) {
 
 makeSf <- function(df, crs = 32612) {
   df %>%
-    st_as_sf(coords = c("lon", "lat"), crs = 4327) %>%
+    st_as_sf(coords = c("lon", "lat"), crs = 4326) %>%
     st_transform(crs)
 }
 
 
-#' Process scored GPS points data.
-#'
-#' This function takes a tibble of scored GPS points and performs various
-#' processing steps including sampling, grouping, and creating Simple Features.
-#'
-#' @param scored A tibble containing scored GPS points data.
-#'
-#' @return A processed tibble with sampled, grouped, and transformed data.
+#' Process GPS points data
+#' 
+#' Process GPS points data by arranging, grouping, sampling, converting to SF objects,
+#' calculating convex hull area, and determining distance traveled.
+#' 
+#' @param scored The GPS points data with scores.
+#' 
+#' @return A processed tibble with additional columns for area and distance.
 
 gps_points_process <- function(scored) {
   processed <- scored %>%
