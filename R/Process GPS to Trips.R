@@ -212,8 +212,8 @@ gps_points_process <- function(scored) {
   processed <- scored %>%
     arrange(userId, activityDay, hour, minute) %>% 
     group_by(userId, activityDay, hour, minute) %>%
-    slice_sample(n = 10, replace = FALSE) %>%
-    
+    # Keep 6 LBS points minute for each hour
+    slice_sample(n = 6, replace = FALSE) %>%
     ungroup() %>% 
     group_by(userId, activityDay) %>%
     nest() %>% 
