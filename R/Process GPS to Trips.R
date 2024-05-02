@@ -221,7 +221,14 @@ gps_points_process <- function(scored) {
     rename(cleaned = data) %>%
     mutate(num_points = purrr::map_int(cleaned, nrow)) %>%
     filter(num_points > 1000)  %>% 
-    mutate(cleaned = purrr::map(cleaned, makeSf))
+    # Convert the LBS points to an SF object
+    mutate(cleaned = purrr::map(cleaned, makeSf)) %>% 
+    # Calculate the area of the convex hull
+    mutate(convex_hull = purrr::map(cleaned, ~st_convex_hull(st_union(.))), 
+           area = purrr::map_dbl(convex_hull, st_area)) %>% 
+    # Calculate the distance traveled 
+    mutate(polyline = purrr::map(cleaned, ~st_linestring(st_coordinates(.))), 
+           length = purrr::map_dbl(polyline, st_length))
   
   return(processed)
 }
