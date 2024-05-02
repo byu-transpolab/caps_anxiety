@@ -58,7 +58,7 @@ list(
   tar_target(prepared_data_summary, summarize_prepared_data(prepared_data)),
   
   # Make activity clusters using the optimized parameters
-  tar_target(clustered_data, makeClusters(prepared_data, params = c(11.7,3,300,1))),
+  tar_target(clustered_data, makeClusters(prepared_data, params = c(16.8,207,1860,1.16))),
   
   # Determine the number of trips made on a given day by a given user
   tar_target(num_trips, addNumTrips(clustered_data)),
