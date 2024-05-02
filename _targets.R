@@ -117,4 +117,16 @@ list(
   
   # Estimate models
   tar_target(models, estimate_models(final_table))
+  
+  
+  
+  
+  
+  
+  # Create a subset of the processed data
+  tar_target(preprocessed_samp, preprocessed_days_samp(preprocessed)),
+  
+  # Score the subset of processed data
+  tar_target(scored_days_samp, scoring_samp(preprocessed_samp))
+  
 )
