@@ -41,36 +41,6 @@ summarize_raw_data <- function(raw_data) {
 }
 
 
-#' Clean GPS points data by removing specified userIds.
-#'
-#' This function takes a tibble of GPS points and removes rows corresponding to
-#' specified userIds. The userIds to be removed are hardcoded in the function.
-#'
-#' @param gps_points A tibble containing GPS points data.
-#' 
-#' @return A tibble with rows corresponding to specified userIds removed.
-
-clean_userids <- function(gps_points) {
-  relevant_ids <- gps_points %>% 
-    filter(!userId %in% c("5ce457e340c7ec3c62f0bf0b",
-                          "5ce58b8fb806a3095b02825d",
-                          "5ce81b11df98d115d6a6d533",
-                          "5cf80a3e39b0af75d30f8a9a",
-                          "5d012e9194fc444819b759df",
-                          "5d01492cac3695481f754b11",
-                          "5d01495eac3695481f754b14",
-                          "5d0be0795c9e01405be7a410",
-                          "5d56c21c03448c58bbe4b6c8",
-                          "5f28ffac9f802f6966082468",
-                          "5f29a58184b80f5e2521f4ee",
-                          "5f4eb5c0df4cfc08a627d827",
-                          "5f600ae96ac58a28e1862544",
-                          "60be7eba0cfa734406650c33"))
-  
-  return(relevant_ids)
-}
-
-
 #' Adjust Timestamp to Previous Day
 #'
 #' This function adjusts a timestamp to the previous day if the recorded hour is
