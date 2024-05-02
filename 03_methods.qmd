@@ -1,1 +1,37 @@
 # Methodology
+
+## Data
+
+Brigham Young University’s Counseling and Psychology Services (CAPS) conducted a study involving 95 young adults residing in Utah County, ages ranging from 18-40 with the average age being 23 years old. Each of the participants belonged to one of three groups based on a psychological evaluation: control, social anxiety, and autism.
+
+-   \[PROVIDE BREAKDOWN FOR HOW MANY PEOPLE IN EACH GROUP\] 
+
+Participants installed an application on their phone that collected cellular location-based services (LBS) data. The participants participated to varying degrees with some providing 1 month of LBS data and others providing up to 1 year of data. There was a period of time \[1 MONTH\] when no LBS data was collected by the application. In addition to collecting LBS data, the application prompted participants to complete a survey answering questions about their mental health. Surveys were administered in the mornings and the evenings and asked questions such as  “Have you felt stressed since you last took a survey?”, “How would you rate your overall sleep quality last night?”, and “Have you thought about killing yourself in the past 12 hours or since you last took a survey?” among others. Participants were monetarily incentivized to complete the mental health surveys. 
+
+By integrating LBS data and mental health survey responses, this dataset enables the analysis of the impact of individual travel behavior on mental well-being, with a particular focus on understanding the interaction between travel behavior and individuals from neurodiverse groups. Additionally, it allows for investigating how characteristics of neurodiverse groups influence travel behavior. The data is cleaned and processed so this analysis can be performed.
+
+## Cleaning the Data
+
+The first step is to clean the raw LBS data. The raw LBS data included the ID associated with each participant, the time stamp consisting of the date and time when the data was collected, and the geometry, meaning latitude and longitude, of each data point. 
+
+When analyzing data points for each day, instead of defining a single day of activities from midnight to midnight, the data underwent additional cleaning to shift the 24-hour period from 3AM to 3AM. This adjustment ensured that any timestamp recorded between midnight and 3AM was attributed to the preceding calendar date, indicating it as the the final data points of the preceding day rather than the initial data points of the following day. The data points encompassed in the 3AM to 3AM 24-hour period make up the activity day, which is associated with the preceding day. The evening mental health survey closed at 3AM each day, so a survey taken between midnight and 3AM would be the evening survey and would be associated with the activity day as previously described. 
+
+From there, the LBS data was grouped by participant ID, activity day, and hour and a scoring algorithm was implemented to assess the quality and completeness of GPS data for each combination of user IDs and activity days. This algorithm identifies userID-activity days that exhibit a high score, indicating a sufficient quantity and distribution of LBS points within the designated time frame. The scoring mechanism is based on two factors: the hour of the day and the number of LBS points recorded. For hours from 8AM to 11PM, which are hours where the likelihood of significant activity is greater, a higher score is assigned than the other hours. The other aspect adjusts the score based on the number of LBS points recorded within the hour. The algorithm categorizes the number of GPS points into different tiers and assigns a score multiplier corresponding to each tier. To determine the final score the score based on the hour of the day and the score based on the number of LBS points are multiplied and then summed to determine the daily score. By summing the scores for the day, the algorithm provides a comprehensive assessment of the day quality and completeness for each user and activity day. The threshold was chosen as a cutoff to retain only those userID-activity day pairs with a relatively high quality LBS dataset. This threshold ensures that only data deemed to be sufficiently complete and accurate is retained for further analysis for determining the trip patterns for participants during the day. 
+
+-   \[SHOW WHAT A HIGH SCORING DAY LOOKS LIKE AND WHAT A LOW SCORING DAY LOOKS LIKE\] 
+
+-   \[TALK ABOUT HOW MANY USERID-ACTIVITYDAY COMBOS THERE WERE BEFORE APPLYING THE ALGORITHM AND HOW MANY THERE ARE LEFT AFTER\]
+
+The data collection application recorded LBS data every second that the participants' cell phone was on. To improve workability of the data, a random sample of 10 LBS points per minute was extracted for each high scoring userID-activity day. If the total number of LBS data points for a day was less than 1000, then that day was removed. The data points were then converted into latitude and longitude coordinates to visualize them on a map.
+
+-   Look into whether any activitydays were lost by filtering to 1000 points (this step might be unnecessary)
+
+## Processing the Trips
+
+The DBSCAN-TE algorithm was used to determine where activities occurred during the day and how many activities were engaged in during the day.  The parameters for the DBSCAN-TE algorithm were previously optimized and were implemented on the LBS data set (Riches 2022). 
+
+The optimal parameters were implemented are the number of activities were determined for the \_\_\_\_\_ high quality userID-activity days. Then it was determined which activities during a given activity day occurred at parks, grocery stores, or libraries. 
+
+After identifying high-scoring userID-activity days using this scoring algorithm and using the DBSCAN-TE algorithm to determine the number of activities per day, an imputation process was conducted to enhance the dataset's completeness. This imputation aimed to fill in missing trip data for certain days, either due to the absence of data collection or the poor quality of data, ensuring a more comprehensive dataset aligning with the days of mental health survey responses. The imputation used rolling averages to estimate the number of trips for specific time frame and activity types. This process involved calculating averages over varying time windows, such as seven, fourteen, and thirty days, to capture trends and patterns in trip data. The imputation process was applied separately for different activity types, including park visits, grocery shopping, and library visits, to account for potential variations in activity patterns across different contexts.
+
+By calculating rolling averages and imputing missing trip data, the imputation algorithm enhanced the dataset's completeness and reliability, thereby facilitating more robust analyses of activity patterns and their associations with mental health outcomes. The resulting dataset with imputed trip data served as a valuable resource for exploring the relationship between daily activities and mental well-being.
