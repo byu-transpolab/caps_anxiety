@@ -294,8 +294,7 @@ makeClusters <- function(cleaned_manual_table, params) {
 
 addNumTrips <- function(df){
   tibble <- as_tibble(df) %>%
-    select(userId, activityDay, cleaned, algorithm) %>%
-    group_by(userId, activityDay) %>%
+    select(userId, activityDay, cleaned, algorithm, area, length) %>%
     rowwise() %>%
     # Calculate the total number of trips someone made in a day
     mutate(numTrips = length(algorithm[[1]]))
