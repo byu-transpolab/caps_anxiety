@@ -410,3 +410,56 @@ imputation <- function(trips_activities) {
   return(imputed_trips)
 }
 
+
+#' Preprocess GPS data by grouping points per userID-activityDay-hour
+#' and selecting random groups for sampling
+#'
+#' This function preprocesses raw GPS data by grouping points per 
+#' userID-activityDay-hour and selecting random groups for sampling.
+#' 
+#' @param raw_samp The raw GPS data tibble
+#' 
+#' @return A tibble containing randomly selected groups for sampling
+
+preprocessed_days_samp <- function(raw_samp){
+  samp <- raw_samp %>% 
+    # Determine how many GPS points there are per userID-activityDay by hour
+    ungroup() %>% 
+    arrange(userId, activityDay, hour) %>% 
+    group_by(userId, activityDay, hour) %>%
+    nest() %>% 
+    ungroup() %>% 
+    rename(cleaned = data) %>%
+    mutate(num_points = purrr::map_int(cleaned, nrow))
+
+  # Select 100 random groups
+  random_groups <- samp %>% sample_n(100)
+  
+  return(random_groups)
+}
+
+
+#' Calculate daily scores based on GPS data characteristics
+#' 
+#' This function calculates daily scores based on the number and spread of GPS points.
+#' 
+#' @param raw_data The raw GPS data tibble
+#' 
+#' @return A tibble with calculated daily scores
+
+scoring_samp <- function(raw_data) {
+  scored <- raw_data %>%
+    # Calculate the score for the day based on number and spread of gps points
+    mutate(
+      hour_multiplier = ifelse(hour %in% 8:23, 3, 1),
+      points_multiplier = case_when(
+        num_points <= 500 ~ 0,
+        num_points <= 1500 ~ 1,
+        num_points <= 2500 ~ 2,
+        TRUE ~ 3
+      ),
+      daily_score = hour_multiplier * points_multiplier
+    )
+  
+  return(scored)
+}
