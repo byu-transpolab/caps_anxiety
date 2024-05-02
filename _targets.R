@@ -39,18 +39,15 @@ list(
   # SUMMARIZE THE RAW DATA
   tar_target(raw_data_summary, summarize_raw_data(read_in)),
   
-  # Remove the irrelevant userIds of those who weren't study participants
-  tar_target(cleaned_ids, clean_userids(read_in)),
-  
   # Preprocess the data
-  tar_target(preprocessed, preprocessing(cleaned_ids)),
+  tar_target(preprocessed, preprocessing(read_in)),
   
   # SUMMARIZE THE RAW DATA
   tar_target(filtered_data_summary, summarize_filtered_data(preprocessed)),
   
   # Implement the scoring algorithm to have higher quality userId activityDay combos
   tar_target(scored_days, scoring(preprocessed)),
-  
+
   # SUMMARIZE THE SCORED DATA
   tar_target(scored_data_summary, summarize_scored_data(scored_days)),
   
