@@ -1,0 +1,224 @@
+---
+title: "Activity Analysis"
+author: "Emily Youngs"
+date: "`r Sys.Date()`"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+# load needed packages
+library(targets)
+library(tidyverse)
+library(forcats)
+library(lmtest)
+library(modelsummary)
+library(dplyr)
+library(knitr)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(sf)
+library(ggspatial)
+```
+
+# Number of Activities
+
+This is to analyze the number of activities as outputted by the DBSCAN-TE algorithm using the optimized parameters. 
+
+It appears that there are a lot of activityDays when zero trips were made. This histogram shows that distribution.
+
+```{r}
+tar_load(final_table)
+tar_load(activity_types)
+tar_load(prepared_data)
+```
+
+```{r}
+# Histogram for numTrips with bin width of 10
+ggplot(final_table, aes(x = numTrips)) +
+  geom_histogram(binwidth = 1, fill = "darkgray", color = "black") +
+  geom_text(stat = "count", aes(label = ..count..),
+            vjust = -0.5, color = "black", size = 3) +
+  labs(title = "Number of Activities on activityDays", x = "Number of Activities", y = "Frequency") +
+  theme_bw()
+```
+
+## Days with Zero Activities
+
+The following four examples show the daily patterns of userId-activityDays when the total number of activities was zero. 
+
+```{r}
+x_0_1 <- prepared_data %>% filter(userId == "60c1208d20961555001bc890", activityDay == as_date("2021-10-03"))
+x_0_1 <- x_0_1$cleaned[[1]]
+
+y_0_1 <- activity_types %>% filter(userId == "60c1208d20961555001bc890", activityDay == as_date("2021-10-03"))
+y_0_1 <- y_0_1$algorithm[[1]]
+
+ggplot() + annotation_map_tile("cartolight") + geom_sf(data = x_0_1, color = "black") + geom_sf(data = y_0_1, mapping = aes(color = as_factor(cluster)))
+```
+
+From this example day, it seems that this person stayed in the same place for the duration of the LBS data collection. I wonder why this doesn't show up as one activity?
+
+```{r}
+x_0_2 <- prepared_data %>% filter(userId == "60903e7d355f265152194165", activityDay == as_date("2021-09-26"))
+x_0_2 <- x_0_2$cleaned[[1]]
+
+y_0_2 <- activity_types %>% filter(userId == "60903e7d355f265152194165", activityDay == as_date("2021-09-26"))
+y_0_2 <- y_0_2$algorithm[[1]]
+
+ggplot() + annotation_map_tile("cartolight") + geom_sf(data = x_0_2, color = "black") + geom_sf(data = y_0_2, mapping = aes(color = as_factor(cluster)))
+```
+
+From this example day, it looks like the user spent some time on BYU campus and then went to a house up 900E. If I was labling this by hand, I would have marked a few activities. 
+
+```{r}
+x_0_3 <- prepared_data %>% filter(userId == "5dde9b5adedf9d524abb3b76", activityDay == as_date("2020-07-06"))
+x_0_3 <- x_0_3$cleaned[[1]]
+
+y_0_3 <- activity_types %>% filter(userId == "5dde9b5adedf9d524abb3b76", activityDay == as_date("2020-07-06"))
+y_0_3 <- y_0_3$algorithm[[1]]
+
+ggplot() + annotation_map_tile("cartolight") + geom_sf(data = x_0_3, color = "black") + geom_sf(data = y_0_3, mapping = aes(color = as_factor(cluster)))
+```
+
+From this example day, it looks like the user spent time around south Provo. This looks a bit more difficult to label as activities, but I think they would still be able to be labeled.
+
+```{r}
+x_0_4 <- prepared_data %>% filter(userId == "5f50c48d4e42d048e9630d16", activityDay == as_date("2021-01-09"))
+x_0_4 <- x_0_4$cleaned[[1]]
+
+y_0_4 <- activity_types %>% filter(userId == "5f50c48d4e42d048e9630d16", activityDay == as_date("2021-01-09"))
+y_0_4 <- y_0_4$algorithm[[1]]
+
+ggplot() + annotation_map_tile("cartolight") + geom_sf(data = x_0_4, color = "black") + geom_sf(data = y_0_4, mapping = aes(color = as_factor(cluster)))
+```
+
+From this example day, it looks like the user spent a lot of time driving. This is likely why zero activities were determined. But no one drives to just drive...
+
+## Days with One Activities
+
+The following three examples show the daily patterns of userId-activityDays when the total number of activities was one. We want to look at what the difference is between having zero activities and one activity
+
+```{r}
+x_1_1 <- prepared_data %>% filter(userId == "5e278fd9c22c717cab2faad7", activityDay == as_date("2020-07-09"))
+x_1_1 <- x_1_1$cleaned[[1]]
+
+y_1_1 <- activity_types %>% filter(userId == "5e278fd9c22c717cab2faad7", activityDay == as_date("2020-07-09"))
+y_1_1 <- y_1_1$algorithm[[1]]
+
+ggplot() + annotation_map_tile("cartolight") + geom_sf(data = x_1_1, color = "black") + geom_sf(data = y_1_1, mapping = aes(color = as_factor(cluster)))
+```
+
+This looks like another day of travel that is only showing up as one activity, presumably at a starting location.
+
+```{r}
+x_1_2 <- prepared_data %>% filter(userId == "5f46d69345052d21d7e55dfa", activityDay == as_date("2020-12-10"))
+x_1_2 <- x_1_2$cleaned[[1]]
+
+y_1_2 <- activity_types %>% filter(userId == "5f46d69345052d21d7e55dfa", activityDay == as_date("2020-12-10"))
+y_1_2 <- y_1_2$algorithm[[1]]
+
+ggplot() + annotation_map_tile("cartolight") + geom_sf(data = x_1_2, color = "black") + geom_sf(data = y_1_2, mapping = aes(color = as_factor(cluster)))
+```
+
+Based on this day, I would expect there to be two activities, but there is only one showing up.
+
+```{r}
+x_1_2 <- prepared_data %>% filter(userId == "600ba73a2b3d790a179c6e05", activityDay == as_date("2021-01-31"))
+x_1_2 <- x_1_2$cleaned[[1]]
+
+y_1_2 <- activity_types %>% filter(userId == "600ba73a2b3d790a179c6e05", activityDay == as_date("2021-01-31"))
+y_1_2 <- y_1_2$algorithm[[1]]
+
+ggplot() + annotation_map_tile("cartolight") + geom_sf(data = x_1_2, color = "black") + geom_sf(data = y_1_2, mapping = aes(color = as_factor(cluster)))
+```
+
+This does look like there was one activity.
+
+## Days with Four Activities
+
+The following three examples show the daily patterns of userId-activityDays when the total number of activities was three, four, and five.
+
+```{r}
+x_4_1 <- prepared_data %>% filter(userId == "5f2c9ae2c7467c5d565f5da0", activityDay == as_date("2020-11-11"))
+x_4_1 <- x_4_1$cleaned[[1]]
+
+y_4_1 <- activity_types %>% filter(userId == "5f2c9ae2c7467c5d565f5da0", activityDay == as_date("2020-11-11"))
+y_4_1 <- y_4_1$algorithm[[1]]
+
+ggplot() + annotation_map_tile("cartolight") + geom_sf(data = x_4_1, color = "black") + geom_sf(data = y_4_1, mapping = aes(color = as_factor(cluster)))
+```
+
+This day example also seems reasonable. Looks like there were activities at a home location and the MTC.
+
+```{r}
+x_5_1 <- prepared_data %>% filter(userId == "600dfb6ba2a43c09ff0780f0", activityDay == as_date("2021-03-07"))
+x_5_1 <- x_5_1$cleaned[[1]]
+
+y_5_1 <- activity_types %>% filter(userId == "600dfb6ba2a43c09ff0780f0", activityDay == as_date("2021-03-07"))
+y_5_1 <- y_5_1$algorithm[[1]]
+
+ggplot() + annotation_map_tile("cartolight") + geom_sf(data = x_5_1, color = "black") + geom_sf(data = y_5_1, mapping = aes(color = as_factor(cluster)))
+```
+
+It looks like this user travelled around BYU campus and spent some time on campus. Thie day of travel seems well paired with the activities.
+
+```{r}
+x_6_1 <- prepared_data %>% filter(userId == "60108d452b3d790a179d7584", activityDay == as_date("2021-03-17"))
+x_6_1 <- x_6_1$cleaned[[1]]
+
+y_6_1 <- activity_types %>% filter(userId == "60108d452b3d790a179d7584", activityDay == as_date("2021-03-17"))
+y_6_1 <- y_6_1$algorithm[[1]]
+
+ggplot() + annotation_map_tile("cartolight") + geom_sf(data = x_6_1, color = "black") + geom_sf(data = y_6_1, mapping = aes(color = as_factor(cluster)))
+```
+
+This user also travelled around BYU campus. This day of travel also seems well paired with the activities.
+
+## Days with Ten Activities
+
+```{r}
+x_10 <- prepared_data %>% filter(userId == "60a6a6263f7f6665e922ef5c", activityDay == as_date("2021-10-13"))
+x_10 <- x_10$cleaned[[1]]
+
+y_10 <- activity_types %>% filter(userId == "60a6a6263f7f6665e922ef5c", activityDay == as_date("2021-10-13"))
+y_10 <- y_10$algorithm[[1]]
+
+ggplot() + annotation_map_tile("cartolight") + geom_sf(data = x_10, color = "black") + geom_sf(data = y_10, mapping = aes(color = as_factor(cluster)))
+```
+
+This looks like a student making trips around campus. This shows activities presumably for each different class.
+
+```{r}
+x_10_2 <- prepared_data %>% filter(userId == "5f4d2bbf9d58d208dd24f43d", activityDay == as_date("2020-10-24"))
+x_10_2 <- x_10_2$cleaned[[1]]
+
+y_10_2 <- activity_types %>% filter(userId == "5f4d2bbf9d58d208dd24f43d", activityDay == as_date("2020-10-24"))
+y_10_2 <- y_10_2$algorithm[[1]]
+
+ggplot() + annotation_map_tile("cartolight") + geom_sf(data = x_10_2, color = "black") + geom_sf(data = y_10_2, mapping = aes(color = as_factor(cluster)))
+```
+
+## Day with Twelve Activites
+
+```{r}
+x_12 <- prepared_data %>% filter(userId == "5f6a6eff21da9b57edebbb0c", activityDay == as_date("2020-10-27"))
+x_12 <- x_12$cleaned[[1]]
+
+y_12 <- activity_types %>% filter(userId == "5f6a6eff21da9b57edebbb0c", activityDay == as_date("2020-10-27"))
+y_12 <- y_12$algorithm[[1]]
+
+ggplot() + annotation_map_tile("cartolight") + geom_sf(data = x_12, color = "black") + geom_sf(data = y_12, mapping = aes(color = as_factor(cluster)))
+```
+
+Trip to Walmart, maybe Walmart is so big that it comes up as having different activities.
+
+
+
+
