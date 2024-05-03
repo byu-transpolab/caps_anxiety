@@ -1,23 +1,20 @@
 # Acknowledgments {.unnumbered}
 
-This data used in this research was collected with help from an
-Interdisciplinary Research Grant at Brigham Young University, and administered
-under IRB protocol F2020-242. The investigators on the overarching grant include
-Terisa Gabrielsen and Jared Nielsen.
+This data used in this research was collected with help from an Interdisciplinary Research Grant at Brigham Young University, and administered under IRB protocol F2020-242. The investigators on the overarching grant include Terisa Gabrielsen and Jared Nielsen.
 
-Graphics in the document are produced with multiple R packages [@modelsummary;
-@ggplot2; @ggspatial; @wesanderson].
+Graphics in the document are produced with multiple R packages [@modelsummary; @ggplot2; @ggspatial; @wesanderson].
 
-## Author Contribution Statement{.unnumbered}
+## Author Contribution Statement {.unnumbered}
 
 ```{r contrib, results = 'asis', message=FALSE, echo=FALSE}
 library(CRediTas)
 # crt <- template_create(authors = c("Gregory S. Macfarlane",
-#                                    "Emily Blanchard",
+#                                    "Emily K. Youngs",
 #                                    "Gillian Martin",
-#                                    "Jared Nielsen"))
+#                                    "Jared A. Nielsen"))
 # fix(crt)
 # readr::write_csv(crt, "author_contributions.csv")
 crt <- readr::read_csv("author_contributions.csv", show_col_types = FALSE)
 ```
+
 `r cras_write(crt, markdown = TRUE)`
