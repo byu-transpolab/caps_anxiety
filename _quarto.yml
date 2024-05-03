@@ -35,9 +35,11 @@ book:
         state: UT
         country: USA
         postal-code: 84602
-  date: "9/30/2023"
+  date: "`r Sys.Date()`"
   chapters:
     - index.qmd
+    - 01_introduction.qmd
+    - 02_litreview.qmd
     - 03_methods.qmd
     - 04_results.qmd
     - 05_conclusion.qmd
