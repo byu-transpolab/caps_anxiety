@@ -1,1 +1,61 @@
-## Applications
+# Results
+
+## Activity and Suicidality Analysis
+
+The neuro group that a person is part of is an important aspect of the analysis. The different neuro groups are control, social anxiety, and autism. Since there will be further analysis about how these groups travel and how mental health and well-being affect their travel, an understanding of the number of activities they engage in is beneficial to consider.
+
+-   These boxplots describe the number of activities for the different neuro groups.
+
+Based on these boxplots, the control neuro group engaged in the most activities during their day and the autism neuro group engaged in the least number of activities during their day.
+
+I also explored the percent of days that each group was suicidal. This percent calculation is based on the total number of days for each nuero group and the number of days within each group a participant answered “Yes” to the question: “Have you thought about killing yourself in the past 12 hours or since you last took a survey?” that was asked as part of the evening survey.
+
+-   table showing these percentages
+
+These results show that of all of the userId-activityDays for social anxious participants, individuals expressed suicidal tendency 24.67% of the time. Individuals with autism expressed suicidal tendency on 13.53% of the days and individuals who were part of the control group expressed suicidal tendency on only 1.04% of days.
+
+With an understanding of the trip distribution and the suicidality for the various nuero groups, further steps can be taken to analyze the relationship between the number of activities and the well-being and mental health of individuals.
+
+After joining together the semantic activities and the responses to the surveys, statistical models were created to investigate the relationship between mental health and travel behavior. Using the Poisson Model, we explored how mental health influences the number of activities individuals undertake. This model incorporates demographic attributes and mental health responses as independent variables, aiming to quantify the influence of mental health on trip frequency. The number of trips serve as the dependent variable. The identification of a relationship between travel behavior and mental health has the potential to open up therapeutic and mitigative activities for individuals suffering from depression and suicidality.
+
+## Statistical Modeling
+
+In statistical modeling, the selection and comparison of various regression models are crucial steps in understanding the relationships between variables and making predictions. These models are systematically built and expanded to evaluate the impact of additional covariates on the outcome variable.
+
+### Model Assumptions
+
+These models are fit using generalized linear models (GLM) and specifically using the Poisson model. There are many assumptions for the Poisson GLM regression models. Some of these assumptions are linearity, independence, homogeneity of variance, no overdispersion, and an absence of multicollinearity.
+
+-   Linearity \~ The relationship between the predictor variables and the logarithm of the expected counts (the response variable) should be linear. This assumption can be checked by examining plots of the predictor variables against the log-transformed response variable.
+
+-   Independence \~ Observations should be independent of each other. In other words, there should be no correlation between the residuals (the differences between observed and predicted values) for different observations. This assumption can be checked by examining residuals over time or across groups.
+
+-   Homogeneity of Variance \~ The variance of the response variable should be constant across all levels of the predictor variables. This assumption is particularly important for count data, as the variance often increases with the mean in Poisson regression. You can check this assumption by examining residual plots. It is assumed that the variance is constant.
+
+-   No Overdispersion \~ In Poisson regression, the variance of the response variable should equal its mean. Overdispersion occurs when the variance is greater than the mean, indicating that the model does not adequately capture the variability in the data. If overdispersion is present, alternative models like negative binomial regression may be more appropriate.
+
+-   Absence of Multicollinearity \~ Predictor variables should not be highly correlated with each other. Multicollinearity can lead to inflated standard errors and difficulty in interpreting the coefficients.
+
+It is assumed that all of these assumptions are met for this analysis. It would be beneficial and worthwhile to explore these assumptions later on to ensure the validity of the results, but at this point in the analysis, they are assumed and accepted. It is important to note that since a seven day rolling average of trips is being used as the independent variable, the number of trips will likely be autocorrelated. This would lead to autocorrelated residuals. I recongize that this may be an issue for the analysis, and I will look more into this in the future.
+
+### Model Analysis
+
+In this analysis, we explore five Poisson regression models, each aiming to predict the number of daily average activities per activityDay based on a set of predictor variables.
+
+The reference for sex is Male and the reference nuero group is Control.
+
+Model 1 serves as our baseline model, using fundamental demographic factors such as sex, age, and intelligence quotient (IQ). As we progress through Model 2, Model 3, and finally Model 4, we incrementally introduce more variables to assess their individual and collective contributions to the predictive accuracy of the model.
+
+Model 2 expands upon Model 1 by including information on prescribed groups, which includes information about whether the individual was part of the Control, Autism, or Social Anxiety group. This addition allows us to evaluate the influence of specific neurodiverse types on the number of daily activities.
+
+In Model 3, we delve deeper into the psychological aspect by incorporating data on suicidal ideation. The question asked participants whether or not they thought about killing themselves by suicide in the past 24 hours. This variable introduces a new dimension to our analysis, enabling us to explore the relationship between mental health indicators and travel behavior.
+
+Model 4 extends our analysis to include information on energy levels energy, which is a continuous variable input. By examining how variations in energy levels impact daily travel and activity making, we aim to uncover potential associations between physical well-being and travel patterns.
+
+Model 5 combines the effects of energy and suicidal ideation on the number of activities engaged in.
+
+Through a comprehensive evaluation of these five models, we seek to identify the most informative predictors of daily trip severity and gain insights into the complex interplay between demographic, psychological, and physiological factors in shaping travel behavior. By analyzing the relative importance of each predictor variable and assessing the overall goodness of fit of the models, we aim to provide valuable insights for understanding and potentially predicting daily travel patterns in our target population.
+
+This comparison shows the five models and their outputs. The numbers for each covariate are the estimates for each model, the values in parentheses are the t-statistics, and the stars represent the significance of the estimate based on the 95% confidence interval.
+
+-   modelsummary table
