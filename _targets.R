@@ -41,8 +41,11 @@ list(
   # SUMMARIZE THE RAW DATA
   tar_target(raw_data_summary, summarize_raw_data(read_in)),
   
+  # Remove the irrelevant userIds of those who don't have demo data
+  tar_target(cleaned_trip_ids, clean_trip_userids(read_in)),
+  
   # Preprocess the data
-  tar_target(preprocessed, preprocessing(read_in)),
+  tar_target(preprocessed, preprocessing(cleaned_trip_ids)),
   
   # SUMMARIZE THE RAW DATA
   tar_target(filtered_data_summary, summarize_filtered_data(preprocessed)),
