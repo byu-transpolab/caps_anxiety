@@ -42,7 +42,9 @@ book:
     - 02_litreview.qmd
     - 03_methods.qmd
     - 04_results.qmd
-    - 05_conclusion.qmd
+    - 05_discussion.qmd
+    - 06_limitations.qmd
+    - 07_conclusions.qmd
     - acknowledgments.qmd
     - references.qmd
   keyword: "active mobility, life-stages, and quality of life"
