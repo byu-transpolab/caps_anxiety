@@ -1,15 +1,7 @@
-# Research Goals
+# Abstract
 
-The mental health of young adults is a major public concern in much of the world,
-with increasing numbers and rates of young adult suicides. The causes of this
-public health concern are not straightforward, and multiple hypotheses have been
-proposed.
+The mental health of young adults is a major public concern in much of the world, with increasing numbers and rates of young adult suicides. The causes of this public health concern are not straightforward, and multiple hypotheses have been proposed.
 
-Travel behavior is proposed as an element in individual mental health in a number
-of dimensions. First, participating in activities outside of the home may limi
+Travel behavior is proposed as an element in individual mental health in a number of dimensions. First, participating in activities outside of the home may limi
 
-In this research, we explore a unique dataset of young adults who have expressed
-suicide ideation in professional therapy contexts. Using data from a mobile 
-application revealing the individual's moods and travel behaviors over a 
-six-month period, we examine the relationship between travel behavior and
-expressed suicidal ideation.
+In this research, we explore a unique dataset of young adults who have expressed suicide ideation in professional therapy contexts. Using data from a mobile application revealing the individual's moods and travel behaviors over a six-month period, we examine the relationship between travel behavior and expressed suicidal ideation.
