@@ -1,0 +1,17 @@
+# Discussion and Applications {#sec-contribs}
+
+Upon reviewing the output summaries of Model 1, Model 2, Model 3, Model 4, and Model 5, several insights emerge regarding the significance of covariates and the predictive performance of each model.
+
+Model 1, which includes basic demographic variables such as age, sex, and intelligence quotient (IQ), reveals significant associations between the number of activities and sex, age, and to a lesser extent, IQ. Notably, being female and older are negatively associated with the number of activities, indicating that these demographic factors play a role in determining daily activity levels.
+
+Expanding on Model 1, Model 2 incorporates additional information about neuro groups. Here, we observe significant associations between the number of activities and neuro groups and less association with age, suggesting that the neuro group may influence daily activity levels and that age does not contribute as much. Furthermore, the inclusion of neuro group information improves the model fit, as evidenced by the reduction in the log likelihood compared to Model 1.
+
+Moving to Model 3, which includes data on suicidal ideation, we find that suicidal ideation does significantly impact the number of activities engaged in and neuro group variables remain significant predictor. It is interesting to note that age and sex both became less significant. This suggests that suicidal ideation and nuero group may significantly influence daily activity levels, whereas demographic factors may be less significant factors.
+
+Model 4 introduces information about individuals’ energy levels alongside demographics and neuro group. Interestingly, energy levels also emerge as significant predictors of the number of activities, indicating that physical energy levels play a crucial role in determining daily activity levels.
+
+Finally, in Model 5, where Model 3 and Model 4 were essentially combined to include demographics, neuro group, suicidal ideation, and energy levels. The model results in both suicidal ideation and energy levels being significant predictors in the number of activities engaged in. Sex dropped out completely from significance.
+
+In terms of overall predictive performance, Model 5 stands out as the most comprehensive and effective model. By incorporating a broader range of variables, including demographic, neuro group, mental health, and energy-related factors, Model 5 offers a more nuanced understanding of the factors influencing daily activity levels. Additionally, the reduction in the log likelihood compared to previous models suggests that Model 5 provides the best fit to the observed data, indicating its predictive performance in capturing the variability in trip severity.
+
+Overall, while each model provides valuable insights into the factors influencing daily activity levels, Model 5 emerges as the most robust and effective model in predicting the number of activities that participants engage in on a given day.
