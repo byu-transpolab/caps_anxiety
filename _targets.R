@@ -92,11 +92,14 @@ list(
   # Read in the demographic data
   tar_target(demographics, readDemographicData("data/mental_surveys/Demographic_Breakdown.xlsx")),
 
+  # Remove the irrelevant userIds of those who don't have any activityDays
+  tar_target(demo_ids, clean_demo_userids(demographics)),
+  
   # Create frame of userIds and date
-  tar_target(frame, make_frame(demographics, "2019-05-01", "2022-03-01")),
+  tar_target(frame, make_frame(demo_ids, "2019-05-01", "2022-03-01")),
 
   # Add the demographic data to the frame
-  tar_target(demo_data, addDemographicData(frame, demographics)),
+  tar_target(demo_data, addDemographicData(frame, demo_ids)),
 
   # Add the mental health responses to the demographic data
   tar_target(survey_data, addMentalHealthResponses(demo_data)),
