@@ -1,3 +1,8 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Results
 
 ## Activity and Suicidality Analysis
@@ -12,7 +17,7 @@ I also explored the percent of days that each group was suicidal. This percent c
 
 -   table showing these percentages
 
-These results show that of all of the userId-activityDays for social anxious participants, individuals expressed suicidal tendency 24.67% of the time. Individuals with autism expressed suicidal tendency on 13.53% of the days and individuals who were part of the control group expressed suicidal tendency on only 1.04% of days.
+These results show that of all of the userId-activityDays for social anxious participants, individuals expressed suicidal tendency **24.67%** of the time. Individuals with autism expressed suicidal tendency on **13.53%** of the days and individuals who were part of the control group expressed suicidal tendency on only **1.04%** of days.
 
 With an understanding of the trip distribution and the suicidality for the various nuero groups, further steps can be taken to analyze the relationship between the number of activities and the well-being and mental health of individuals.
 
@@ -24,38 +29,35 @@ In statistical modeling, the selection and comparison of various regression mode
 
 ### Model Assumptions
 
-These models are fit using generalized linear models (GLM) and specifically using the Poisson model. There are many assumptions for the Poisson GLM regression models. Some of these assumptions are linearity, independence, homogeneity of variance, no overdispersion, and an absence of multicollinearity.
+Ordinary least squares (OLS) regression was considered followed by fixed and random effects models.
 
--   Linearity \~ The relationship between the predictor variables and the logarithm of the expected counts (the response variable) should be linear. This assumption can be checked by examining plots of the predictor variables against the log-transformed response variable.
+For the OLS regression, the motivation as reported in the evening surveys was considered as a function of the 7-day rolling average number of activities engaged in as described previously. Since each participant in the study will likely have different base levels of motivation, we want to consider looking at each participants' differences in motivation
 
--   Independence \~ Observations should be independent of each other. In other words, there should be no correlation between the residuals (the differences between observed and predicted values) for different observations. This assumption can be checked by examining residuals over time or across groups.
+The fixed effects (FE) model demeans the data by participant and looks at each participant's motivation and 7-day rolling average number of activities individually. The results in having different intercepts for each participant. This model is consistent but less efficient because it results in losing degrees of freedom to estimate individual intercepts for each participant. This results in larger standard errors for the estimates which can make it more difficult to recognize significance. The FE model also removes the effect of time constant characteristics, which in this case are the demographic characteristics of each participant. These variables are absorbed by the intercept as they are unique to each participant.
 
--   Homogeneity of Variance \~ The variance of the response variable should be constant across all levels of the predictor variables. This assumption is particularly important for count data, as the variance often increases with the mean in Poisson regression. You can check this assumption by examining residual plots. It is assumed that the variance is constant.
+The random effects (RE) model semi-demeans the data by participant. Based on a mean for the entire group, a mean is determined with set standard deviations to represent the data pf the entire group. The RE model is appropriate to use if it is believed that the the difference in motivation has an influence on the 7-day rolling average number of activities. It is possible that other variables that influence the 7-day rolling average number of activities are not included which can lead to bias in the model. Unlike the FE model, the RE model is more efficient because degrees of freedom are not lost to more estimates, but the results can be biased.
 
--   No Overdispersion \~ In Poisson regression, the variance of the response variable should equal its mean. Overdispersion occurs when the variance is greater than the mean, indicating that the model does not adequately capture the variability in the data. If overdispersion is present, alternative models like negative binomial regression may be more appropriate.
+We ran to OLS model, the FE model, and the RE model to predict motivation based on the 7-day rolling average number of activities. The Hausman test compares the differences in the coefficients of the FE and RE models. The null hypothesis is that the preferred model is the RE and the alternative hypothesis is that the preferred model is the FE. We found, using the Hausman test, that the p-value is 0.001324 which is less than 0.05, which means that the results are significant and we reject the null hypothesis. This implies that the coefficients from the FE model and RE model are sufficiently different from each other, which means that the RE model is inconsistent and the FE model should be used in the analysis.
 
--   Absence of Multicollinearity \~ Predictor variables should not be highly correlated with each other. Multicollinearity can lead to inflated standard errors and difficulty in interpreting the coefficients.
+- show table for comparing ols, fe, and re
 
-It is assumed that all of these assumptions are met for this analysis. It would be beneficial and worthwhile to explore these assumptions later on to ensure the validity of the results, but at this point in the analysis, they are assumed and accepted. It is important to note that since a seven day rolling average of trips is being used as the independent variable, the number of trips will likely be autocorrelated. This would lead to autocorrelated residuals. I recongize that this may be an issue for the analysis, and I will look more into this in the future.
+Since the FE model cannot implement time constant variables, a linear model was used to predict the fixed effects from the model on the demographic data of the users. The sex, age, IQ, and neuro group were the independent variables, and the fixed effects intercept values for each user served as the dependent variable.
+
+```{r, message=FALSE, echo=FALSE}
+library(targets)
+tar_load(fe_model)
+
+fe_model
+```
+
+The Hausman test is used to determine whether the random effects model is more appropriate than the fixed effects model. It tests whether the random effects estimator is consistent and efficient compared to the fixed effects estimator. The null hypothesis is that the random effects estimator is consistent and efficient, while the alternative hypothesis is that the fixed effects estimator is more efficient.
+
+This function extracts the intercepts from the fixed effects model and conducts a linear regression analysis to examine how demographic variables (e.g., sex, age, FSIQ) are associated with the intercepts. This allows for understanding how the baseline level of motivation differs across different demographic groups.
+
+This function fits a simple linear regression model where motivation is regressed on the severity of the day average (sev_day_avg). The model estimates the relationship between the independent variable (sev_day_avg) and the dependent variable (motivation).
+
+This function provides a summary of the coefficients and statistics for the provided regression models: Ordinary Least Squares (OLS), Fixed Effects (FE), and Random Effects (RE). It displays the estimates, standard errors, t-statistics, and p-values for each coefficient. Additionally, it renames the coefficient for the variable "sev_day_avg" to "7-Day Rolling Avg. Number of Activities".
 
 ### Model Analysis
-
-In this analysis, we explore five Poisson regression models, each aiming to predict the number of daily average activities per activityDay based on a set of predictor variables.
-
-The reference for sex is Male and the reference nuero group is Control.
-
-Model 1 serves as our baseline model, using fundamental demographic factors such as sex, age, and intelligence quotient (IQ). As we progress through Model 2, Model 3, and finally Model 4, we incrementally introduce more variables to assess their individual and collective contributions to the predictive accuracy of the model.
-
-Model 2 expands upon Model 1 by including information on prescribed groups, which includes information about whether the individual was part of the Control, Autism, or Social Anxiety group. This addition allows us to evaluate the influence of specific neurodiverse types on the number of daily activities.
-
-In Model 3, we delve deeper into the psychological aspect by incorporating data on suicidal ideation. The question asked participants whether or not they thought about killing themselves by suicide in the past 24 hours. This variable introduces a new dimension to our analysis, enabling us to explore the relationship between mental health indicators and travel behavior.
-
-Model 4 extends our analysis to include information on energy levels energy, which is a continuous variable input. By examining how variations in energy levels impact daily travel and activity making, we aim to uncover potential associations between physical well-being and travel patterns.
-
-Model 5 combines the effects of energy and suicidal ideation on the number of activities engaged in.
-
-Through a comprehensive evaluation of these five models, we seek to identify the most informative predictors of daily trip severity and gain insights into the complex interplay between demographic, psychological, and physiological factors in shaping travel behavior. By analyzing the relative importance of each predictor variable and assessing the overall goodness of fit of the models, we aim to provide valuable insights for understanding and potentially predicting daily travel patterns in our target population.
-
-This comparison shows the five models and their outputs. The numbers for each covariate are the estimates for each model, the values in parentheses are the t-statistics, and the stars represent the significance of the estimate based on the 95% confidence interval.
 
 -   modelsummary table
