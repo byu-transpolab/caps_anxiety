@@ -2,7 +2,7 @@
 
 ## Data
 
-Brigham Young University’s Counseling and Psychology Services (CAPS) conducted a study involving **94** young adults residing in Utah County, ages ranging from **18-40 years old** with the average age being **23 years old**. There were **70** individuals assigned female at birth and **24** individuals assigned male at birth. Each of the participants belonged to one of four groups based on a psychological evaluation: social anxiety, autism, control, or no group. Those who were part of the no group initially thought that they were part of the social anxiety group or the autism group, but after the physiological evaluation, it was found that they were not part of those groups. These individuals were grouped together with the control for this analysis. Of the **94** participants in the study, **29** belong to the social anxiety group, **33** belong to the autism group, and the remaining **32** are part of the control group.
+Brigham Young University’s Counseling and Psychology Services (CAPS) conducted a study involving **88** young adults residing in Utah County, ages ranging from **18-40 years old** with the average age being **23 years old**. There were **65** individuals assigned female at birth and **23** individuals assigned male at birth. Each of the participants belonged to one of four groups based on a psychological evaluation: social anxiety, autism, control, or no group. Those who were part of the no group initially thought that they were part of the social anxiety group or the autism group, but after the physiological evaluation, it was found that they were not part of those groups. These individuals were grouped together with the control for this analysis. Of the **88** participants in the study, **28** belong to the social anxiety group, **29** belong to the autism group, and the remaining **31** are part of the control group.
 
 -   \[INSERT SUMMARY STATISTICS TABLE FOR DEMOGRAPHICS\]
 
@@ -12,7 +12,7 @@ By integrating LBS data and mental health survey responses, this dataset enables
 
 ## Cleaning the Data
 
-The first step is to clean the raw LBS data so the data can be distilled into semantic activities and locations using the DBSCAN-TE algorithm which will be described further on [@riches2022]. The raw LBS data includes the ID associated with each participant, the time stamp consisting of the date and time when the data was collected, and the geometry, meaning latitude and longitude, of each data point. 
+The first step is to clean the raw LBS data so the data can be distilled into semantic activities and locations using the DBSCAN-TE algorithm which will be described further on [@macfarlaneClassifyingLocationPoints2024]. The raw LBS data includes the ID associated with each participant, the time stamp consisting of the date and time when the data was collected, and the geometry, meaning latitude and longitude, of each data point. 
 
 When analyzing data points for each day, instead of defining a single day of activities from midnight to midnight, the data underwent additional cleaning to shift the 24-hour period from 3AM to 3AM. This adjustment ensured that any timestamp recorded between midnight and 3AM was attributed to the preceding calendar date, indicating it as the the final data points of the preceding day rather than the initial data points of the following day. The data points encompassed in the 3AM to 3AM 24-hour period make up the activity day, which is associated with the preceding day. The evening mental health survey closed at 3AM each day, so a survey taken between midnight and 3AM would be the evening survey and would be associated with the activity day as previously described. 
 
@@ -28,18 +28,34 @@ The data collection application recorded LBS data every second that the particip
 
 ## Processing the Trips
 
-The DBSCAN-TE algorithm was used to determine where activities occurred during the day and how many activities were engaged in during the day. This algorithm is a density-based clustering non-parametric algorithm where given a set of points in some space, it groups together points that are closely packed together. DBSCAN stands for density-based spatial clustering of applications with noise and the TE add an entropy constraint and temporal sequence constraint which allows for better classification of activities during one’s day. The parameters for the DBSCAN-TE algorithm were previously optimized and were implemented on the LBS data set [@riches2022]. 
+The DBSCAN-TE algorithm was used to determine where activities occurred during the day and how many activities were engaged in during the day. This algorithm is a density-based clustering non-parametric algorithm where given a set of points in some space, it groups together points that are closely packed together. DBSCAN stands for density-based spatial clustering of applications with noise and the TE add an entropy constraint and temporal sequence constraint which allows for better classification of activities during one’s day. The parameters for the DBSCAN-TE algorithm were previously optimized and were implemented on the LBS data set [@macfarlaneClassifyingLocationPoints2024].
 
-The optimized values for the parameters parameters were implemented and the number of activities were determined for the high scoring userID-activity days. Then it was determined which activities during a given activity day occurred at parks, grocery stores, libraries, and social-recreation locations. After processing the data, we ended up with **3,846** user-activityDays that had sufficient enough data to create good trip data.
+The optimized values for the parameters parameters were implemented and the number of activities were determined for the high scoring userId-activity days. Then it was determined which activities during a given activity day occurred at parks, grocery stores, libraries, and social-recreation locations. After processing the data, we ended up with **3,845** user-activityDays that had sufficient enough data to create good trip data.
 
--   This is the distribution of the number of trips on a given day for those **3,846** days.
+This is the distribution of the number of trips on a given day for those **3,845** days.
 
--   Show example days where the activities are identified next to the raw LBS data
+```{r, message=FALSE, echo=FALSE}
+library(targets)
+tar_load(fig_numAct)
+fig_numAct
+```
 
 After identifying high-scoring userID-activity days using this scoring algorithm and using the DBSCAN-TE algorithm to determine the number of activities per day, an imputation process was conducted to enhance the dataset's completeness. This imputation aimed to fill in missing trip data for certain days, either due to the absence of data collection or the poor quality of data, ensuring a more comprehensive dataset aligning with the days of mental health survey responses. The imputation used rolling averages to estimate the number of trips for specific time frame and activity types. This process involved calculating averages over varying time windows, such as seven, fourteen, and thirty days, to capture trends and patterns in trip data. The imputation process was applied separately for different activity types, including park visits, grocery shopping, and library visits, to account for potential variations in activity patterns across different contexts.
 
-After using the rolling averages, there were **5,680** user-activityDays for the seven day rolling average, **6,266** user-activityDays for the fourteen day rolling average, and **7,160** user-activityDays for the thirty day rolling average.
+After using the rolling averages, there were **5,673** user-activityDays for the seven day rolling average, **6,252** user-activityDays for the fourteen day rolling average, and **7,130** user-activityDays for the thirty day rolling average.
 
--   Show plots of the distributions of activities for the sev day, fourteen day, and thirty day rolling averages
+The following plots show the distribution of activities for the seven day rolling average, fourteen day rolling average, and thirty day rolling average. 
+
+```{r, message=FALSE, echo=FALSE}
+library(targets)
+
+tar_load(fig_numAct_7)
+tar_load(fig_numAct_14)
+tar_load(fig_numAct_30)
+
+fig_numAct_7
+fig_numAct_14
+fig_numAct_30
+```
 
 By calculating rolling averages and imputing missing trip data, the imputation algorithm enhanced the dataset's completeness and reliability, thereby facilitating more robust analyses of activity patterns and their associations with mental health outcomes. The resulting dataset with imputed trip data served as a valuable resource for exploring the relationship between daily activities and mental well-being.
