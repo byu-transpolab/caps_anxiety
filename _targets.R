@@ -11,13 +11,15 @@ threads <- future::availableCores() - 1
 source("R/Process GPS to Trips.R")
 source("R/Create Table.R")
 source("R/Estimate Models.R")
+source("R/Figures.R")
 
 # Set target-specific options such as packages.
 # Install gpsactivs from github with remotes::install_github("byu-transpolab/gpsactivs")
 tar_option_set(packages = c("dplyr","tools", "hms", "lubridate", "gpsactivs",
                             "tidyverse", "leaflet", "sf", "purrr", "stringr",
                             "ggspatial", "data.table", "plotly", "future.apply",
-                            "viridis", "pomp", "stats", "osmdata"),
+                            "viridis", "pomp", "stats", "osmdata", "modelsummary",
+                            "plm"),
                memory = "transient",
                garbage_collection = TRUE)
 
