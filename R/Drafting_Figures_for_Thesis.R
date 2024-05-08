@@ -22,7 +22,7 @@ summary(demo$age)
 # Distribution of Prescribed Group
 ggplot(demo, aes(x = initial_group)) +
   geom_bar() +
-  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5) +
+  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.5) +
   labs(title = "Distribution of Prescribed Groups",
        x = "Prescribed Group",
        y = "Frequency") +
@@ -36,9 +36,9 @@ demo_long <- pivot_longer(demo, cols = c(initial_group, prescribed_group), names
 ggplot(demo_long, aes(x = group)) +
   geom_bar(aes(fill = group_type), position = "dodge") +
   geom_text(data = demo_long %>% filter(group_type == "prescribed_group"),
-            stat = "count", aes(label = ..count..), position = position_dodge(width = 0.9), vjust = -0.5, hjust = -1) +  # Adding labels for prescribed_group
+            stat = "count", aes(label = after_stat(count)), position = position_dodge(width = 0.9), vjust = -0.5, hjust = -1) +  # Adding labels for prescribed_group
   geom_text(data = demo_long %>% filter(group_type == "initial_group"),
-            stat = "count", aes(label = ..count..), position = position_dodge(width = 0.9), vjust = -0.5, hjust = 2, color = "black") +  # Adding labels for initial_group
+            stat = "count", aes(label = after_stat(count)), position = position_dodge(width = 0.9), vjust = -0.5, hjust = 2, color = "black") +  # Adding labels for initial_group
   labs(title = "Distribution of Initial and Prescribed Groups",
        x = "Group",
        y = "Frequency") +
