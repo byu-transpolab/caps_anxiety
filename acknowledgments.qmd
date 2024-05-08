@@ -1,8 +1,8 @@
 # Acknowledgments {.unnumbered}
 
-This data used in this research was collected with help from an Interdisciplinary Research Grant at Brigham Young University, and administered under IRB protocol F2020-242. The investigators on the overarching grant include Terisa Gabrielsen and Jared Nielsen.
+This data used in this research was collected with help from an Interdisciplinary Research Grant at Brigham Young University, and administered under IRB protocol F2020-242. The investigators on the overarching grant include Terisa Gabrielsen, Jared Nielsen, and Mikle South.
 
-Graphics in the document are produced with multiple R packages [@modelsummary; @ggplot2; @ggspatial; @wesanderson].
+Graphics in the document are produced with multiple R packages [@modelsummary; @ggplot2; @ggspatial].
 
 ## Author Contribution Statement {.unnumbered}
 
