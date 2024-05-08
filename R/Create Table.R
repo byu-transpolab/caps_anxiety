@@ -20,6 +20,28 @@ readDemographicData <- function(file_path) {
 }
 
 
+#' Clean demographic data by removing specified userIds.
+#'
+#' This function takes a tibble of demographic data and removes rows corresponding to
+#' specified userIds. The userIds to be removed are hardcoded in the function.
+#'
+#' @param demo_data A tibble containing the dataset with a userId column.
+#' 
+#' @return A tibble with data excluding the specified user IDs.
+
+clean_demo_userids <- function(demo_data) {
+  relevant_ids <- demo_data %>% 
+    filter(!userId %in% c("5dd74879c275fa51872433c4",
+                          "5dd86e5d230c8b6315a40eb3",
+                          "5de5472b8239bd38c0eec4e4",
+                          "5de7f5ba9ef66c6443e7e7dd",
+                          "60a3fb2e4a311034d36fa104",
+                          "60ac0dcf2c0c5a3a2f82af89"))
+  
+  return(relevant_ids)
+}
+
+
 #' Create a Data Frame with User IDs and Dates
 #'
 #'
