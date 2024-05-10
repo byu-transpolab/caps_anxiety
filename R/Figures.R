@@ -105,3 +105,18 @@ neuro_numAct <- function(model_data) {
          x = "Neuro Group", y = "Seven Day Average Number of Activities") +
     theme_bw()
 }
+
+# Percent suicidal ideation across the different groups
+neuro_suicide <- function(model_data) {
+  suicidal_percent <- model_data %>%
+    group_by(prescribed_group) %>%
+    summarize("Percentage of Days Suicidal" = mean(suicidal_ideation_q31_even == TRUE, na.rm = TRUE) * 100) %>% 
+    rename("Neuro Group" = prescribed_group) %>% 
+    as.data.frame()
+  
+  tt(suicidal_percent, digits = 3, theme = "bootstrap")
+}
+
+
+
+
