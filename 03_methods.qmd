@@ -2,9 +2,27 @@
 
 ## Data
 
-Brigham Young University’s Counseling and Psychology Services (CAPS) conducted a study involving **88** young adults residing in Utah County, ages ranging from **18-40 years old** with the average age being **23 years old**. There were **65** individuals assigned female at birth and **23** individuals assigned male at birth. Each of the participants belonged to one of four groups based on a psychological evaluation: social anxiety, autism, control, or no group. Those who were part of the no group initially thought that they were part of the social anxiety group or the autism group, but after the physiological evaluation, it was found that they were not part of those groups. These individuals were grouped together with the control for this analysis. Of the **88** participants in the study, **28** belong to the social anxiety group, **29** belong to the autism group, and the remaining **31** are part of the control group.
+In this research, we explored a unique dataset of young adults who have expressed suicide ideation in professional therapy contexts. This study was conducted by the Brigham Young University’s Counseling and Psychology Services (CAPS). The study included 88 young adults residing in Utah County. @tbl-statnum provides a description of the participants' age and IQ descriptive statistics. The average participant was 23.8 years old and the average IQ score was 120.8.
 
--   \[INSERT SUMMARY STATISTICS TABLE FOR DEMOGRAPHICS\]
+```{r table statnum, message=FALSE, echo=FALSE}
+#| label: tbl-statnum
+#| tbl-cap: "Numeric descriptive statitics: age and IQ."
+
+library(targets)
+tar_load(desc_stat_num)
+desc_stat_num
+```
+
+@tbl-statcat provides a description of the participants' sex, group, and race. There were 65 individuals assigned female at birth and 23 individuals assigned male at birth. While gender of each participant was also recorded, the sex assigned at birth is used for this analysis. Each participant belonged to one of four groups based on a psychological evaluation: social anxiety, autism, control, or no group. Those who were part of the no group initially thought that they were part of the social anxiety group or the autism group, but after the physiological evaluation, it was found that they were not part of those groups. These individuals were grouped together with the control group for this analysis. Of the 88 participants in the study, 28 belong to the social anxiety group, 29 belong to the autism group, and the remaining 31 are part of the control group. The majority of participants were White, but Hispanic or Latino and Asian participants were also part of the study.
+
+```{r table statcat, message=FALSE, echo=FALSE}
+#| label: tbl-statcat
+#| tbl-cap: "Categorical descriptive statistics: sex, group, and race."
+
+library(targets)
+tar_load(desc_stat_cat)
+desc_stat_cat
+```
 
 Participants installed an application on their phone that collected cellular location-based services (LBS) data. The participants participated to varying degrees with some providing 1 month of LBS data and others providing up to 1 year of data. There was a period of time \[1 MONTH\] when no LBS data was collected by the application. In addition to collecting LBS data, the application prompted participants to complete a survey answering questions about their mental health. Surveys were administered in the mornings and the evenings and asked questions such as “Have you felt stressed since you last took a survey?”, “How would you rate your overall sleep quality last night?”, and “Have you thought about killing yourself in the past 12 hours or since you last took a survey?” among others. Participants were monetarily incentivized to complete the mental health surveys. 
 
