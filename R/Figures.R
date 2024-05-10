@@ -22,16 +22,15 @@ desc_cat <- function(demo_ids) {
     datasummary_skim(type = "categorical")
 }
 
-
+# Distribution of the number of activities engaged in
 numAct <- function(final_table) {
   raw_trips <- final_table %>% 
     filter(!is.na(numTrips))
   
-  # Histogram for numTrips with bin width of 10
   ggplot(raw_trips, aes(x = numTrips)) +
     geom_histogram(binwidth = 1, fill = "darkgray", color = "black") +
-    geom_text(stat = "count", aes(label = after_stat(count)),
-              vjust = -0.5, color = "black", size = 3) +
+    # geom_text(stat = "count", aes(label = after_stat(count)),
+              # vjust = -0.5, color = "black", size = 3) +
     labs(title = "Distribution of Number of Activities", x = "Number of Activities", y = "Frequency") +
     theme_bw()
 }
