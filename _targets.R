@@ -19,7 +19,7 @@ tar_option_set(packages = c("dplyr","tools", "hms", "lubridate", "gpsactivs",
                             "tidyverse", "leaflet", "sf", "purrr", "stringr",
                             "ggspatial", "data.table", "plotly", "future.apply",
                             "viridis", "pomp", "stats", "osmdata", "modelsummary",
-                            "plm"),
+                            "plm", "tinytable"),
                memory = "transient",
                garbage_collection = TRUE)
 
