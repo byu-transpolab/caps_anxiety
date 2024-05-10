@@ -69,8 +69,19 @@ modelsummary(models,
 In heteroscedasticity, error variance is non-constant, therefore, OLS standard errors are not applicable. As a result, it is not advisable to rely on confidence intervals and p-values. The variance of estimates: OLS estimates no longer have minimum variance property because the variance of residuals is not constant.
 
 
+## Effect of Demographic Factors on Motivation
 
-This function provides a summary of the coefficients and statistics for the provided regression models: Ordinary Least Squares (OLS), Fixed Effects (FE), and Random Effects (RE). It displays the estimates, standard errors, t-statistics, and p-values for each coefficient. Additionally, it renames the coefficient for the variable "sev_day_avg" to "7-Day Rolling Avg. Number of Activities".
+Since the FE model cannot implement time constant variables, a linear regression analysis was implemented to examine how demographic variables (e.g., sex, age, IQ, and group) are associated with the intercepts. This allows for understanding how the baseline level of motivation differs across different demographic groups. The sex, age, IQ, and group were the independent variables, and the fixed effects intercept values for each user served as the dependent variable. This model is shown in @tbl-fedemolm.
 
-### Model Analysis
+```{r table fe demo lm, message=FALSE, echo=FALSE}
+#| label: tbl-fedemolm
+#| tbl-cap: "Fixed Effects and Demographics Regression"
+
+library(targets)
+tar_load(fe_model)
+
+fe_model
+```
+
+The linear model examined the relationship between motivation and various predictor variables, including gender, age, IQ, and group. The analysis revealed several significant findings. First, being female was associated with a decrease in motivation by 6.311 points on a scale from 0-100 compared to males, a statistically significant effect. However, age and IQ did not show significant associations with motivation. Conversely, individuals with autism exhibited a substantial decrease in motivation by 10.732 points compared to the control group, and those with social anxiety experienced a similar decrease of 9.039 points, both statistically significant at p < 0.05. These results suggest that gender and group conditions play significant roles in shaping motivational levels, while age and IQ appear to have limited influence in this context. The model explained approximately 26.6% of the variance in motivation, indicating that other unexplored factors may contribute to motivational outcomes. These findings underscore the importance of considering individual differences, particularly gender and group status, when examining motivational behavior.
 
