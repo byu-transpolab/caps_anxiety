@@ -204,7 +204,8 @@ preprocessed_days_samp <- function(raw_samp){
     nest() %>% 
     ungroup() %>% 
     rename(cleaned = data) %>%
-    mutate(num_points = purrr::map_int(cleaned, nrow))
+    mutate(num_points = purrr::map_int(cleaned, nrow)) %>% 
+    group_by(userId, activityDay)
   
   # Select 100 random groups
   random_groups <- samp %>% sample_n(100)
@@ -224,6 +225,7 @@ preprocessed_days_samp <- function(raw_samp){
 scoring_samp <- function(raw_data) {
   scored <- raw_data %>%
     # Calculate the score for the day based on number and spread of gps points
+    ungroup() %>% 
     mutate(
       hour_multiplier = ifelse(hour %in% 8:23, 3, 1),
       points_multiplier = case_when(
@@ -233,7 +235,8 @@ scoring_samp <- function(raw_data) {
         TRUE ~ 3
       ),
       daily_score = hour_multiplier * points_multiplier
-    )
+    ) %>% 
+    group_by(userId, activityDay)
   
   return(scored)
 }
