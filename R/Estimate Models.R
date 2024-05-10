@@ -108,10 +108,35 @@ random_effects <- function(model_data) {
 hausman <- function(fixed, random) {
   phtest(fixed,random)
 }
+
+
+#' Summarize Regression Models
+#'
+#' This function summarizes the results of multiple regression models.
+#'
+#' @param ols An object of class "lm" representing the Ordinary Least Squares (OLS) regression model.
+#' @param fe An object of class "plm" representing the Fixed Effects regression model.
+#' @param re An object of class "plm" representing the Random Effects regression model.
+#'
+#' @return A summary table of regression model coefficients and statistics.
+
+compare_models <- function(ols, fe, re) {
   
-  glm4 <- glm(suicidal_ideation_q31_even ~ race, data = data, family = "binomial")
+  models <- list(
+    "Ordinary Least Squares Model" = ols,
+    "Fixed Effects Model" = fe,
+    "Random Effect Model" = re
+  )
   
-  glm5 <- glm(suicidal_ideation_q31_even ~ initial_group + gender + race, data = data, family = "binomial")
+  modelsummary(models, 
+               estimate = c("{estimate}({statistic}){stars}"),
+               statistic = NULL, 
+               coef_rename = c("sev_day_avg" = "7-Day Rolling Avg. Number of Activities"),
+               gof_omit = 'RMSE|AIC|BIC'
+  )
+}
+
+
   
   glm6 <- update(glm5, formula = .~.+numTrips)
   
