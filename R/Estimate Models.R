@@ -65,6 +65,20 @@ ols_model <- function(model_data) {
   ols <- lm(motivation ~ sev_day_avg, data = model_data)
   return(ols)
 }
+
+
+#' Estimate Fixed Effects Model
+#'
+#' This function estimates a fixed effects model using the provided model data.
+#'
+#' @param model_data A data frame containing the data for modeling.
+#'
+#' @return A fixed effects model object.
+
+fixed_effects <- function(model_data) {
+  fixed <- plm(motivation ~ sev_day_avg, index = c("userId", "activityDay"), data = model_data, model = "within")
+  return(fixed)
+}
   
   glm4 <- glm(suicidal_ideation_q31_even ~ race, data = data, family = "binomial")
   
