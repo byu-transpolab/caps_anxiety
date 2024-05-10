@@ -20,7 +20,7 @@ prep_models <- function(data) {
 
 #' Estimate Models for Suicidal Ideation
 #'
-#' @param clean_comp_table A tibble containing the data for analysis.
+#' @param model_data A tibble containing the data for analysis.
 #' @return A list of summaries for each fitted model.
 #'
 #' @details The function fits several logistic regression models to predict 
