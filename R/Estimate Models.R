@@ -93,6 +93,21 @@ random_effects <- function(model_data) {
   random <- plm(motivation ~ sev_day_avg, index = c("userId", "activityDay"), data = model_data, model = "random") 
   return(random)
 }
+
+
+#' Perform Hausman Test
+#'
+#' This function performs the Hausman test to compare the efficiency of fixed effects 
+#' and random effects models.
+#'
+#' @param fixed A fixed effects model object.
+#' @param random A random effects model object.
+#'
+#' @return A p-value indicating the significance of the Hausman test.
+
+hausman <- function(fixed, random) {
+  phtest(fixed,random)
+}
   
   glm4 <- glm(suicidal_ideation_q31_even ~ race, data = data, family = "binomial")
   
