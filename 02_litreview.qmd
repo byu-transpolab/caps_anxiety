@@ -94,6 +94,10 @@ Social recreation spaces play a multifaceted role in shaping mental health outco
 
 'department_store', 'mall'
 
+## Neurodiversity
+
+-   talk about how social anxiety and autism affect mental health and motivation
+
 ## THE GAP
 
 **Recently, a group used mobile phone-based sensing to look at daily activities and environmental exposures and the connection to anxiety symptoms.**
