@@ -91,3 +91,17 @@ length_dist <- function(final_table) {
     labs(title = "Distribution of Distance Traveled", x = "Length (km)", y = "Frequency") +
     theme_bw()
 }
+
+
+## RESULTS
+# Boxplot showing the distribution of the number of activities for each neuro group
+neuro_numAct <- function(model_data) {
+  acts <- model_data %>% 
+    filter(!is.na(sev_day_avg))
+  
+  ggplot(acts, aes(x = prescribed_group, y = sev_day_avg)) +
+    geom_boxplot(fill = "darkgray", color = "black") +
+    labs(title = "Distribution of Activities based on Neuro Group",
+         x = "Neuro Group", y = "Seven Day Average Number of Activities") +
+    theme_bw()
+}
