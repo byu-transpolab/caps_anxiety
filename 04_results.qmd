@@ -1,63 +1,76 @@
----
-output: html_document
-editor_options: 
-  chunk_output_type: console
----
 # Results
 
 ## Activity and Suicidality Analysis
 
-The neuro group that a person is part of is an important aspect of the analysis. The different neuro groups are control, social anxiety, and autism. Since there will be further analysis about how these groups travel and how mental health and well-being affect their travel, an understanding of the number of activities they engage in is beneficial to consider.
+The group that a person is part of is an important aspect of the analysis of travel behavior and mental well-being. The different groups are control, social anxiety, and autism. Since there will be further analysis about how these groups travel and how mental well-being affect their travel, an understanding of the number of activities they engage in is beneficial to consider. The seven-day rolling average number of activities for each group was analyzed.
 
--   These boxplots describe the number of activities for the different neuro groups.
+The boxplots in @fig-groupnumAct describe the number of activities for the different groups.
 
-Based on these boxplots, the control neuro group engaged in the most activities during their day and the autism neuro group engaged in the least number of activities during their day.
+```{r figure group numAct, echo=FALSE, message = FALSE}
+#| label: fig-groupnumAct
+#| fig-cap: "Boxplots showing the distribution of the 7-day rolling average number of activities by group."
 
-I also explored the percent of days that each group was suicidal. This percent calculation is based on the total number of days for each nuero group and the number of days within each group a participant answered “Yes” to the question: “Have you thought about killing yourself in the past 12 hours or since you last took a survey?” that was asked as part of the evening survey.
+library(targets)
+tar_load(fig_neuro_numAct)
+fig_neuro_numAct
+```
 
--   table showing these percentages
+Based on these boxplots, the control group engaged in the most activities on average during their day and the autism group engaged in the least number of activities during their day. Each group's distribution of number of activities was right skewed with outliers for some observations on the high end of number of activities.
 
-These results show that of all of the userId-activityDays for social anxious participants, individuals expressed suicidal tendency **24.67%** of the time. Individuals with autism expressed suicidal tendency on **13.53%** of the days and individuals who were part of the control group expressed suicidal tendency on only **1.04%** of days.
+With an understanding of the trip distribution and the suicidality for the various groups, further steps can be taken to analyze the relationship between the number of activities and the well-being and mental health of individuals.
 
-With an understanding of the trip distribution and the suicidality for the various nuero groups, further steps can be taken to analyze the relationship between the number of activities and the well-being and mental health of individuals.
-
-After joining together the semantic activities and the responses to the surveys, statistical models were created to investigate the relationship between mental health and travel behavior. Using the Poisson Model, we explored how mental health influences the number of activities individuals undertake. This model incorporates demographic attributes and mental health responses as independent variables, aiming to quantify the influence of mental health on trip frequency. The number of trips serve as the dependent variable. The identification of a relationship between travel behavior and mental health has the potential to open up therapeutic and mitigative activities for individuals suffering from depression and suicidality.
+**After joining together the semantic activities and the responses to the surveys, statistical models were created to investigate the relationship between mental health and travel behavior. Using the Poisson Model, we explored how mental health influences the number of activities individuals undertake. This model incorporates demographic attributes and mental health responses as independent variables, aiming to quantify the influence of mental health on trip frequency. The number of activities serve as the dependent variable. The identification of a relationship between travel behavior and mental health has the potential to open up therapeutic and mitigative activities for individuals suffering from depression and suicidality.**
 
 ## Statistical Modeling
 
 In statistical modeling, the selection and comparison of various regression models are crucial steps in understanding the relationships between variables and making predictions. These models are systematically built and expanded to evaluate the impact of additional covariates on the outcome variable.
 
-### Model Assumptions
+### Model Analysis
 
 Ordinary least squares (OLS) regression was considered followed by fixed and random effects models.
 
-For the OLS regression, the motivation as reported in the evening surveys was considered as a function of the 7-day rolling average number of activities engaged in as described previously. Since each participant in the study will likely have different base levels of motivation, we want to consider looking at each participants' differences in motivation
+For the OLS regression, the motivation as reported in the evening surveys on a scale from 0-100 was considered as a function of the 7-day rolling average number of activities engaged in as described previously. Since each participant in the study will likely have different base levels of motivation, we want to consider looking at each participants' differences in motivation
 
 The fixed effects (FE) model demeans the data by participant and looks at each participant's motivation and 7-day rolling average number of activities individually. The results in having different intercepts for each participant. This model is consistent but less efficient because it results in losing degrees of freedom to estimate individual intercepts for each participant. This results in larger standard errors for the estimates which can make it more difficult to recognize significance. The FE model also removes the effect of time constant characteristics, which in this case are the demographic characteristics of each participant. These variables are absorbed by the intercept as they are unique to each participant.
 
 The random effects (RE) model semi-demeans the data by participant. Based on a mean for the entire group, a mean is determined with set standard deviations to represent the data pf the entire group. The RE model is appropriate to use if it is believed that the the difference in motivation has an influence on the 7-day rolling average number of activities. It is possible that other variables that influence the 7-day rolling average number of activities are not included which can lead to bias in the model. Unlike the FE model, the RE model is more efficient because degrees of freedom are not lost to more estimates, but the results can be biased.
 
-We ran to OLS model, the FE model, and the RE model to predict motivation based on the 7-day rolling average number of activities. The Hausman test compares the differences in the coefficients of the FE and RE models. The null hypothesis is that the preferred model is the RE and the alternative hypothesis is that the preferred model is the FE. We found, using the Hausman test, that the p-value is 0.001324 which is less than 0.05, which means that the results are significant and we reject the null hypothesis. This implies that the coefficients from the FE model and RE model are sufficiently different from each other, which means that the RE model is inconsistent and the FE model should be used in the analysis.
+We ran to OLS model, the FE model, and the RE model to predict motivation based on the 7-day rolling average number of activities. These three models are shown in @tbl-olsfere. The Hausman test is used to determine whether the random effects model is more appropriate than the fixed effects model. It tests whether the random effects estimator is consistent and efficient compared to the fixed effects estimator. The null hypothesis is that the random effects estimator is consistent and efficient, while the alternative hypothesis is that the fixed effects estimator is more efficient. We found, using the Hausman test, that the p-value is 0.0013 which is less than 0.05, which means that the results are significant and we reject the null hypothesis. This implies that the coefficients from the FE model and RE model are sufficiently different from each other, which means that the RE model is inconsistent and the FE model should be used in the analysis.
 
-- show table for comparing ols, fe, and re
+```{r table ols fe re, message=FALSE, echo=FALSE}
+#| label: tbl-olsfere
+#| tbl-cap: "OLS, FE, and RE Models"
+#| warnings: FALSE
 
-Since the FE model cannot implement time constant variables, a linear model was used to predict the fixed effects from the model on the demographic data of the users. The sex, age, IQ, and neuro group were the independent variables, and the fixed effects intercept values for each user served as the dependent variable.
-
-```{r, message=FALSE, echo=FALSE}
 library(targets)
-tar_load(fe_model)
+library(modelsummary)
+library(plm)
+library(kableExtra)
 
-fe_model
+tar_load(ols)
+tar_load(fe)
+tar_load(re)
+
+models <- list(
+    "Ordinary Least Squares Model" = ols,
+    "Fixed Effects Model" = fe,
+    "Random Effect Model" = re
+  )
+
+modelsummary(models,
+             estimate = c("{estimate) ({statistic}){stars}"),
+             statistic = NULL,
+             coef_rename = c("sev_day_avg" = "7-Day Rolling Avg. Number of Activities"),
+             gof_omit = 'RMSE|AIC|BIC',
+             output = "kableExtra"
+  )
 ```
 
-The Hausman test is used to determine whether the random effects model is more appropriate than the fixed effects model. It tests whether the random effects estimator is consistent and efficient compared to the fixed effects estimator. The null hypothesis is that the random effects estimator is consistent and efficient, while the alternative hypothesis is that the fixed effects estimator is more efficient.
+In heteroscedasticity, error variance is non-constant, therefore, OLS standard errors are not applicable. As a result, it is not advisable to rely on confidence intervals and p-values. The variance of estimates: OLS estimates no longer have minimum variance property because the variance of residuals is not constant.
 
-This function extracts the intercepts from the fixed effects model and conducts a linear regression analysis to examine how demographic variables (e.g., sex, age, FSIQ) are associated with the intercepts. This allows for understanding how the baseline level of motivation differs across different demographic groups.
 
-This function fits a simple linear regression model where motivation is regressed on the severity of the day average (sev_day_avg). The model estimates the relationship between the independent variable (sev_day_avg) and the dependent variable (motivation).
 
 This function provides a summary of the coefficients and statistics for the provided regression models: Ordinary Least Squares (OLS), Fixed Effects (FE), and Random Effects (RE). It displays the estimates, standard errors, t-statistics, and p-values for each coefficient. Additionally, it renames the coefficient for the variable "sev_day_avg" to "7-Day Rolling Avg. Number of Activities".
 
 ### Model Analysis
 
--   modelsummary table
