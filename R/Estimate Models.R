@@ -79,6 +79,20 @@ fixed_effects <- function(model_data) {
   fixed <- plm(motivation ~ sev_day_avg, index = c("userId", "activityDay"), data = model_data, model = "within")
   return(fixed)
 }
+
+
+#' Estimate Random Effects Model
+#'
+#' This function estimates a random effects model using the provided model data.
+#'
+#' @param model_data A data frame containing the data for modeling.
+#'
+#' @return A random effects model object.
+
+random_effects <- function(model_data) {
+  random <- plm(motivation ~ sev_day_avg, index = c("userId", "activityDay"), data = model_data, model = "random") 
+  return(random)
+}
   
   glm4 <- glm(suicidal_ideation_q31_even ~ race, data = data, family = "binomial")
   
