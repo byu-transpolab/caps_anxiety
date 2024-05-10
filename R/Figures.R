@@ -67,3 +67,15 @@ numAct_30 <- function(final_table) {
     labs(title = "Number of Activities with Thirty Day Average", x = "Number of Activities", y = "Frequency") +
     theme_bw()
 }
+
+# Distribution of the area covered as calculated by the convex_hull
+area_dist <- function(final_table) {
+  trips <- final_table %>% 
+    filter(!is.na(area))
+  
+  ggplot(trips, aes(x = area/(1e6))) +
+    geom_histogram(fill = "darkgray", color = "black") +
+    scale_x_log10() +
+    labs(title = "Distribution of Area Covered", x = "Area (km^2)", y = "Frequency") +
+    theme_bw()
+}
