@@ -137,13 +137,41 @@ compare_models <- function(ols, fe, re) {
 }
 
 
+#' Fixed Effects Analysis
+#'
+#' This function conducts analysis using fixed effects models.
+#'
+#' @param fe A fixed effects model object.
+#' @param demo A data frame containing demographic information.
+#'
+#' @return A summary of the linear regression model examining the relationship 
+#' between the intercepts from the fixed effects model and demographic variables.
+
+fe_analysis <- function(fe, demo) {
+  fixef <- data.frame(userId = names(fixef(fe)), intercept = fixef(fe)) %>% 
+    as_tibble()
   
-  glm6 <- update(glm5, formula = .~.+numTrips)
+  fe_model <- right_join(demo, fixef, by = "userId") %>% 
+    mutate(sex = if(is.ordered(sex)) sex else relevel(as.factor(sex), ref = "Male"),
+           fsiq_2 = as.numeric(fsiq_2),
+           prescribed_group = fct_recode(prescribed_group, Control = "No Group"))
   
-  summaries <- list(summary(glm1), summary(glm2), summary(glm3), summary(glm4), summary(glm5), summary(glm6))
+  int_model <- list(
+    "Intercept Model" = lm(intercept ~ sex + age + fsiq_2 + prescribed_group, data = fe_model))
   
-  return(summaries)
+  modelsummary(int_model,
+               estimate = c("{estimate} ({statistic}){stars}"),
+               statistic = NULL, 
+               coef_rename = c("sexFemale" = "Female", 
+                               "age" = "Age", 
+                               "fsiq_2" = "IQ", 
+                               "prescribed_groupAutism" = "Autism", 
+                               "prescribed_groupSocial Anxiety" = "Social Anxiety"),
+               gof_omit = 'RMSE|AIC|BIC',
+               fmt = 2
+  )
 }
+
 
 
 
