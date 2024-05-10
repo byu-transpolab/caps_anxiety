@@ -153,9 +153,39 @@ list(
   
   
   # Create a subset of the processed data
-  tar_target(preprocessed_samp, preprocessed_days_samp(preprocessed)),
+  # tar_target(preprocessed_samp, preprocessed_days_samp(preprocessed)),
   
   # Score the subset of processed data
-  tar_target(scored_days_samp, scoring_samp(preprocessed_samp))
+  # tar_target(scored_days_samp, scoring_samp(preprocessed_samp)),
+  
+  # Table for numeric descriptive statistics
+  tar_target(desc_stat_num, desc_num(demo_ids)),
+  
+  # Table for categorical descriptive statitics
+  tar_target(desc_stat_cat, desc_cat(demo_ids)),
+  
+  # Figure for the number of activities
+  tar_target(fig_numAct, numAct(final_table)),
+  
+  # Figure for the 7-day rolling average number of activities
+  tar_target(fig_numAct_7, numAct_7(final_table)),
+  
+  # Figure for the 14-day rolling average number of activities
+  tar_target(fig_numAct_14, numAct_14(final_table)),
+  
+  # Figure for the 30-day rolling average number of activities
+  tar_target(fig_numAct_30, numAct_30(final_table)),
+  
+  # Figure for the distribution of area covered
+  tar_target(area_distribution, area_dist(final_table)),
+  
+  # Figure for the distribution of length covered
+  tar_target(length_distribution, length_dist(final_table)),
+  
+  # Boxplot for the 7-day rolling average number of activities by neuro group
+  tar_target(fig_neuro_numAct, neuro_numAct(model_data)),
+  
+  # Percent suicidal for neuro group
+  tar_target(tbl_neuro_suicide, neuro_suicide(model_data))
   
 )
