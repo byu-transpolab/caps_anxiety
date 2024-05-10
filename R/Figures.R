@@ -35,25 +35,34 @@ numAct <- function(final_table) {
     theme_bw()
 }
 
+# Distribution of the 7-day rolling average number of activities
 numAct_7 <- function(final_table) {
-  # Histogram for sev_day_avg with bin width of 10
-  ggplot(final_table, aes(x = sev_day_avg)) +
+  trips <- final_table %>% 
+    filter(!is.na(sev_day_avg))
+  
+  ggplot(trips, aes(x = sev_day_avg)) +
     geom_histogram(binwidth = 1, fill = "darkgray", color = "black") +
     labs(title = "Number of Activities with Seven Day Average", x = "Number of Activities", y = "Frequency") +
     theme_bw()
 }
 
+# Distribution of the 14-day rolling average number of activities
 numAct_14 <- function(final_table) {
-  # Histogram for fourteen_day_avg with bin width of 10
-  ggplot(final_table, aes(x = fourteen_day_avg)) +
+  trips <- final_table %>% 
+    filter(!is.na(fourteen_day_avg))
+  
+  ggplot(trips, aes(x = fourteen_day_avg)) +
     geom_histogram(binwidth = 1, fill = "darkgray", color = "black") +
     labs(title = "Number of Activities with Fourteen Day Average", x = "Number of Activities", y = "Frequency") +
     theme_bw()
 }
 
+# Distribution of the 30-day rolling average number of activities
 numAct_30 <- function(final_table) {
-  # Histogram for thirty_day_avg with bin width of 10
-  ggplot(final_table, aes(x = thirty_day_avg)) +
+  trips <- final_table %>% 
+    filter(!is.na(thirty_day_avg))
+  
+  ggplot(trips, aes(x = thirty_day_avg)) +
     geom_histogram(binwidth = 1, fill = "darkgray", color = "black") +
     labs(title = "Number of Activities with Thirty Day Average", x = "Number of Activities", y = "Frequency") +
     theme_bw()
