@@ -51,6 +51,20 @@ estimate_models <- function(data_models) {
                gof_omit = 'RMSE|AIC|BIC'
   )
 }
+
+
+#' Ordinary Least Squares (OLS) Model
+#'
+#' This function fits an Ordinary Least Squares (OLS) regression model.
+#'
+#' @param model_data A data frame containing the variables for modeling.
+#'
+#' @return An object of class "lm" representing the fitted OLS regression model.
+
+ols_model <- function(model_data) {
+  ols <- lm(motivation ~ sev_day_avg, data = model_data)
+  return(ols)
+}
   
   glm4 <- glm(suicidal_ideation_q31_even ~ race, data = data, family = "binomial")
   
