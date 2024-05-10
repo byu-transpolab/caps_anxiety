@@ -1,4 +1,5 @@
 
+## MODELS
 library(targets)
 library(tidyverse)
 library(modelsummary)
@@ -37,7 +38,7 @@ modelsummary(models,
              )
 
 # Models to predict the energy levels
-s_base <- glm(energy ~ sex + age + fsiq_2 + prescribed_group, data = data_models, family = "gaussian")
+s_base <- glm(motivation ~ sex + age + fsiq_2 + prescribed_group, data = data_models, family = "gaussian")
 s_distance <- update(s_base, .~. + length)
 s_area <- update(s_base, .~. + area)
 s_numTrips <- update(s_base, .~. + numTrips)
@@ -76,7 +77,7 @@ ggplot(final_table, aes(x = numTrips)) +
 ggplot(final_table, aes(x = area/(1e6))) +
   geom_histogram(fill = "darkgray", color = "black") +
   scale_x_log10() +
-  labs(title = "Distribution of Area Covered", x = "Area (mm^2)", y = "Frequency") +
+  labs(title = "Distribution of Area Covered", x = "Area (km^2)", y = "Frequency") +
   theme_bw()
 
 ggplot(final_table, aes(x = length/1000)) +
@@ -87,29 +88,101 @@ ggplot(final_table, aes(x = length/1000)) +
 
 
 ## FIXED EFFECTS AND RANDOM EFFECTS
-
 library(modelr)
 library(tidyverse)
 library(foreign)
 library(plm)
 
 effects <- data_models %>% 
-  filter(!is.na(motivation))
+  filter(!is.na(motivation)) %>% 
+  select(-algorithm) %>% 
+  as.data.frame()
 
 # fixed model
-fixed <- plm(motivation ~ sex + age + fsiq_2 + prescribed_group , index = c("userId", "activityDay"), data = effects, model = "within")  
-fixef(fixed) 
+fixed <- plm(motivation ~ sev_day_avg, index = c("userId", "activityDay"), data = effects, model = "within") 
+summary(fixed)
 
+
+fixef(fixed) 
+fixef_data <- data.frame(userId = names(fixef(fixed)), intercept = fixef(fixed))
+fixef_tibble <- as_tibble(fixef_data)
+
+# fixed effects linear regression model
+fe_model <- right_join(demo_ids, fixef_tibble, by = "userId") %>% 
+  mutate(sex = if(is.ordered(sex)) sex else relevel(as.factor(sex), ref = "Male"),
+         fsiq_2 = as.numeric(fsiq_2),
+         prescribed_group = fct_recode(prescribed_group, Control = "No Group"))
+
+int_model <- lm(intercept ~ sex + age + fsiq_2 + prescribed_group, data = fe_model)
+summary(int_model)
+
+plot(fixed)
 
 fixed_dum <-lm(motivation ~ sex + age + fsiq_2 + prescribed_group + factor(userId) - 1, data = effects)
 summary(fixed_dum)
 
-
 #random model
-random <- plm(motivation ~ activityDay, c("userId", "activityDay"), data = effects, model = "random")  
+random <- plm(motivation ~ sev_day_avg, index = c("userId", "activityDay"), data = effects, model = "random")  
 
 # Hausman test to compare the fixed and random
 phtest(fixed,random) 
 
 
+
+
+suicide_model <- lm(motivation ~ suicida , data = data_models)
+summary(int_model)
+
+
+
+
+
+# FIGURE SHOWING A HEAT MAP OF ACTIVITIES
+library(dplyr)
+library(ggplot2)
+library(sf)
+library(tmap)
+library(ggspatial)
+
+activity_locations <- activity_types %>% 
+  select(algorithm) %>% 
+  unnest(cols = c(algorithm)) %>% 
+  st_as_sf()
+  
+activities <- ggplot(data = activity_locations) + 
+  annotation_map_tile("cartolight") +
+  geom_sf()
+
+ggplot() + 
+  annotation_map_tile("cartolight") + 
+  geom_sf(data = activity_locations, aes(geometry = geometry)) +
+  theme_void()
+
+
+
+
+
+
+## OLD MODEL STUFF
+glm1 <- glm(suicidal_ideation_q31_even ~ initial_group, data = data, family = "binomial")
+
+glm2 <- glm(suicidal_ideation_q31_even ~ prescribed_group, data = data, family = "binomial")
+
+glm3 <- glm(suicidal_ideation_q31_even ~ gender, data = data, family = "binomial")
+
+glm4 <- glm(suicidal_ideation_q31_even ~ race, data = data, family = "binomial")
+
+glm5 <- glm(suicidal_ideation_q31_even ~ initial_group + gender + race, data = data, family = "binomial")
+
+glm6 <- update(glm5, formula = .~.+numTrips)
+
+summaries <- list(summary(glm1), summary(glm2), summary(glm3), summary(glm4), summary(glm5), summary(glm6))
+
+return(summaries)
+
+
+
+
+packageurl <- "https://cran.r-project.org/src/contrib/Archive/targets/targets_1.6.0.tar.gz"
+install.packages(packageurl, repos=NULL, type="source")
 
