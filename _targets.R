@@ -123,9 +123,30 @@ list(
   
   
   
-  # Estimate models
-  tar_target(models, estimate_models(final_table)),
+  # Prepare the data for models
+  tar_target(model_data, prep_models(final_table)),
   
+  # Estimate models
+  tar_target(models, estimate_models(model_data)),
+  
+  # Estimate the OLS Model
+  tar_target(ols, ols_model(model_data)),
+  
+  # Estimate the Fixed Effects Model
+  tar_target(fe, fixed_effects(model_data)),
+  
+  # Estimate the Random Effects Model
+  tar_target(re, random_effects(model_data)),
+  
+  # Perform the Hausman Test
+  tar_target(haus_result, hausman(fe, re)),
+  
+  # Create a model summary table
+  # tar_target(model_comps, compare_models(ols, fe, re)),
+  
+  # Create the Fixed Effects Linear Model
+  tar_target(fe_model, fe_analysis(fe, demo_ids)),
+
   
   
   
