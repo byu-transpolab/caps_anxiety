@@ -79,3 +79,15 @@ area_dist <- function(final_table) {
     labs(title = "Distribution of Area Covered", x = "Area (km^2)", y = "Frequency") +
     theme_bw()
 }
+
+# Distribution of the distance traveled 
+length_dist <- function(final_table) {
+  trips <- final_table %>% 
+    filter(!is.na(length))
+  
+  ggplot(trips, aes(x = length/1000)) +
+    geom_histogram(fill = "darkgray", color = "black") +
+    scale_x_log10() +
+    labs(title = "Distribution of Distance Traveled", x = "Length (km)", y = "Frequency") +
+    theme_bw()
+}
