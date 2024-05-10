@@ -1,4 +1,26 @@
+## METHODS
+# Descriptive numeric statistics
+desc_num <- function(demo_ids) {
+  descriptives_num <- demo_ids %>% 
+    filter(!is.na(userId)) %>% 
+    select(age, fsiq_2) %>% 
+    mutate(fsiq_2 = as.numeric(fsiq_2)) %>%
+    rename(Age = age,
+           IQ = fsiq_2) %>% 
+    datasummary_skim()
+}
 
+# Descriptive categorical statistics
+desc_cat <- function(demo_ids) {
+  descriptives_cat <- demo_ids %>% 
+    filter(!is.na(userId)) %>% 
+    select(prescribed_group, sex, race) %>% 
+    mutate(prescribed_group = fct_recode(prescribed_group, Control = "No Group")) %>% 
+    rename(Group = prescribed_group,
+           Sex = sex,
+           Race = race) %>% 
+    datasummary_skim(type = "categorical")
+}
 
 
 numAct <- function(final_table) {
