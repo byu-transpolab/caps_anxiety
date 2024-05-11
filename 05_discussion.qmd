@@ -1,5 +1,33 @@
 # Discussion and Applications {#sec-contribs}
 
+```{r setup, file = "R/chapter_start.R", include = FALSE, cache = FALSE}
+library(tinytable)
+```
+
+## Group Analysis
+
+The group that a person is part of is an important aspect of the analysis of travel behavior and mental well-being. The different groups are control, social anxiety, and autism. Since there will be further analysis about how these groups travel and how mental well-being affect their travel, an understanding of the number of activities they engage in is beneficial to consider. The seven-day rolling average number of activities for each group was analyzed.
+
+The descriptive statistics in @tbl-groupActs describe the activities for the different groups.
+
+```{r table groupAct, echo=FALSE, message = FALSE}
+#| label: fig-groupActs
+#| tbl-cap: "Descriptive Statistics by Group"
+
+tar_load(model_data)
+
+acts <- model_data %>% 
+    filter(!is.na(numTrips)) %>%
+    select(prescribed_group, numTrips, sev_day_avg, park, grocery, library, social_rec, suicidal_ideation_q31_even) %>% 
+    group_by(prescribed_group)
+
+datasummary_balance(~prescribed_group, data = acts, coef_map = cm_group, dinm=FALSE)
+```
+
+Based on these results, the control group engaged in the most activities during their day with the average day having 3.0 activities. The participants in the autism group engaged in the least number of activities, with an average of 1.9 activities during their day. The participants in the social anxiety group participated in 2.4 activities on average each day. In addition, the social anxiety group had the highest percent of days when the participants answered "Yes" to the question: “Have you thought about killing yourself in the past 12 hours or since you last took a survey?” that was asked as part of the evening survey. Participants in the social anxiety group responded "Yes" 16.4% of the day, whereas participants in the control group and autism group responded "Yes" 1.7% of the time and 5.1% of the time respectively.
+
+With an understanding of the trip distribution and the suicidality for the various groups, further steps can be taken to analyze the relationship between the number of activities and the well-being and mental health of individuals.
+
 We explored the percent of days that each group was suicidal. This percent calculation is based on the total number of days for each group and the number of days within each group a participant answered “Yes” to the question: “Have you thought about killing yourself in the past 12 hours or since you last took a survey?” that was asked as part of the evening survey.
 
 @tbl-groupsuicide table shows these percentages.
@@ -8,9 +36,15 @@ We explored the percent of days that each group was suicidal. This percent calcu
 #| label: tbl-groupsuicide
 #| tbl-cap: "Percent Suicidal Ideation"
 
-library(targets)
-tar_load(tbl_neuro_suicide)
-tbl_neuro_suicide
+library(model_data)
+
+suicidal_percent <- model_data %>%
+    group_by(prescribed_group) %>%
+    summarize("Percentage of Days Suicidal" = mean(suicidal_ideation_q31_even == TRUE, na.rm = TRUE) * 100) %>% 
+    rename("Neuro Group" = prescribed_group) %>% 
+    as.data.frame()
+  
+tt(suicidal_percent, digits = 3, theme = "bootstrap")
 ```
 
 This table presents the percentage of days individuals within different groups reported feeling suicidal. Notably, individuals in the control group reported feeling suicidal on approximately 1.04% of the days. In contrast, individuals diagnosed with autism reported a substantially higher percentage, with 13.38% of days marked by suicidal feelings. Similarly, those with social anxiety exhibited the highest percentage, with 24.79% of days characterized by feelings of suicidality. These findings suggest a significant disparity in the prevalence of suicidal ideation across groups, with higher rates observed among individuals with autism and social anxiety compared to the control group. Understanding these patterns is crucial for developing targeted interventions and support strategies tailored to individuals with specific neurodiverse conditions.
