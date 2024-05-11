@@ -72,12 +72,21 @@ After using the rolling averages, there were 5,673 userId-activityDays for the s
 #| label: fig-numActsev
 #| fig-cap: "Distribution of 7-day rolling average number of activities per day for all userId-activityDays."
 
-library(targets)
-tar_load(fig_numAct_7)
-fig_numAct_7
+tar_load(final_table)
+
+raw_trips <- final_table %>% 
+    filter(!is.na(sev_day_avg))
+  
+ggplot(raw_trips, aes(x = sev_day_avg)) +
+    geom_histogram(binwidth = 1, fill = "darkgray", color = "black") +
+    labs(x = "Number of Activities", y = "Frequency") +
+    theme_bw()
 ```
 
 By calculating rolling averages and imputing missing trip data, the imputation algorithm enhanced the dataset's completeness and reliability, thereby facilitating more robust analyses of activity patterns and their associations with mental health outcomes. The resulting dataset with imputed trip data served as a valuable resource for exploring the relationship between daily activities and mental well-being.
+
+[ADD HEAT MAP FIGURE OF ALL OF THE ACTIVITIES IN UTAH COUNTY]
+[CREATE A HEAT MAP WITH EACH GEOJSON FILE UNDERNEATHER FOR EACH ACTIVITY LOCATION]
 
 ## Additional Parameters
 
