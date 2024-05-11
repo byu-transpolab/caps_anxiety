@@ -151,38 +151,30 @@ activity_locations <- activity_types %>%
   
 activities <- ggplot(data = activity_locations) + 
   annotation_map_tile("cartolight") +
-  geom_sf()
-
-ggplot() + 
-  annotation_map_tile("cartolight") + 
-  geom_sf(data = activity_locations, aes(geometry = geometry)) +
-  theme_void()
+  geom_contour()
 
 
 
 
+# Compute density of points
+density <- density(activity_locations$geometry)
 
-
-## OLD MODEL STUFF
-glm1 <- glm(suicidal_ideation_q31_even ~ initial_group, data = data, family = "binomial")
-
-glm2 <- glm(suicidal_ideation_q31_even ~ prescribed_group, data = data, family = "binomial")
-
-glm3 <- glm(suicidal_ideation_q31_even ~ gender, data = data, family = "binomial")
-
-glm4 <- glm(suicidal_ideation_q31_even ~ race, data = data, family = "binomial")
-
-glm5 <- glm(suicidal_ideation_q31_even ~ initial_group + gender + race, data = data, family = "binomial")
-
-glm6 <- update(glm5, formula = .~.+numTrips)
-
-summaries <- list(summary(glm1), summary(glm2), summary(glm3), summary(glm4), summary(glm5), summary(glm6))
-
-return(summaries)
+# Plot the sf object with density
+ggplot() +
+  geom_sf(data = activity_locations, aes(fill = density)) +
+  scale_fill_viridis_c() +  # Choose your desired color palette
+  theme_void()  # Remove axes and background
 
 
 
 
-packageurl <- "https://cran.r-project.org/src/contrib/Archive/targets/targets_1.6.0.tar.gz"
-install.packages(packageurl, repos=NULL, type="source")
+library(spatstat)
 
+# Convert the geometry to a ppp object
+points <- as.ppp(activity_locations$geometry)
+
+# Compute the density
+density <- density(points)
+
+# Plot the density
+plot(density)
