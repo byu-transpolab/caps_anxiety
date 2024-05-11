@@ -43,18 +43,23 @@ The data collection application recorded LBS data every second that the particip
 
 The DBSCAN-TE algorithm was used to determine where activities occurred during the day and how many activities were engaged in during the day. This algorithm is a density-based clustering non-parametric algorithm where given a set of points in some space, it groups together points that are closely packed together. DBSCAN stands for density-based spatial clustering of applications with noise and the TE add an entropy constraint and temporal sequence constraint which allows for better classification of activities during one’s day. The parameters for the DBSCAN-TE algorithm were previously optimized and were implemented on the LBS data set [@macfarlaneClassifyingLocationPoints2024].
 
-The optimized values for the parameters parameters were implemented and the number of activities were determined for the high scoring userId-activity days. Then it was determined which activities during a given activity day occurred at parks, grocery stores, libraries, and social-recreation locations. After processing the data, we ended up with **3,845** userId-activityDays that had sufficient enough data to create good trip data.
+The optimized values for the parameters parameters were implemented and the number of activities were determined for the high scoring userId-activity days. Then it was determined which activities during a given activity day occurred at parks, grocery stores, libraries, and social-recreation locations. After processing the data, we ended up with 3,845 userId-activityDays that had sufficient enough data to create good trip data.
 
-@fig-numAct shows the distribution of the number of activities on a given day for those **3,845** days.
+@fig-numAct shows the distribution of the number of activities on a given day for those 3,845 days.
 
 ```{r figure numAct, message=FALSE, echo=FALSE}
 #| label: fig-numAct
 #| fig-cap: "Distribution of activities per day for all userId-activityDays."
 
-library(targets)
-library(tidyverse)
-tar_load(fig_numAct)
-fig_numAct
+tar_load(final_table)
+
+raw_trips <- final_table %>% 
+    filter(!is.na(numTrips))
+  
+ggplot(raw_trips, aes(x = numTrips)) +
+    geom_histogram(binwidth = 1, fill = "darkgray", color = "black") +
+    labs(x = "Number of Activities", y = "Frequency") +
+    theme_bw()
 ```
 
 After identifying high-scoring userId-activity days using this scoring algorithm and using the DBSCAN-TE algorithm to determine the number of activities per day, an imputation process was conducted to enhance the dataset's completeness. This imputation aimed to fill in missing trip data for certain days, either due to the absence of data collection or the poor quality of data, ensuring a more comprehensive dataset aligning with the days of mental health survey responses. The imputation used rolling averages to estimate the number of trips for specific time frame and activity types. This process involved calculating averages over varying time windows, such as seven, fourteen, and thirty days, to capture trends and patterns in trip data. The imputation process was applied separately for different activity types, including park visits, grocery shopping, and library visits, to account for potential variations in activity patterns across different contexts.
