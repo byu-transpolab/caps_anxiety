@@ -18,41 +18,6 @@ prep_models <- function(data) {
 }
 
 
-#' Estimate Models for Suicidal Ideation
-#'
-#' @param model_data A tibble containing the data for analysis.
-#' @return A list of summaries for each fitted model.
-#'
-#' @details The function fits several logistic regression models to predict 
-#' suicidal ideation. It returns a summary for each model
-
-estimate_models <- function(data_models) {
-  
-  models <- list(
-    "Basic Demographics" = glm(sev_day_avg ~ sex + age + fsiq_2, data = data_models, family = "poisson"),
-    "Demographics and Group" = glm(sev_day_avg ~ sex + age + fsiq_2 + prescribed_group, data = data_models, family = "poisson"),
-    "Demographics, Group, and Suicide Ideation" = glm(sev_day_avg ~ sex + age + fsiq_2 + prescribed_group + suicidal_ideation_q31_even, data = data_models, family = "poisson"),
-    "Demographics, Group, and Energy" = glm(sev_day_avg ~ sex + age + fsiq_2 + prescribed_group  + energy, data = data_models, family = "poisson"),
-    "Demographics, Group, and Motivation" = glm(sev_day_avg ~ sex + age + fsiq_2 + prescribed_group  + motivation, data = data_models, family = "poisson"),
-    "Demographics, Group, Suicide, and Energy" = glm(sev_day_avg ~ sex + age + fsiq_2 + prescribed_group  + suicidal_ideation_q31_even + energy + motivation, data = data_models, family = "poisson")
-  )
-  
-  modelsummary(models, 
-               estimate = c("{estimate}({statistic}){stars}"),
-               statistic = NULL, 
-               coef_rename = c("sexFemale" = "Female", 
-                               "age" = "Age", 
-                               "fsiq_2" = "IQ", 
-                               "prescribed_groupAutism" = "Autism", 
-                               "prescribed_groupSocial Anxiety" = "Social Anxiety", 
-                               "suicidal_ideation_q31_evenTRUE" = "Suicidal Ideation",
-                               "energy" = "Energy",
-                               "motivation" = "Motivation"),
-               gof_omit = 'RMSE|AIC|BIC'
-  )
-}
-
-
 #' Ordinary Least Squares (OLS) Model
 #'
 #' This function fits an Ordinary Least Squares (OLS) regression model.
