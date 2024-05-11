@@ -96,18 +96,6 @@ fe_analysis <- function(fe, demo) {
   
   int_model <- list(
     "Intercept Model" = lm(intercept ~ sex + age + fsiq_2 + prescribed_group, data = fe_model))
-  
-  modelsummary(int_model,
-               estimate = c("{estimate} ({statistic}){stars}"),
-               statistic = NULL, 
-               coef_rename = c("sexFemale" = "Female", 
-                               "age" = "Age", 
-                               "fsiq_2" = "IQ", 
-                               "prescribed_groupAutism" = "Autism", 
-                               "prescribed_groupSocial Anxiety" = "Social Anxiety"),
-               gof_omit = 'RMSE|AIC|BIC',
-               fmt = 2
-  )
 }
 
 
