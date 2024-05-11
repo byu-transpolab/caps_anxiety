@@ -99,5 +99,58 @@ fe_analysis <- function(fe, demo) {
 }
 
 
+#' Estimate Fixed Effects Model ~ for the sev_day_avg
+#'
+#' This function estimates a fixed effects model using the provided model data.
+#'
+#' @param model_data A data frame containing the data for modeling.
+#'
+#' @return A fixed effects model object.
+
+fe_sevdayavg <- function(model_data) {
+  fixed <- plm(motivation ~ sev_day_avg, index = c("userId", "activityDay"), data = model_data, model = "within")
+  return(fixed)
+}
+
+
+#' Estimate Fixed Effects Model ~ for the numTrips
+#'
+#' This function estimates a fixed effects model using the provided model data.
+#'
+#' @param model_data A data frame containing the data for modeling.
+#'
+#' @return A fixed effects model object.
+
+fe_numTrips <- function(model_data) {
+  fixed <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = model_data, model = "within")
+  return(fixed)
+}
+
+
+#' Estimate Fixed Effects Model ~ for area
+#'
+#' This function estimates a fixed effects model using the provided model data.
+#'
+#' @param model_data A data frame containing the data for modeling.
+#'
+#' @return A fixed effects model object.
+
+fe_area <- function(model_data) {
+  fixed <- plm(motivation ~ area, index = c("userId", "activityDay"), data = model_data, model = "within")
+  return(fixed)
+}
+
+
+#' Estimate Fixed Effects Model ~ for the length
+#'
+#' This function estimates a fixed effects model using the provided model data.
+#'
+#' @param model_data A data frame containing the data for modeling.
+#'
+#' @return A fixed effects model object.
+fe_length <- function(model_data) {
+  fixed <- plm(motivation ~ length, index = c("userId", "activityDay"), data = model_data, model = "within")
+  return(fixed)
+}
 
 
