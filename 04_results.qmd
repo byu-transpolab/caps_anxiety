@@ -1,31 +1,42 @@
 # Results
 
-## Activity and Suicidality Analysis
-
-The group that a person is part of is an important aspect of the analysis of travel behavior and mental well-being. The different groups are control, social anxiety, and autism. Since there will be further analysis about how these groups travel and how mental well-being affect their travel, an understanding of the number of activities they engage in is beneficial to consider. The seven-day rolling average number of activities for each group was analyzed.
-
-The boxplots in @fig-groupnumAct describe the number of activities for the different groups.
-
-```{r figure group numAct, echo=FALSE, message = FALSE}
-#| label: fig-groupnumAct
-#| fig-cap: "Boxplots showing the distribution of the 7-day rolling average number of activities by group."
-
-library(targets)
-tar_load(fig_neuro_numAct)
-fig_neuro_numAct
+```{r setup, file = "R/chapter_start.R", include = FALSE, cache = FALSE}
+library(plm)
+library(sandwich)
 ```
 
-Based on these boxplots, the control group engaged in the most activities on average during their day and the autism group engaged in the least number of activities during their day. Each group's distribution of number of activities was right skewed with outliers for some observations on the high end of number of activities.
+```{r model-setups, include=FALSE}
+f <- function(x) format(round(x, 3), big.mark=",")
+gm <- list(
+  list("raw" = "Num.Obs.", "clean" = "Number of Observations", "fmt" = f),
+  list("raw" = "Log.Lik.", "clean" = "Log Liklihood", "fmt" = f),
+  list("raw" = "rho20", "clean" = "$\\rho^2_0$", "fmt" = f))
 
-With an understanding of the trip distribution and the suicidality for the various groups, further steps can be taken to analyze the relationship between the number of activities and the well-being and mental health of individuals.
-
-**After joining together the semantic activities and the responses to the surveys, statistical models were created to investigate the relationship between mental health and travel behavior. Using the Poisson Model, we explored how mental health influences the number of activities individuals undertake. This model incorporates demographic attributes and mental health responses as independent variables, aiming to quantify the influence of mental health on trip frequency. The number of activities serve as the dependent variable. The identification of a relationship between travel behavior and mental health has the potential to open up therapeutic and mitigative activities for individuals suffering from depression and suicidality.**
+cm <- c(
+  "sev_day_avg" = "7-Day Rolling Avg. Number of Activities",
+  "sexFemale" = "Female", 
+  "age" = "Age", 
+  "fsiq_2" = "IQ", 
+  "prescribed_groupAutism" = "Autism", 
+  "prescribed_groupSocial Anxiety" = "Social Anxiety", 
+  "suicidal_ideation_q31_evenTRUE" = "Suicidal Ideation",
+  "energy" = "Energy",
+  "motivation" = "Motivation")
+  
+cm_group <- c(
+  "numTrips" = "Number of Activities",
+  "sev_day_avg" = "7-Day Rolling Avg. Number of Activities",
+  "park" = "Visits to Parks",
+  "grocery" = "Visits to Grocery Store",
+  "library" = "Visits to Libraries",
+  "social_rec" = "Visits to Social Recreation Locations")
+```
 
 ## Statistical Modeling
 
-In statistical modeling, the selection and comparison of various regression models are crucial steps in understanding the relationships between variables and making predictions. These models are systematically built and expanded to evaluate the impact of additional covariates on the outcome variable.
+After joining together the semantic activities and the responses to the surveys, statistical models were created to investigate the relationship between mental health and travel behavior. In statistical modeling, the selection and comparison of various regression models are crucial steps in understanding the relationships between variables and making predictions. For our analysis, we analyzed an ordinary least squares, fixed effects model, and random effects model.
 
-### Model Analysis
+### Model Analysis and Selection
 
 Ordinary least squares (OLS) regression was considered followed by fixed and random effects models.
 
