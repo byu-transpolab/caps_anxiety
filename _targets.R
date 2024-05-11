@@ -126,9 +126,6 @@ list(
   # Prepare the data for models
   tar_target(model_data, prep_models(final_table)),
   
-  # Estimate models
-  tar_target(models, estimate_models(model_data)),
-  
   # Estimate the OLS Model
   tar_target(ols, ols_model(model_data)),
   
@@ -141,51 +138,31 @@ list(
   # Perform the Hausman Test
   tar_target(haus_result, hausman(fe, re)),
   
-  # Create a model summary table
-  # tar_target(model_comps, compare_models(ols, fe, re)),
-  
   # Create the Fixed Effects Linear Model
   tar_target(fe_model, fe_analysis(fe, demo_ids)),
+  
+  
+  
+  # Estimate the Fixed Effects Model for the sev_day_avg
+  tar_target(fe_sevdayavg_mod, fe_sevdayavg(model_data)),
+  
+  # Estimate the Fixed Effects Model for numTrips
+  tar_target(fe_numTrips_mod, fe_numTrips(model_data)),
+  
+  # Estimate the Fixed Effects Model for the area
+  tar_target(fe_area_mod, fe_area(model_data)),
+  
+  # Estimate the Fixed Effects Model for the length
+  tar_target(fe_length_mod, fe_length(model_data)),
 
   
   
-  
-  
-  
   # Create a subset of the processed data
-  # tar_target(preprocessed_samp, preprocessed_days_samp(preprocessed)),
+  tar_target(preprocessed_samp, preprocessed_days_samp(preprocessed)),
   
   # Score the subset of processed data
-  # tar_target(scored_days_samp, scoring_samp(preprocessed_samp)),
+  tar_target(scored_days_samp, scoring_samp(preprocessed_samp)),
   
   # Table for numeric descriptive statistics
-  tar_target(desc_stat_num, desc_num(demo_ids)),
-  
-  # Table for categorical descriptive statitics
-  tar_target(desc_stat_cat, desc_cat(demo_ids)),
-  
-  # Figure for the number of activities
-  tar_target(fig_numAct, numAct(final_table)),
-  
-  # Figure for the 7-day rolling average number of activities
-  tar_target(fig_numAct_7, numAct_7(final_table)),
-  
-  # Figure for the 14-day rolling average number of activities
-  tar_target(fig_numAct_14, numAct_14(final_table)),
-  
-  # Figure for the 30-day rolling average number of activities
-  tar_target(fig_numAct_30, numAct_30(final_table)),
-  
-  # Figure for the distribution of area covered
-  tar_target(area_distribution, area_dist(final_table)),
-  
-  # Figure for the distribution of length covered
-  tar_target(length_distribution, length_dist(final_table)),
-  
-  # Boxplot for the 7-day rolling average number of activities by neuro group
-  tar_target(fig_neuro_numAct, neuro_numAct(model_data)),
-  
-  # Percent suicidal for neuro group
-  tar_target(tbl_neuro_suicide, neuro_suicide(model_data))
-  
+  tar_target(descrip_stats, desc_stats(demo_ids)),
 )
