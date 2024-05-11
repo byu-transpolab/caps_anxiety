@@ -88,11 +88,51 @@ Since the FE model cannot implement time constant variables, a linear regression
 #| label: tbl-fedemolm
 #| tbl-cap: "Fixed Effects and Demographics Regression"
 
-library(targets)
 tar_load(fe_model)
 
-fe_model
+modelsummary(int_model, gof_map = gm, coef_map = cm,
+             estimate = c("{estimate} ({statistic}){stars}"),
+             statistic = NULL,
+             notes = list("t-statistics in parentheses"))
 ```
 
 The linear model examined the relationship between motivation and various predictor variables, including gender, age, IQ, and group. The analysis revealed several significant findings. First, being female was associated with a decrease in motivation by 6.311 points on a scale from 0-100 compared to males, a statistically significant effect. However, age and IQ did not show significant associations with motivation. Conversely, individuals with autism exhibited a substantial decrease in motivation by 10.732 points compared to the control group, and those with social anxiety experienced a similar decrease of 9.039 points, both statistically significant at p < 0.05. These results suggest that gender and group conditions play significant roles in shaping motivational levels, while age and IQ appear to have limited influence in this context. The model explained approximately 26.6% of the variance in motivation, indicating that other unexplored factors may contribute to motivational outcomes. These findings underscore the importance of considering individual differences, particularly gender and group status, when examining motivational behavior.
+
+## Model Comparison for Impact on Motivation
+
+To compare the effects of different aspects of travel behavior on motivation, we conducted a comprehensive analysis considering various factors. Specifically, we examined the impact of the total number of activities, the seven-day rolling average number of activities, the convex hull area, and the total distance traveled on a day.
+
+Analyzing the total number of activities provides insights into the overall level of engagement and mobility of individuals. A higher number of activities may indicate greater involvement in social, recreational, or productive tasks, which could positively result in an increase in motivation. Similarly, a lower number of activities might suggest reduced participation and potential disengagement, possibly leading to decreased motivation.
+
+The seven-day rolling average number of activities allows us to assess the consistency and stability of individuals' activity patterns over time. Fluctuations in this metric may reflect changes in routine, lifestyle adjustments, or shifts in mental well-being, all of which can influence motivation. A higher rolling average may indicate sustained engagement and stability, potentially contributing to higher motivation levels.
+
+The convex hull area represents the spatial extent covered by an individual's activities, providing insights into their travel behavior's spatial distribution and range. A larger convex hull area may suggest greater exploration, mobility, and exposure to diverse environments, which could positively impact motivation through experiences and opportunities. Conversely, a larger convex hull area may suggest a lot of commuting which may lead to a decrease in motivation.
+
+Lastly, the total distance traveled on a day captures the extent of physical movement and travel undertaken by individuals. Longer distances traveled may indicate higher levels of physical activity, exploration, or commuting, all of which can impact energy levels and motivation. Understanding how travel distance relates to motivation can provide valuable insights into the interplay between physical activity and mental well-being.
+
+By examining these different aspects of travel behavior in relation to motivation, we aim to discern which factors have the most significant influence and in what ways. This holistic approach will enable us to gain a comprehensive understanding of how travel behavior interacts with motivation, offering valuable insights for promoting mental well-being and enhancing motivation levels among individuals.
+
+```{r table motivation impact, message=FALSE, echo=FALSE}
+#| label: tbl-motivimpact
+#| tbl-cap: "Fixed Effects and Demographics Regression"
+
+tar_load(fe_sevdayavg_mod)
+tar_load(fe_numTrips_mod)
+tar_load(fe_area_mod)
+tar_load(fe_length_mod)
+
+models <- list(
+  "Number of Activites" = fe_numTrips_mod,
+  "Seven Day Rolling Average Number of Activities" = fe_sevdayavg_mod,
+  "Convex Hull Area" = fe_area_mod,
+  "Distrance Travelled" = fe_length_mod
+  )
+
+modelsummary(models, gof_map = gm, coef_map = cm, vcov = "HAC",
+             estimate = c("{estimate) ({statistic}){stars}"),
+             statistic = NULL,
+             notes = list("t-statistics in parentheses")
+  )
+```
+
 
