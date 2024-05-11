@@ -92,7 +92,7 @@ By calculating rolling averages and imputing missing trip data, the imputation a
 
 The accuracy of the DBSCAN-TE algorithm in identifying activities was good, achieving 91% accurary. However, upon closer examination of some of the raw LBS data, instances appeared where activities seemed apparent but went undetected by the algorithm. These discrepancies prompted a deeper investigation into additional parameters that might shed light on the number of activities recorded.
 
-To expand the analysis, we introduced calculations for the convex hull and total distance traveled. The convex hull, is the shape formed by connecting the outermost points of the LBS points in such a way that the resulting polygon is convex, meaning that any line segment connecting two poinr within the shapes lies entirely within the shape itself. By calculating the area enclosed by the convex hull, we gained a measure of the geographic footprint of the recorded activities. This value was reported in square meters.
+To expand the analysis, we introduced calculations for the convex hull and total distance traveled. The convex hull, is the shape formed by connecting the outermost points of the LBS points in such a way that the resulting polygon is convex, meaning that any line segment connecting two points within the shapes lies entirely within the shape itself. By calculating the area enclosed by the convex hull, we gained a measure of the geographic footprint of the recorded activities. This value was reported in square meters.
 
 @fig-areadistrib shows the distribution of the area covered for all of the userId-activityDays.
 
@@ -100,9 +100,14 @@ To expand the analysis, we introduced calculations for the convex hull and total
 #| label: fig-areadistrib
 #| fig-cap: "Distribution of area covered for all userId-activityDays."
 
-library(targets)
-tar_load(area_distribution)
-area_distribution
+trips <- final_table %>% 
+    filter(!is.na(area))
+  
+ggplot(trips, aes(x = area/(1e6))) +
+    geom_histogram(fill = "darkgray", color = "black") +
+    scale_x_log10() +
+    labs(x = "Area (km^2)", y = "Frequency") +
+    theme_bw()
 ```
 
 Additionally, we evaluated the total distance traveled by computing the length of the polyline, representing the trajectory of movement between consecutive LBS points during a participant's day. This value was reported in meters.
@@ -113,9 +118,14 @@ Additionally, we evaluated the total distance traveled by computing the length o
 #| label: fig-lengthdistrib
 #| fig-cap: "Distribution of distance travelled for all userId-activityDays."
 
-library(targets)
-tar_load(length_distribution)
-length_distribution
+trips <- final_table %>% 
+    filter(!is.na(length))
+  
+ggplot(trips, aes(x = length/1000)) +
+    geom_histogram(fill = "darkgray", color = "black") +
+    scale_x_log10() +
+    labs(x = "Length (km)", y = "Frequency") +
+    theme_bw()
 ```
 
 By incorporating these parameters alongside the number of identified activities, we aimed to further our understanding of the connection between the number of activities detected by the DBSCAN-TE algorithm and the geographic footprint of activities during the day and the total distance traveled in that same day.
