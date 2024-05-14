@@ -49,25 +49,26 @@ The random effects (RE) model semi-demeans the data by participant. Based on a m
 We ran to OLS model, the FE model, and the RE model to predict motivation based on the 7-day rolling average number of activities. These three models are shown in @tbl-olsfere. The Hausman test is used to determine whether the random effects model is more appropriate than the fixed effects model. It tests whether the random effects estimator is consistent and efficient compared to the fixed effects estimator. The null hypothesis is that the random effects estimator is consistent and efficient, while the alternative hypothesis is that the fixed effects estimator is more efficient. We found, using the Hausman test, that the p-value is 0.0013 which is less than 0.05, which means that the results are significant and we reject the null hypothesis. This implies that the coefficients from the FE model and RE model are sufficiently different from each other, which means that the RE model is inconsistent and the FE model should be used in the analysis.
 
 ```{r table ols fe re, message=FALSE, echo=FALSE}
-#| label: tbl-olsfere
-#| tbl-cap: "OLS, FE, and RE Models"
-#| warnings: FALSE
-
-tar_load(ols)
-tar_load(fe)
-tar_load(re)
-
-models <- list(
-    "Ordinary Least Squares Model" = ols,
-    "Fixed Effects Model" = fe,
-    "Random Effect Model" = re
-  )
-
-modelsummary(models, gof_map = gm, coef_map = cm, vcov = "HCA",
-             estimate = c("{estimate) ({statistic}){stars}"),
-             statistic = NULL,
-             notes = list("t-statistics in parentheses")
-  )
+# #| label: tbl-olsfere
+# #| tbl-cap: "OLS, FE, and RE Models"
+# #| warnings: FALSE
+# 
+# tar_load(ols)
+# tar_load(fe)
+# tar_load(re)
+# 
+# models <- list(
+#     "Ordinary Least Squares Model" = ols,
+#     "Fixed Effects Model" = fe,
+#     "Random Effect Model" = re
+#   )
+# 
+# modelsummary(models, gof_map = gm, coef_map = cm, 
+#              # vcov = "HAC",
+#              estimate = c("{estimate) ({statistic}){stars}"),
+#              statistic = NULL,
+#              notes = list("t-statistics in parentheses")
+  # )
 ```
 
 When analyzing how motivation changes over time for individual people, autocorrelation and heteroskedasticity can arise as statistical challenges. Autocorrelation occurs when observations in a time series are correlated with preceding or succeeding observations, violating the assumption of independence between observations. In the context of studying individual motivation over time, autocorrelation can manifest as a person's motivation level at one point in time being influenced by their motivation level at previous time points. This can lead to biased estimates and inflated significance levels in regression analyses.
@@ -90,7 +91,7 @@ Since the FE model cannot implement time constant variables, a linear regression
 
 tar_load(fe_model)
 
-modelsummary(int_model, gof_map = gm, coef_map = cm,
+modelsummary(fe_model, gof_map = gm, coef_map = cm,
              estimate = c("{estimate} ({statistic}){stars}"),
              statistic = NULL,
              notes = list("t-statistics in parentheses"))
@@ -115,24 +116,25 @@ By examining these different aspects of travel behavior in relation to motivatio
 ```{r table motivation impact, message=FALSE, echo=FALSE}
 #| label: tbl-motivimpact
 #| tbl-cap: "Fixed Effects and Demographics Regression"
-
-tar_load(fe_sevdayavg_mod)
-tar_load(fe_numTrips_mod)
-tar_load(fe_area_mod)
-tar_load(fe_length_mod)
-
-models <- list(
-  "Number of Activites" = fe_numTrips_mod,
-  "Seven Day Rolling Average Number of Activities" = fe_sevdayavg_mod,
-  "Convex Hull Area" = fe_area_mod,
-  "Distrance Travelled" = fe_length_mod
-  )
-
-modelsummary(models, gof_map = gm, coef_map = cm, vcov = "HAC",
-             estimate = c("{estimate) ({statistic}){stars}"),
-             statistic = NULL,
-             notes = list("t-statistics in parentheses")
-  )
+# 
+# tar_load(fe_sevdayavg_mod)
+# tar_load(fe_numTrips_mod)
+# tar_load(fe_area_mod)
+# tar_load(fe_length_mod)
+# 
+# models <- list(
+#   "Number of Activites" = fe_numTrips_mod,
+#   "Seven Day Rolling Average Number of Activities" = fe_sevdayavg_mod,
+#   "Convex Hull Area" = fe_area_mod,
+#   "Distrance Travelled" = fe_length_mod
+#   )
+# 
+# modelsummary(models, gof_map = gm, coef_map = cm, 
+#              # vcov = "HAC",
+#              estimate = c("{estimate) ({statistic}){stars}"),
+#              statistic = NULL,
+#              notes = list("t-statistics in parentheses")
+#   )
 ```
 
 
