@@ -4,6 +4,33 @@
 library(tinytable)
 ```
 
+```{r model-setups, include=FALSE}
+f <- function(x) format(round(x, 3), big.mark=",")
+gm <- list(
+  list("raw" = "Num.Obs.", "clean" = "Number of Observations", "fmt" = f),
+  list("raw" = "Log.Lik.", "clean" = "Log Liklihood", "fmt" = f),
+  list("raw" = "rho20", "clean" = "$\\rho^2_0$", "fmt" = f))
+
+cm <- c(
+  "sev_day_avg" = "7-Day Rolling Avg. Number of Activities",
+  "sexFemale" = "Female", 
+  "age" = "Age", 
+  "fsiq_2" = "IQ", 
+  "prescribed_groupAutism" = "Autism", 
+  "prescribed_groupSocial Anxiety" = "Social Anxiety", 
+  "suicidal_ideation_q31_evenTRUE" = "Suicidal Ideation",
+  "energy" = "Energy",
+  "motivation" = "Motivation")
+  
+cm_group <- c(
+  "numTrips" = "Number of Activities",
+  "sev_day_avg" = "7-Day Rolling Avg. Number of Activities",
+  "park" = "Visits to Parks",
+  "grocery" = "Visits to Grocery Store",
+  "library" = "Visits to Libraries",
+  "social_rec" = "Visits to Social Recreation Locations")
+```
+
 ## Group Analysis
 
 The group that a person is part of is an important aspect of the analysis of travel behavior and mental well-being. The different groups are control, social anxiety, and autism. Since there will be further analysis about how these groups travel and how mental well-being affect their travel, an understanding of the number of activities they engage in is beneficial to consider. The seven-day rolling average number of activities for each group was analyzed.
@@ -11,8 +38,8 @@ The group that a person is part of is an important aspect of the analysis of tra
 The descriptive statistics in @tbl-groupActs describe the activities for the different groups.
 
 ```{r table groupAct, echo=FALSE, message = FALSE}
-#| label: fig-groupActs
-#| tbl-cap: "Descriptive Statistics by Group"
+#| label: tbl-groupActs
+#| tbl-cap: "Descriptive statistics by group."
 
 tar_load(model_data)
 
@@ -36,7 +63,8 @@ We explored the percent of days that each group was suicidal. This percent calcu
 #| label: tbl-groupsuicide
 #| tbl-cap: "Percent Suicidal Ideation"
 
-library(model_data)
+library(tinytable)
+tar_load(model_data)
 
 suicidal_percent <- model_data %>%
     group_by(prescribed_group) %>%
