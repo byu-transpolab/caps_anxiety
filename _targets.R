@@ -158,11 +158,11 @@ list(
   
   
   # Create a subset of the processed data
-  tar_target(preprocessed_samp, preprocessed_days_samp(preprocessed)),
+  # tar_target(preprocessed_samp, preprocessed_days_samp(preprocessed)),
   
   # Score the subset of processed data
-  tar_target(scored_days_samp, scoring_samp(preprocessed_samp)),
+  # tar_target(scored_days_samp, scoring_samp(preprocessed_samp)),
   
   # Table for numeric descriptive statistics
-  tar_target(descrip_stats, desc_stats(demo_ids)),
+  tar_target(descrip_stats, desc_stats(demo_ids))
 )
