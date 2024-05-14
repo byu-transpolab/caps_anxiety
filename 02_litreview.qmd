@@ -86,20 +86,20 @@ In their research, @orbenEffectsSocialDeprivation2020 pointed out that limited r
 
 Social recreation spaces play a multifaceted role in shaping mental health outcomes, offering opportunities for social interaction and stress reduction, but also presenting potential risk factors dependent on the nature of the interactions. The complex interplay between activities that occur in these environments and mental well-being suggests that activities to social recreation locations may or may not improve overall well-being.
 
+## Group Status
 
-'restaurant', 'cafe', 'fast_food','food_court', 'ice_cream'
+### Autism
 
-'cinema', 'community_centre', 'theatre'
+Autism spectrum disorder (referred to as autism) is a neurodevelopmental condition that persists throughout one's life and is often defined by variations in social communication. Autism is often identified and diagnosed in early childhood, however many characteristics of autism can remain unrecognized until later in life.[@ridgwaySubjectiveWellbeingAutistic].
 
-'department_store', 'mall'
+In a study comparing well-being in 53 autistic and 49 non-autistic adolescents and young adults, @ridgwaySubjectiveWellbeingAutistic found that significantly lower well-being was found in the autistic group compared to the non-autistic group, suggesting autistic individuals may be more vulnerable to lower well-being. When specifically exmaining the well-being of autistic college students, researchers found that autistic students with lower well-being more often discussed challenges to make social connections and to balance their social and academic lives [@baileyRelationshipSocialExperience2020].
 
-## Neurodiversity
+While autism is studied often in many fields, autism does not appear often in transportation literature. The National Household Travel Survey and other metropolitan travel surveys do not classify individuals with autism, so little is known about the travel behavior of autistic individuals.
 
--   talk about how social anxiety and autism affect mental health and motivation
+In a recent study, researchers distributed a survey to 703 autistic adults in New Jersey to learn about their travel patterns [@dekaTravelPatternsNeeds2016]. The goal of the survey was to learn about travel patterns, needs, and barriers faced by autistic individuals. @dekaTravelPatternsNeeds2016 found that due to difficulties driving, walking, or taking transit, it is more common for autistic individuals to take rides from others, like parents, family members, or friends. The survey showed that due to the dependence on others, many autistic individuals forgo trips due to the unavailablity of others to provide rides. In another study, with a group of 22 autistic individuals and 19 parents or guardians, several of the autistic individuals expressed feeling isolated and experiencing bouts of depression due to transportation related struggles [@lubinTransportationIssuesAdults2016].
 
-## THE GAP
+These studies suggest that the well-being of autistic individuals may be lower on average than the well-being of non-autistic individuals and that their travel behaviors differ. Autistic individuals may take less trips since they often rely on other for transport and many individuals reported feeling isolated or depressed because of transportation related difficulties.
 
-**Recently, a group used mobile phone-based sensing to look at daily activities and environmental exposures and the connection to anxiety symptoms.**
 
 The article by @lanDailySpacetimeActivities2022 investigates the relationship between daily space-time activities, multiple environmental exposures, and anxiety symptoms. The study utilizes a cross-sectional mobile phone-based sensing approach to gather data. The goal was to understand how individuals' activities in different environmental settings contribute to their anxiety levels.
 
