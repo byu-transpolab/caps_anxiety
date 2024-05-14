@@ -205,12 +205,11 @@ preprocessed_days_samp <- function(raw_samp){
     ungroup() %>% 
     rename(cleaned = data) %>%
     mutate(num_points = purrr::map_int(cleaned, nrow)) %>% 
-    group_by(userId, activityDay)
+    group_by(userId, activityDay) %>% 
+    distinct() %>%   # Get unique combinations of userId and activityDay
+    sample_n(100)
   
-  # Select 100 random groups
-  random_groups <- samp %>% sample_n(100)
-  
-  return(random_groups)
+  return(samp)
 }
 
 
