@@ -1,6 +1,6 @@
 # Literature Review
 
-Mental health is a complex issue that can be influenced by various factors, including social, economic, and environmental factors. Addressing the determinants of positive mental health is crucial in promoting well-being for individuals [@barryAddressingDeterminantsPositive2009]. In addition, travel behavior has been recognized as a significant factor influencing social and mental health among individuals [@delboscExploringRelativeInfluences2011]. These impacts will be further discussed in this section.
+Mental health and well-being are complex issues influenced by a multitude of factors, including social, economic, and environmental elements. Addressing these determinants is essential for promoting individual well-being [@barryAddressingDeterminantsPositive2009] . Additionally, travel behavior has been recognized as a significant factor impacting social and mental health [@delboscExploringRelativeInfluences2011]. In this review, we explore current research on the effects of the built and natural environments, social isolation, travel behavior, and activity locations on mental health and well-being. We also examine the well-being and travel behavior of individuals with autism and social anxiety. Ultimately, we integrate these factors to highlight how our research aims to fill an existing gap in the literature.
 
 ## Impacts of the Built and Natural Environment
 
