@@ -32,35 +32,37 @@ cm_comp <- c(
   "numTrips_squared" = "Number of Activities^2",
   "sev_day_avg" = "Seven-Day Rolling Avg. Number of Activities",
   "area" = "Activity Area",
-  "length" = "Distance"
+  "length" = "Distance",
+  "log(length)" = "log(Distance)",
+  "length_squared" = "Distance^2"
   )
 ```
 
 ## Statistical Modeling
 
-After joining together the semantic activities, other travel pattern parameters, and the responses to the surveys, statistical models were created to investigate the relationship between mental health and travel behavior. In statistical modeling, the selection and comparison of various regression models are crucial steps in understanding the relationships between variables and making predictions. For our analysis, we analyzed an ordinary least squares, fixed effects model, and random effects model to determine which was the best fit for our data. In addition to the model analysis, heteroskedasticity and autocorrelation were accounted for in the selected models.
+After joining together the semantic activities, other travel pattern parameters, and the responses to the surveys, we created statistical models to investigate the relationship between mental health and travel behavior. In statistical modeling, the selection and comparison of various regression models are crucial steps in understanding the relationships between variables and making predictions. For our analysis, we analyzed an ordinary least squares, fixed effects model, and random effects model to determine which was the best fit for our data. In addition to the model analysis, we accounted for heteroskedasticity and autocorrelation in the selected models.
 
 ### Model Analysis and Selection
 
-We first considered an ordinary least squares regression followed by fixed and random effects models. For all three of these models, the motivation, as reported in the evening surveys on a scale from 0-100, served as the dependent variable. The level of motivation is used as a measure for overall subjective well-being. In addition, the seven-day rolling average number of activities engaged in, as described previously, served as the independent variable for the models.
+We first considered an ordinary least squares regression followed by fixed and random effects models. For all three of these models, the motivation, as reported in the evening surveys on a scale from 0-100, served as the dependent variable. The level of motivation is used as a measure for overall subjective well-being. In addition, the seven-day rolling average number of activities, as described previously, served as the independent variable for the models.
 
 ### Ordinary Least Squares
 
-Daily motivation levels (y) were considered as a function of the seven-day rolling average number of activities (x) described in the previous sections. Using these parameters, a linear regression model was estimated by ordinary least squares (OLS).
+Daily motivation levels (y) were considered a function of the seven-day rolling average number of activities (x) described in the previous sections. Using these parameters, a linear regression model was estimated by ordinary least squares (OLS).
 
-\[ADD EQUATION\]
+\[ADD EQUATION?\]
 
-For linear regressions, it is assumed that the error terms are independently and identically distributed (IID) with a normal distribution of mean 0. The estimates resulting from this model may be inconsistent due to unobserved individual differences (violating the IID assumption). For example, all individuals have a different baseline or typical level of motivation. We want to account for changes in motivation by individual to see how their motviation deviates from its baseline. There are two common econometric techniques, known as fixed effects and random effects, that attempt to account for these baseline measures, which are discussed in the following section.
+For linear regressions, it is assumed that the error terms are independently and identically distributed (IID) with a normal distribution of mean 0. The estimates resulting from this model may be inconsistent due to unobserved individual differences (violating the IID assumption). For example, all individuals have a different baseline or typical level of motivation. We want to account for changes in motivation by individual to see how their motviation deviates from its baseline. There are two common econometric techniques, known as fixed effects and random effects, that attempt to account for these baseline measures, which are discussed in the following sections.
 
 ### Fixed Effects
 
-\[ADD EQUATION\]
+\[ADD EQUATION?\]
 
 The fixed effects (FE) model demeans the data by participant and looks at each participant's levels of motivation and seven-day rolling average number of activities individually. The results in having different intercepts for each participant. The FE model is consistent but less efficient because it results in losing degrees of freedom to estimate individual intercepts for each participant. This results in larger standard errors for the estimates which can make it more difficult to recognize significance. The FE model also removes the effect of time constant characteristics, which in this case are the demographic characteristics of each participant. These variables are absorbed by the intercept as they are unique to each participant.
 
 ### Random Effects
 
-\[ADD EQUATION\]
+\[ADD EQUATION?\]
 
 The random effects (RE) model semi-demeans the data by participant. Based on a mean for the entire group, a mean is determined with set standard deviations to represent the data of the entire group. The RE model is appropriate to use if it is believed that the the difference in motivation has an influence on the seven-day rolling average number of activities. It is possible that other variables that influence the seven-day rolling average number of activities are not included which can lead to bias in the model. Unlike the FE model, the RE model is more efficient because degrees of freedom are not lost to more estimates, but the results can be biased.
 
