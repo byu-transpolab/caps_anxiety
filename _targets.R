@@ -52,6 +52,15 @@ list(
   
   # Implement the scoring algorithm to have higher quality userId activityDay combos
   tar_target(scored_days, scoring(preprocessed)),
+  
+  # Create a subset of the processed data
+  tar_target(preprocessed_samp, scored_days_samp(preprocessed)),
+  
+  # Create a subset of the preprocessed_samp to avoid long vectors
+  tar_target(preprocessed_subset, scored_days_subset(preprocessed_samp)),
+  
+  # Plot a sample of scored days
+  tar_target(scored_days_samp_plot, scored_days_plot(preprocessed_samp)),
 
   # SUMMARIZE THE SCORED DATA
   tar_target(scored_data_summary, summarize_scored_data(scored_days)),
