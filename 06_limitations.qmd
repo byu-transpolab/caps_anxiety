@@ -4,8 +4,6 @@ There are some important limitations and future considerations following this in
 
 ## Limitations
 
-As previously mentioned, there is concern that the average number of trips on a seven day rolling average will result in autocorrelation. This needs to be further analyzed. It is recommended that a form of fixed effects be applied to the regression analysis.
-
 ## Future Considerations
 
 The impact of the location of the activities was going to be analyzed, but was not It is recommended that this is further analyzed since the literature suggests that locations can influence mental health and overall mood. This analysis was not done for this project, but it is recommended that this be investigated in the future.
