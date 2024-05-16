@@ -39,7 +39,7 @@ acts <- model_data %>%
   select(prescribed_group, numTrips, sev_day_avg, park, grocery, library, social_rec) %>% 
   group_by(prescribed_group) %>% 
   rename("Number of Activities" = numTrips,
-         "7-day Rolling Avg. Number of Activities" = sev_day_avg,
+         "Seven-day Rolling Avg. Number of Activities" = sev_day_avg,
          "Visits to Parks" = park,
          "Visits to Grocery Store" = grocery,
          "Visits to Libraries" = library,
@@ -105,7 +105,7 @@ The morning and evening surveys included different questions pertaining to suici
 
 -   How strong was your ability to resist the urge to kill yourself since the last survey you completed (or over the past 12 hours, if you didn't complete the last survey)?
 
-The dataset presents an insightful glimpse into the prevalence of suicidal ideation within distinct demographic groups, shedding light on potential differences in mental health concerns among them. Examining responses to the question "Have you thought about killing yourself in the past 12 hours or since you last took a survey?" across the three groups—control, autism, and social anxiety, unveils intriguing patterns. The responses to this question are summarized by group in @tbl-groupSuicide.
+The dataset presents an insightful glimpse into the prevalence of suicidal ideation within distinct demographic groups, shedding light on potential differences in mental health concerns among them. Examining responses to the question "Have you thought about killing yourself in the past 12 hours or since you last took a survey?" across the three groups: control, autism, and social anxiety, unveils intriguing patterns. The responses to this question are summarized by group in @tbl-groupSuicide.
 
 ```{r table groupSuicide, message=FALSE, echo=FALSE}
 #| label: tbl-groupSuicide
@@ -120,7 +120,7 @@ suic <- model_data %>%
     suicidal_ideation_q31_even == TRUE ~ "Yes",
     suicidal_ideation_q31_even == FALSE ~ "No",
     is.na(suicidal_ideation_q31_even) ~ "No Response",
-    TRUE ~ as.character(suicidal_ideation_q31_even)  # for any other cases
+    TRUE ~ as.character(suicidal_ideation_q31_even)
   )) %>%
   mutate(suicidal_ideation_q31_even = factor(suicidal_ideation_q31_even, levels = c("Yes", "No", "No Response"))) %>%
   group_by(prescribed_group) %>% 
@@ -161,9 +161,13 @@ analysis <- model_data %>%
   mutate(suic_intensity = as.numeric(suicidal_intensity_q32_even)) %>% 
   filter(!is.na(suic_intensity))
 
+fixed <- plm(motivation ~ suic_intensity, index = c("userId", "activityDay"), data = analysis, model = "within")
+
+plot(fixed)
+
 ggplot(analysis, aes(y = motivation, x = suic_intensity, color = prescribed_group)) +
   geom_point(alpha = 0.5) +
-  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  geom_smooth(method = "plm", se = FALSE, color = "black") +
   facet_wrap(~prescribed_group) +
   labs(y = "Level of Motivation", x = "Suicidal Intensity") +
   theme_bw()
