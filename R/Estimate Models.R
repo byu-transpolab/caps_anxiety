@@ -29,7 +29,7 @@ prep_models <- function(data) {
 #' @return An object of class "lm" representing the fitted OLS regression model.
 
 ols_model <- function(model_data) {
-  ols <- lm(motivation ~ sev_day_avg, data = model_data)
+  ols <- plm(motivation ~ sev_day_avg, data = model_data, model = "pooling")
   return(ols)
 }
 
