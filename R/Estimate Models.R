@@ -129,6 +129,40 @@ fe_numTrips <- function(model_data) {
 }
 
 
+#' Estimate Fixed Effects Model ~ for the log(numTrips)
+#'
+#' This function estimates a fixed effects model using the provided model data.
+#'
+#' @param model_data A data frame containing the data for modeling.
+#'
+#' @return A fixed effects model object.
+
+fe_numTrips_log <- function(model_data) {
+  fixed <- plm(motivation ~ log(numTrips + 1), index = c("userId", "activityDay"), data = model_data, model = "within")
+  return(fixed)
+}
+
+
+#' Estimate Fixed Effects Model ~ for the numTrips^2
+#'
+#' This function estimates a fixed effects model using the provided model data.
+#'
+#' @param model_data A data frame containing the data for modeling.
+#'
+#' @return A fixed effects model object.
+
+fe_numTrips_squared <- function(model_data) {
+  model_data$numTrips <- as.numeric(model_data$numTrips)
+  
+  model_data_squ <- model_data %>%
+    mutate(numTrips_squared = numTrips^2) %>%
+    filter(!is.na(numTrips_squared))
+  
+  fixed <- plm(motivation ~ numTrips_squared, index = c("userId", "activityDay"), data = model_data_squ, model = "within")
+  return(fixed)
+}
+
+
 #' Estimate Fixed Effects Model ~ for area
 #'
 #' This function estimates a fixed effects model using the provided model data.
@@ -154,5 +188,8 @@ fe_length <- function(model_data) {
   fixed <- plm(motivation ~ length, index = c("userId", "activityDay"), data = model_data, model = "within")
   return(fixed)
 }
+
+
+
 
 
