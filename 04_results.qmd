@@ -159,7 +159,8 @@ models_fe_paras <- list(
   "Distance Traveled Model" = fe_length_mod
   )
 
-modelsummary(models_fe_paras, gof_map = gm, coef_map = cm_comp,
+modelsummary(models_fe_paras, gof_map = gm, coef_map = cm_comp, 
+             fmt = fmt_sprintf("%.3e"), 
              vcov = function(x) vcovHC(x, cluster = "time"),
              estimate = c("{estimate} ({statistic}){stars}"),
              statistic = NULL,
@@ -167,13 +168,17 @@ modelsummary(models_fe_paras, gof_map = gm, coef_map = cm_comp,
              )
 ```
 
-The findings from these models suggest that there is a positive relationship between the number of activities and motivation and the relationship is statistically significant. For each additional activity a person engages in, their motivation increases 0.356 points. While motivation is on a scale from 1-100, it may not be reasonable to engage is one more activity in a day to increase motivation by 0.356 points, especially considering that the average number of activities for all of the userID-activity days was 2.65 activities. The seven-day rolling average of activities also shows a potential cumulative effect on motivation, though the evidence is weaker. In contrast, the size of the activity area does not appear to influence motivation, indicating that the physical space covered during the day is less important than the number of activities themselves. Additionally, traveling longer distances during the day might slightly decrease motivation.
+The findings from these models suggest that there is a positive relationship between the number of activities and motivation and the relationship is statistically significant. For each additional activity a person engages in, their motivation increases 0.356 points. While motivation is on a scale from 1-100, it may not be reasonable to engage is one more activity in a day to increase motivation by 0.356 points, especially considering that the average number of activities for all of the userID-activity days was 2.65 activities. 
+
+The results also suggest that there is a negative relationship between the distance traveled and the motivation; this relationship is also statistically significant.In the case of distance traveled, for each additional kilometer traveled, the motivation of the individual decreased by 0.0003263 points. Similar to the case with the number of activities, while the distance traveled is statistically significant, the decrease in motivation seems so minor that it would not be reasonable to use distance traveled to inform changes in motivation.
+
+The seven-day rolling average of activities also shows a potential cumulative effect on motivation, though the evidence is weaker. In contrast, the size of the activity area does not appear to influence motivation, indicating that the physical space covered during the day is less important than the number of activities themselves. Additionally, traveling longer distances during the day might slightly decrease motivation.
 
 Overall, while the number of activities, seven-day rolling average number of activities, and distance traveled are important factor for motivation, the low R-squared values across all models suggest that many other factors not included in this analysis likely play a significant role in determining motivation levels.
 
 ### Number of Activities Models
 
-To further analyze the impact of the number of activities, we applied transformations to the independent variable. We looked at the logarithm number of activities and the number of activities squared.
+To further analyze the impact of the number of activities, we applied transformations to the independent variable. We looked at the logarithm of the number of activities and the number of activities squared. @tbl-motivnumActs compares the original model with the number of trips with these two transformed models.
 
 ```{r table motivation numActs, message=FALSE, echo=FALSE}
 #| label: tbl-motivnumActs
