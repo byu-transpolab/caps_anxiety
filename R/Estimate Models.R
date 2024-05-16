@@ -12,7 +12,9 @@ prep_models <- function(data) {
            fsiq_2 = as.numeric(fsiq_2),
            energy = as.numeric(energy_day_q1, na.rm = TRUE),
            motivation = as.numeric(motivation_day_q2, na.rm = TRUE),
-           prescribed_group = fct_recode(prescribed_group, Control = "No Group")) %>%
+           prescribed_group = fct_recode(prescribed_group, Control = "No Group"),
+           area = area/1e6,
+           length = length/1000) %>%
     select(-algorithm) %>% 
     as.data.frame()
 }
