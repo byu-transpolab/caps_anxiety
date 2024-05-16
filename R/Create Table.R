@@ -186,7 +186,6 @@ combine_data <- function(survey, activities){
 
 clean_final_table <- function(table){
   clean <- table %>%
-    filter(status != "Withdrawn") %>% 
     filter(!(is.na(Survey.Name.x) & is.na(Survey.Name.y) & is.na(numTrips)))
     
   return(clean)
