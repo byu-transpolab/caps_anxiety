@@ -30,14 +30,14 @@ The analysis delved into the activity engagement patterns of the three distinct 
 
 ```{r table groupAct, echo=FALSE, message = FALSE}
 #| label: tbl-groupActs
-#| tbl-cap: "Activity descriptive statistics by group."
+#| tbl-cap: "Activity Descriptive Statistics by Group"
 
 tar_load(model_data)
 
 acts <- model_data %>% 
-    filter(!is.na(numTrips)) %>%
-    select(prescribed_group, numTrips, sev_day_avg, park, grocery, library, social_rec) %>% 
-    group_by(prescribed_group) %>% 
+  filter(!is.na(numTrips)) %>%
+  select(prescribed_group, numTrips, sev_day_avg, park, grocery, library, social_rec) %>% 
+  group_by(prescribed_group) %>% 
   rename("Number of Activities" = numTrips,
          "7-day Rolling Avg. Number of Activities" = sev_day_avg,
          "Visits to Parks" = park,
@@ -60,15 +60,15 @@ Upon closer examination of the distinct groups, notable differences in well-bein
 
 ```{r table groupMotiv, message=FALSE, echo=FALSE}
 #| label: tbl-groupMotiv
-#| tbl-cap: "Motivation levels by group."
+#| tbl-cap: "Motivation Levels by Group"
 
 tar_load(model_data)
 
 motiv <- model_data %>% 
-    filter(!is.na(numTrips)) %>%
-    select(prescribed_group, motivation) %>% 
-    group_by(prescribed_group) %>% 
-    mutate("Level of Motivation" = motivation)
+  filter(!is.na(numTrips)) %>%
+  select(prescribed_group, motivation) %>% 
+  group_by(prescribed_group) %>% 
+  mutate("Level of Motivation" = motivation)
 
 motiv_tbl <- motiv %>% 
   select(prescribed_group, "Level of Motivation")
@@ -109,7 +109,7 @@ The dataset presents an insightful glimpse into the prevalence of suicidal ideat
 
 ```{r table groupSuicide, message=FALSE, echo=FALSE}
 #| label: tbl-groupSuicide
-#| tbl-cap: "Suicidal ideation by group."
+#| tbl-cap: "Suicidal Ideation by Group"
 
 tar_load(model_data)
 
