@@ -145,7 +145,7 @@ The analysis examined how motivation is influenced by different independent vari
 
 ```{r table motivation impact, message=FALSE, echo=FALSE}
 #| label: tbl-motivimpact
-#| tbl-cap: "Comparison of how different parameters impact motivation levels."
+#| tbl-cap: "Comparison of Impacts on Motivation Levels"
 
 tar_load(fe_sevdayavg_mod)
 tar_load(fe_numTrips_mod)
