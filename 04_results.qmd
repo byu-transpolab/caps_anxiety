@@ -204,3 +204,28 @@ modelsummary(models_numActs, gof_map = gm, coef_map = cm_comp,
 
 
 ### Activity Area Covered
+
+To further analyze the impact of the distance traveled, we applied transformations to the independent variable. We looked at the logarithm of the distance traveled and the distance traveled squared. @tbl-motivDistTrav compares the original model with the distance traveled with these two transformed models.
+
+```{r table motivation numActs, message=FALSE, echo=FALSE}
+#| label: tbl-motivDistTrav
+#| tbl-cap: "Comparison of the Distance Traveled Models"
+
+tar_load(fe_length_mod)
+tar_load(fe_length_log)
+tar_load(fe_length_squared)
+
+models_distTrav <- list(
+  "Distance Traveled Model" = fe_length_mod,
+  "log(Distance Traveled) Model" = fe_length_log,
+  "Distance Traveled^2 Model" = fe_length_squared
+  )
+
+modelsummary(models_distTrav, gof_map = gm, coef_map = cm_comp,
+             fmt = fmt_sprintf("%.3e"),
+             vcov = function(x) vcovHC(x, cluster = "time"),
+             estimate = c("{estimate} ({statistic}){stars}"),
+             statistic = NULL,
+             notes = list("t-statistics in parentheses")
+             )
+```
