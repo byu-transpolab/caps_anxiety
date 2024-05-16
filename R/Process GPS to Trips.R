@@ -195,8 +195,8 @@ scoring <- function(raw_data) {
 #' 
 #' @return A tibble containing randomly selected groups for sampling
 
-preprocessed_days_samp <- function(raw_samp){
-  samp <- raw_samp %>% 
+scored_days_samp <- function(raw_samp){
+  scored <- raw_samp %>%
     # Determine how many GPS points there are per userID-activityDay by hour
     ungroup() %>% 
     arrange(userId, activityDay, hour) %>% 
@@ -204,12 +204,67 @@ preprocessed_days_samp <- function(raw_samp){
     nest() %>% 
     ungroup() %>% 
     rename(cleaned = data) %>%
-    mutate(num_points = purrr::map_int(cleaned, nrow)) %>% 
+    mutate(num_points = purrr::map_int(cleaned, nrow)) %>%
+    # Calculate the score for the day based on number and spread of gps points
+    mutate(
+      hour_multiplier = ifelse(hour %in% 8:23, 3, 1),
+      points_multiplier = case_when(
+        num_points <= 500 ~ 0,
+        num_points <= 1500 ~ 1,
+        num_points <= 2500 ~ 2,
+        TRUE ~ 3
+      ),
+      daily_score = hour_multiplier * points_multiplier
+    ) %>% 
+    group_by(userId, activityDay) %>%
+    mutate(total_daily_score = sum(daily_score))
+  return(scored)
+}
+
+
+#' Subset scored data
+#'
+#' This function subsets a scored dataset to keep only unique combinations of 
+#' userId and activityDay, removing any duplicates, and selects the userId, 
+#' activityDay, and total_daily_score columns.
+#' 
+#' @param scored_data The scored dataset to be subsetted.
+#' 
+#' @return A subset of the scored dataset containing unique combinations of 
+#' userId and activityDay, along with the total_daily_score.
+
+scored_days_subset <- function(scored_data) {
+  preprocessed_subset <- scored_data %>% 
+    distinct(userId, activityDay, .keep_all = TRUE) %>% 
+    select(userId, activityDay, total_daily_score)
+  return(preprocessed_subset)
+}
+
+
+#' Selects a random sample of scored days from a dataset, filters preprocessed data accordingly, and returns the filtered data.
+#'
+#' This function selects a random sample of scored days from the provided dataset and filters the preprocessed data based on the selected rows of scored days.
+#'
+#' @param scored_days Dataset containing scored days information.
+#' @return Filtered dataset based on the random sample of scored days.
+
+scored_days_plot <- function(scored_days) {
+  random_samp <- scored_days %>%
     group_by(userId, activityDay) %>% 
-    distinct() %>%   # Get unique combinations of userId and activityDay
-    sample_n(100)
+    filter(total_daily_score %in% c(155, 140, 95, 50)) %>%
+    group_by(total_daily_score) %>%
+    sample_n(1) %>% 
+    ungroup()
   
-  return(samp)
+  selected_rows <- random_samp %>% 
+    select(userId, activityDay)
+  
+  filtered_data <- scored_days %>%
+    filter(userId %in% selected_rows$userId, 
+           activityDay %in% selected_rows$activityDay) %>% 
+    filter(total_daily_score %in% c(155, 140, 95, 50))
+  
+  return(filtered_data)
 }
 
 
