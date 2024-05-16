@@ -17,6 +17,7 @@ book:
           country: USA
           postal-code: 84602
     - name: Emily K. Youngs
+      orcid: 0009-0001-6847-1154
       email: emmykae@byu.edu
       affiliations:
         - ref: byuce
