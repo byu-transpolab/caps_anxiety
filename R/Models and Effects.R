@@ -1,142 +1,4 @@
 
-## MODELS
-library(targets)
-library(tidyverse)
-library(modelsummary)
-
-tar_load(final_table)
-
-data_models <- final_table %>% 
-  mutate(sex = if(is.ordered(sex)) sex else relevel(as.factor(sex), ref = "Male"),
-         fsiq_2 = as.numeric(fsiq_2),
-         energy = as.numeric(energy_day_q1, na.rm = TRUE),
-         motivation = as.numeric(motivation_day_q2, na.rm = TRUE),
-         prescribed_group = fct_recode(final_table$prescribed_group, Control = "No Group")) %>% 
-  filter(!is.na(sev_day_avg))
-
-# Models to predict the sev day rolling average number of activities
-models <- list(
-  "Basic Demographics" = glm(sev_day_avg ~ sex + age + fsiq_2, data = data_models, family = "poisson"),
-  "Demographics and Group" = glm(sev_day_avg ~ sex + age + fsiq_2 + prescribed_group, data = data_models, family = "poisson"),
-  "Demographics, Group, and Suicide Ideation" = glm(sev_day_avg ~ sex + age + fsiq_2 + prescribed_group + suicidal_ideation_q31_even, data = data_models, family = "poisson"),
-  "Demographics, Group, and Energy" = glm(sev_day_avg ~ sex + age + fsiq_2 + prescribed_group  + energy, data = data_models, family = "poisson"),
-  "Demographics, Group, and Motivation" = glm(sev_day_avg ~ sex + age + fsiq_2 + prescribed_group  + motivation, data = data_models, family = "poisson"),
-  "Demographics, Group, Suicide, and Energy" = glm(sev_day_avg ~ sex + age + fsiq_2 + prescribed_group  + suicidal_ideation_q31_even + energy + motivation, data = data_models, family = "poisson")
-  )
-
-modelsummary(models, 
-             estimate = c("{estimate}({statistic}){stars}"),
-             statistic = NULL, 
-             coef_rename = c("sexFemale" = "Female", 
-                             "age" = "Age", 
-                             "fsiq_2" = "IQ", 
-                             "prescribed_groupAutism" = "Autism", 
-                             "prescribed_groupSocial Anxiety" = "Social Anxiety", 
-                             "suicidal_ideation_q31_evenTRUE" = "Suicidal Ideation",
-                             "energy" = "Energy",
-                             "motivation" = "Motivation")
-             )
-
-# Models to predict the energy levels
-s_base <- glm(motivation ~ sex + age + fsiq_2 + prescribed_group, data = data_models, family = "gaussian")
-s_distance <- update(s_base, .~. + length)
-s_area <- update(s_base, .~. + area)
-s_numTrips <- update(s_base, .~. + numTrips)
-s_numTrips_lag <- update(s_numTrips, .~. + sev_day_avg)
-
-s_models <- list(
-  "Base Demo" = s_base,
-  "Distance" = s_distance,
-  "Area" = s_area,
-  "Number of Activities" = s_numTrips,
-  "7-Day Rolling Average " = s_numTrips_lag
-  )
-
-modelsummary(s_models,
-             estimate = c("{estimate}({statistic}){stars}"),
-             statistic = NULL,
-             coef_rename = c("sexFemale" = "Female", 
-                             "age" = "Age", 
-                             "fsiq_2" = "IQ", 
-                             "prescribed_groupAutism" = "Autism", 
-                             "prescribed_groupSocial Anxiety" = "Social Anxiety", 
-                             "length" = "Distance Traveled",
-                             "area" = "Convex Hull Area",
-                             "numTrips" = "Number of Activities",
-                             "sev_day_avg" = "7-Day Rolling Average")
-             )
-
-# Distributions for numActivities, Area, and Length
-ggplot(final_table, aes(x = numTrips)) +
-  geom_histogram(binwidth = 1, fill = "darkgray", color = "black") +
-  geom_text(stat = "count", aes(label = after_stat(count)),
-            vjust = -0.5, color = "black", size = 3) +
-  labs(title = "Distribution of Number of Activities", x = "Number of Activities", y = "Frequency") +
-  theme_bw()
-
-ggplot(final_table, aes(x = area/(1e6))) +
-  geom_histogram(fill = "darkgray", color = "black") +
-  scale_x_log10() +
-  labs(title = "Distribution of Area Covered", x = "Area (km^2)", y = "Frequency") +
-  theme_bw()
-
-ggplot(final_table, aes(x = length/1000)) +
-  geom_histogram(fill = "darkgray", color = "black") +
-  scale_x_log10() +
-  labs(title = "Distribution of Distance Traveled", x = "Length (km)", y = "Frequency") +
-  theme_bw()
-
-
-## FIXED EFFECTS AND RANDOM EFFECTS
-library(modelr)
-library(tidyverse)
-library(foreign)
-library(plm)
-
-effects <- data_models %>% 
-  filter(!is.na(motivation)) %>% 
-  select(-algorithm) %>% 
-  as.data.frame()
-
-# fixed model
-fixed <- plm(motivation ~ sev_day_avg, index = c("userId", "activityDay"), data = effects, model = "within") 
-summary(fixed)
-
-
-fixef(fixed) 
-fixef_data <- data.frame(userId = names(fixef(fixed)), intercept = fixef(fixed))
-fixef_tibble <- as_tibble(fixef_data)
-
-# fixed effects linear regression model
-fe_model <- right_join(demo_ids, fixef_tibble, by = "userId") %>% 
-  mutate(sex = if(is.ordered(sex)) sex else relevel(as.factor(sex), ref = "Male"),
-         fsiq_2 = as.numeric(fsiq_2),
-         prescribed_group = fct_recode(prescribed_group, Control = "No Group"))
-
-int_model <- lm(intercept ~ sex + age + fsiq_2 + prescribed_group, data = fe_model)
-summary(int_model)
-
-plot(fixed)
-
-fixed_dum <-lm(motivation ~ sex + age + fsiq_2 + prescribed_group + factor(userId) - 1, data = effects)
-summary(fixed_dum)
-
-#random model
-random <- plm(motivation ~ sev_day_avg, index = c("userId", "activityDay"), data = effects, model = "random")  
-
-# Hausman test to compare the fixed and random
-phtest(fixed,random) 
-
-
-
-
-suicide_model <- lm(motivation ~ suicida , data = data_models)
-summary(int_model)
-
-
-
-
-
 # FIGURE SHOWING A HEAT MAP OF ACTIVITIES
 library(dplyr)
 library(ggplot2)
@@ -153,9 +15,6 @@ activities <- ggplot(data = activity_locations) +
   annotation_map_tile("cartolight") +
   geom_contour()
 
-
-
-
 # Compute density of points
 density <- density(activity_locations$geometry)
 
@@ -166,15 +25,64 @@ ggplot() +
   theme_void()  # Remove axes and background
 
 
+# Load required libraries
+library(sf)
+library(ggplot2)
+library(viridis)
+library(osmdata)
+
+## PARKS
+# Load the GeoJSON shape file
+tar_load(parksSf)
+parks <- parksSf
+
+# Calculate the bounding box of the parks sf object
+parks_bbox <- st_bbox(parks)
+
+# Plot the shape files and overlay the activity locations, zoomed to the parks extent
+ggplot() +
+  geom_sf(data = activity_locations, color = "red", size = 2, alpha = 0.3) + # Activity locations
+  geom_sf(data = parks, fill = "black", color = "white") + # Base map
+  scale_color_viridis_c() + 
+  theme_minimal() + 
+  coord_sf(xlim = c(parks_bbox["xmin"], parks_bbox["xmax"]),
+           ylim = c(parks_bbox["ymin"], parks_bbox["ymax"])) # Set limits based on parks bounding box
 
 
-library(spatstat)
+## UNIQUE USERIDS AT DIFFERENT POINTS
+# 65
+tar_load(activity_types)
+acts <- activity_types %>% group_by(userId) %>% n_groups
+acts
 
-# Convert the geometry to a ppp object
-points <- as.ppp(activity_locations$geometry)
+# 89
+tar_load(demo_ids)
+dem <- demo_ids %>% group_by(userId) %>%  n_groups
+dem
 
-# Compute the density
-density <- density(points)
+# 88
+tar_load(survey_data)
+sur <- survey_data %>% group_by(userId) %>%  n_groups
+sur
 
-# Plot the density
-plot(density)
+#88
+tar_load(imputed_trips)
+imp <- imputed_trips %>%  group_by(userId) %>% n_groups()
+imp
+
+#88
+tar_load(final_table)
+fin <- final_table %>%  group_by(userId) %>% n_groups
+fin
+
+
+
+
+
+
+
+
+
+
+
+
