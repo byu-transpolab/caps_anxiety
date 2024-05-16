@@ -169,6 +169,12 @@ list(
   
   # Estimate the Fixed Effects Model for the length
   tar_target(fe_length_mod, fe_length(model_data)),
+  
+  # Estimate the Fixed Effects Model for the log(length)
+  tar_target(fe_length_log, fe_length_log(model_data)),
+  
+  # Estimate the Fixed Effects Model for the length^2
+  tar_target(fe_length_squared, fe_length_squared(model_data)),
 
   
   
