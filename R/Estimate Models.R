@@ -184,12 +184,46 @@ fe_area <- function(model_data) {
 #' @param model_data A data frame containing the data for modeling.
 #'
 #' @return A fixed effects model object.
+
 fe_length <- function(model_data) {
   fixed <- plm(motivation ~ length, index = c("userId", "activityDay"), data = model_data, model = "within")
   return(fixed)
 }
 
 
+#' Estimate Fixed Effects Model ~ for the log(length)
+#'
+#' This function estimates a fixed effects model using the provided model data.
+#'
+#' @param model_data A data frame containing the data for modeling.
+#'
+#' @return A fixed effects model object.
+
+fe_length_log <- function(model_data) {
+  
+  fixed <- plm(motivation ~ log(length), index = c("userId", "activityDay"), data = model_data, model = "within")
+  return(fixed)
+}
+
+
+#' Estimate Fixed Effects Model ~ for the length^2
+#'
+#' This function estimates a fixed effects model using the provided model data.
+#'
+#' @param model_data A data frame containing the data for modeling.
+#'
+#' @return A fixed effects model object.
+
+fe_length_squared <- function(model_data) {
+  model_data$length <- as.numeric(model_data$length)
+  
+  model_data_squ <- model_data %>%
+    mutate(length_squared = length^2) %>%
+    filter(!is.na(length_squared))
+  
+  fixed <- plm(motivation ~ length_squared, index = c("userId", "activityDay"), data = model_data_squ, model = "within")
+  return(fixed)
+}
 
 
 
