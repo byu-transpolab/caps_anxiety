@@ -56,7 +56,7 @@ tar_load(scored_days_samp_plot)
 ggplot(scored_days_samp_plot, aes(x = factor(hour, levels = c(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2)), y = num_points)) +
   geom_bar(stat = "identity") +
   facet_wrap(~ total_daily_score, ncol = 2, labeller = label_parsed) +
-  labs(x = "Hour", y = "Number of Points", title = "Total Daily Score") +
+  labs(x = "Hour", y = "Number of Points") +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
@@ -107,7 +107,17 @@ activity_locations <- activity_types %>%
   select(algorithm) %>%
   unnest(cols = c(algorithm)) %>%
   st_as_sf() %>% 
-  st_crop(parks_bbox)
+  st_crop(parks_bbox) 
+
+# points <- as.data.frame(activity_locations) #convert to dataframe
+# points$lon <- unlist(map(points $geometry,1)) #adding lon column
+# points$lat <- unlist(map(points $geometry,2)) #adding lat column
+# 
+# #Plot using geom_density_2d_filled()
+# ggplot(points, aes(x = lon, y = lat)) +
+#   # This would create filled polygons that we use for create our polygon
+#   geom_density2d_filled(bins = 50) 
+#   geom_density_2d()
 
 # Plot the shape files and overlay the trimmed activity locations
 ggplot() +
@@ -183,40 +193,52 @@ By calculating rolling averages and imputing missing activity data, the imputati
 
 In addition to analyzing the number of activities and their locations, other parameters were also analyzed to describe the travel patterns of individuals. These parameters were included because while the accuracy of the DBSCAN-TE algorithm in identifying activities is 91.5% accurate, it is not 100% accurate [@richesTransformingGPSPoints2022]. This inaccuracy is noticed upon closer examination of some of the raw LBS data, where instances appeared where activities seemed apparent but went undetected by the algorithm. These discrepancies prompted a deeper investigation into additional parameters that might shed light on daily travel patterns.
 
-The additional parameters we introduced were the convex hull area and total distance traveled. The convex hull is the shape formed by connecting the outermost points of the LBS points in such a way that the resulting polygon is convex, meaning that any line segment connecting two points within the shapes lies entirely within the shape itself. By calculating the area enclosed by the convex hull, we gained a measure of the geographic footprint of the recorded LBS data, independent of the location of activities. This value is reported in square kilometers. @fig-areadistrib shows the distribution of the area covered for all of the userID-activity days.
+The additional parameters we introduced were the convex hull area and total distance traveled. The convex hull is the shape formed by connecting the outermost points of the LBS points in such a way that the resulting polygon is convex, meaning that any line segment connecting two points within the shapes lies entirely within the shape itself. By calculating the area enclosed by the convex hull, we gained a measure of the geographic footprint of the recorded LBS data, independent of the location of activities. This value is reported in square kilometers.
 
-```{r figure area, message=FALSE, echo=FALSE}
-#| label: fig-areadistrib
-#| fig-cap: "Distribution of area covered for all userID-activity days."
-
-trips <- final_table %>% 
-    filter(!is.na(area))
-  
-ggplot(trips, aes(x = area/(1e6))) +
-    geom_histogram(fill = "darkgray", color = "black") +
-    scale_x_log10() +
-    labs(x = "Area (km^2)", y = "Frequency") +
-    theme_bw()
-```
-
-We also evaluated the total distance traveled by each individual on each activity day. To determine the total distance traveled, we computed the length of the polyline, representing the trajectory of movement between consecutive LBS points, during a participant's day. This value is reported in meters. @fig-lengthdistrib shows the distribution of the distance traveled for all of the userID-activity days.
-
-```{r figure length, message=FALSE, echo=FALSE}
-#| label: fig-lengthdistrib
-#| fig-cap: "Distribution of distance traveled for all userID-activity days."
-
-trips <- final_table %>% 
-    filter(!is.na(length))
-  
-ggplot(trips, aes(x = length/1000)) +
-    geom_histogram(fill = "darkgray", color = "black") +
-    scale_x_log10() +
-    labs(x = "Length (km)", y = "Frequency") +
-    theme_bw()
-```
+We also evaluated the total distance traveled by each individual on each activity day. To determine the total distance traveled, we computed the length of the polyline, representing the trajectory of movement between consecutive LBS points, during a participant's day. This value is reported in meters.
 
 Our analysis delved beyond merely quantifying the number of activities and their locations to encompass additional parameters aimed at refining our understanding of individual travel patterns. While the DBSCAN-TE algorithm demonstrated a commendable 91.5% accuracy in identifying activities, discrepancies observed in raw LBS data prompted us to explore supplementary metrics. Introducing parameters such as the convex hull area and total distance traveled offered valuable insights. The convex hull area provided a measure of the geographic footprint of LBS data, irrespective of activity locations, while total distance traveled quantified the extent of movement throughout the day. These supplementary parameters contribute to a comprehensive characterization of travel patterns, augmenting the accuracy and depth of our analysis.
 
 ## Completed Processing of the LBS Data
 
 With the data carefully prepared, processed into distinct activity categories and locations, and supplemented with additional parameters, we have laid a robust foundation for exploring the intricate relationship between travel behavior and mental well-being. These comprehensive insights including parameters like convex hull area and total distance traveled, now allow us to explore how individual travel patterns intertwine with responses to mental health surveys. By scrutinizing the interplay between travel behavior and activity engagement alongside mental health outcomes, our analysis looks to find nuanced connections that can inform and foster holistic well-being.
+
+## Statistical Modeling
+
+After joining together the semantic activities, other travel pattern parameters, and the responses to the surveys, we created statistical models to investigate the relationship between mental health and travel behavior. In statistical modeling, the selection and comparison of various regression models are crucial steps in understanding the relationships between variables and making predictions. For our analysis, we analyzed an ordinary least squares, fixed effects model, and random effects model to determine which was the best fit for our data. In addition to the model analysis, we accounted for heteroskedasticity and autocorrelation in the selected models.
+
+### Model Analysis and Selection
+
+We first considered an ordinary least squares regression followed by fixed and random effects models. For all three of these models, the motivation, as reported in the evening surveys on a scale from 0-100, served as the dependent variable. The level of motivation is used as a measure for overall subjective well-being. In addition, the seven-day rolling average number of activities, as described previously, served as the independent variable for the models.
+
+### Ordinary Least Squares
+
+Daily motivation levels (y) were considered a function of the seven-day rolling average number of activities (x) described in the previous sections. Using these parameters, a linear regression model was estimated by ordinary least squares (OLS).
+
+\[ADD EQUATION?\]
+
+For linear regressions, it is assumed that the error terms are independently and identically distributed (IID) with a normal distribution of mean 0. The estimates resulting from this model may be inconsistent due to unobserved individual differences (violating the IID assumption). For example, all individuals have a different baseline or typical level of motivation. We want to account for changes in motivation by individual to see how their motviation deviates from its baseline. There are two common econometric techniques, known as fixed effects and random effects, that attempt to account for these baseline measures, which are discussed in the following sections.
+
+### Fixed Effects
+
+\[ADD EQUATION?\]
+
+The fixed effects (FE) model demeans the data by participant and looks at each participant's levels of motivation and seven-day rolling average number of activities individually. The results in having different intercepts for each participant. The FE model is consistent but less efficient because it results in losing degrees of freedom to estimate individual intercepts for each participant. This results in larger standard errors for the estimates which can make it more difficult to recognize significance. The FE model also removes the effect of time constant characteristics, which in this case are the demographic characteristics of each participant. These variables are absorbed by the intercept as they are unique to each participant.
+
+### Random Effects
+
+\[ADD EQUATION?\]
+
+The random effects (RE) model semi-demeans the data by participant. Based on a mean for the entire group, a mean is determined with set standard deviations to represent the data of the entire group. The RE model is appropriate to use if it is believed that the the difference in motivation has an influence on the seven-day rolling average number of activities. It is possible that other variables that influence the seven-day rolling average number of activities are not included which can lead to bias in the model. Unlike the FE model, the RE model is more efficient because degrees of freedom are not lost to more estimates, but the results can be biased.
+
+### Autocorrelation and Heteroskedasticity
+
+When analyzing how motivation changes over time for individual people, autocorrelation and heteroskedasticity can arise as statistical challenges.
+
+Autocorrelation occurs when observations in a time series are correlated with preceding or succeeding observations, violating the assumption of independence between observations. In the context of studying individual motivation over time, autocorrelation can manifest as a person's motivation level at one point in time being influenced by their motivation level at previous time points. This can lead to biased estimates and inflated significance levels in regression analyses.
+
+Heteroskedasticity refers to the unequal variance of errors across observations in a dataset. In the case of studying motivation over time, heteroskedasticity may arise if the variability in motivation levels differs between individuals or varies systematically over time. This violates the assumption of homoscedasticity, where the variance of the errors remains constant across observations.
+
+Autocorrelation and heteroskedasticity can lead to biased parameter estimates and incorrect inference in statistical models. To address these issues, robust measures for standard errors are used. Specificlaly in our case, Heteroskedasticity and Autocorrelation Consistent (HAC) can be employed. HAC robust standard errors are particularly useful when dealing with time series or panel data where observations may be correlated across time periods. HAC estimators adjust for heteroskedasticity by allowing the variance of the errors to vary across observations. However, they also account for autocorrelation by incorporating a weighting scheme that considers the correlation structure of the data over time. This weighting scheme assigns higher weights to more recent observations and lower weights to distant observations, reflecting the diminishing influence of past observations on current ones.
+
+By adjusting for both heteroskedasticity and autocorrelation, HAC robust standard errors provide more accurate estimates of the standard errors of regression coefficients, ensuring valid statistical inference in the presence of correlated and heteroskedastic data. This makes them particularly well-suited for analyzing time series or panel data where autocorrelation and heteroskedasticity are common concerns. Overall, HAC robust standard errors are essential tools for conducting robust regression analysis in the presence of correlated and heteroskedastic data, ensuring the reliability and validity of statistical inference.
