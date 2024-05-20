@@ -78,11 +78,28 @@ fin
 
 
 
+# [say i am using this methodology because this methodology will allow me to focus on these key things...] 
+# 
+# [why this methodology.... explain why this will let me narrow in]
+# 
+# [justify the methods, narrow down what i am doing and why i am doing it]
+# 
+# Following the integration of semantic, or interpreted, activities and survey responses, statistical models were constructed to examine the interplay between mental health and travel behavior. Three base models were formulated: ordinary least squares, fixed effects, and random effects models. These models predict individual well-being based on a variable representing travel behavior, with the fixed effects and random effects models accounting for individual baseline differences in well-being. Moreover, data transformations were applied to further understand the impact of the number of activities and distance traveled on reported motivation levels.
 
 
+# In terms of activities at specific locations, engagement at parks, grocery stores, libraries, and social recreation locations was generally infrequent across all groups. For instance, activities at parks yielded minimal mean values and low standard deviations, suggesting sporadic engagement. Similarly, activities at grocery stores and libraries were rare, with mean values close to zero and minimal variability. Notably, individuals with social anxiety exhibited slightly higher mean values and greater variability in activities at grocery stores compared to other groups. Activities at social recreation locations, while still infrequent, showed slightly higher mean values across all groups, with some variability in engagement, particularly among individuals with control and social anxiety.
 
 
+library(purrr)
 
 
+ms <- mtcars |>
+  group_by(am) |>
+  nest() |>
+  mutate(
+    model = map(data, function(d) lm(mpg ~ disp, data = d))
+  ) 
 
+
+modelsummary(ms$model |> set_names(str_c("AM: ", ms$am)))
 
