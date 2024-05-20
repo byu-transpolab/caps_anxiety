@@ -2,7 +2,23 @@
 
 There are some important limitations and future considerations following this initial analysis of the research.
 
-## Limitations
+## **Issues with the Algorithm**
+
+One of the primary limitations of this study involves the algorithm used for location and activity identification. Despite efforts to compensate for inaccuracies by using methods like the convex hull and distance calculations, there remain significant issues. The algorithm frequently returned days with zero activity, which suggests problems with accurately identifying participants' locations and activities. This is particularly evident in the unexpectedly low number of recorded activities at parks and other specific locations. Such inaccuracies in location tracking can lead to a misrepresentation of participants' behaviors and routines, ultimately affecting the validity of our findings regarding the relationship between travel behavior and mental well-being.
+
+## **Duration of Engagement and Device Usage**
+
+Another limitation pertains to the varying lengths of time participants engaged in the study and how consistently their phones were operational. A substantial amount of data had to be discarded due to poor quality, influenced by factors such as participants turning off their phones or the app failing to record data accurately. The inconsistency in data collection compromised the scoring algorithm’s effectiveness, further exacerbating the challenges in accurately capturing participants' activities and movements. Improved data quality would likely have mitigated these issues, leading to more reliable and robust findings.
+
+## **Incomplete Activity Duration Data**
+
+The study also lacks detailed information on the duration of participants' activities. While the dataset indicates that certain activities occurred, it does not specify how long participants spent engaging in these activities. For example, we know whether participants visited parks, but not the duration of their stay. This limitation means we cannot accurately assess the impact of time spent in specific environments on mental well-being. Additionally, since the algorithm was determining activities based on location data, we did not account for instances where participants might have merely passed through green spaces or parks without spending significant time there. This omission further complicates our understanding of the relationship between environment and mental health.
+
+These limitations highlight the challenges in using mobile-based data collection for mental health research. Future studies should focus on improving the accuracy of location-tracking algorithms, ensuring consistent data collection, and capturing detailed activity duration to provide a more comprehensive understanding of the interaction between travel behavior and mental well-being.
+
+1.  issues with the algorithm – tried to compensate with the convex hull and distance, but it seems like there may still be issues with it with how may 0 activity days it returned. This may lead to inaccurate location/activity identification. This can been seen in the low umber of activities at parks and some of the other specific locations
+2.  how long participants engaged in the study as well as how much their phone was on. we threw out a lot of the data with the scoring algorithm because of the poor data quality. if data was better quality, then we likely would not have had the issues we had with the algorithm
+3.  we dont know how much time participants spent engaging in the activities, we just know that they happened, so we dont know how much time individuals spent at parks. since we were determining activities, we also do not account for if a green space was passed through during the day.
 
 ## Future Considerations
 
