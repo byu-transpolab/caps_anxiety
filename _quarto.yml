@@ -39,7 +39,6 @@ book:
   date: "`r Sys.Date()`"
   chapters:
     - index.qmd
-    - 01_introduction.qmd
     - 02_litreview.qmd
     - 03_methods.qmd
     - 04_results.qmd
@@ -50,6 +49,9 @@ book:
     - references.qmd
   keyword: "active mobility, life-stages, and quality of life"
   abstract: |
+    The mental health of young adults is a major concern in much of the world. The causes of this concern are not straightforward, and multiple factors have been considered.
+    Travel behavior is proposed as an element in individual mental health in a number of dimensions. 
+    In this research, we explore a unique dataset of young adults who have expressed suicide ideation in professional therapy contexts. Using data from a mobile application revealing the individual's overall well-being and travel behaviors over a six-month period, we examine the relationship between travel behavior and expressed suicidal ideation.
 
 bibliography: groupreferences.bib
 
