@@ -138,7 +138,7 @@ fe_numTrips <- function(model_data) {
 #' @return A fixed effects model object.
 
 fe_numTrips_log <- function(model_data) {
-  fixed <- plm(motivation ~ log(numTrips + 1), index = c("userId", "activityDay"), data = model_data, model = "within")
+  fixed <- plm(motivation ~ log(numTrips + 0.1), index = c("userId", "activityDay"), data = model_data, model = "within")
   return(fixed)
 }
 
@@ -158,7 +158,7 @@ fe_numTrips_squared <- function(model_data) {
     mutate(numTrips_squared = numTrips^2) %>%
     filter(!is.na(numTrips_squared))
   
-  fixed <- plm(motivation ~ numTrips_squared, index = c("userId", "activityDay"), data = model_data_squ, model = "within")
+  fixed <- plm(motivation ~ I(numTrips^2) + numTrips, index = c("userId", "activityDay"), data = model_data, model = "within")
   return(fixed)
 }
 
@@ -221,7 +221,7 @@ fe_length_squared <- function(model_data) {
     mutate(length_squared = length^2) %>%
     filter(!is.na(length_squared))
   
-  fixed <- plm(motivation ~ length_squared, index = c("userId", "activityDay"), data = model_data_squ, model = "within")
+  fixed <- plm(motivation ~ I(length^2) + length, index = c("userId", "activityDay"), data = model_data, model = "within")
   return(fixed)
 }
 
