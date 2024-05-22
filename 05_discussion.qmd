@@ -86,48 +86,7 @@ fixed_social_anxiety <- plm(motivation ~ suic_intensity, index = c("userId", "ac
 plot(fixed_social_anxiety)
 ```
 
-@fig-groupAnaly2 shows the relationship between motivation and the number of activities by group.
 
-```{r figure groupAnaly2, message=FALSE, echo=FALSE}
-#| label: fig-groupAnaly2
-#| fig-cap: "Motivation vs Number of Activities"
-
-ggplot(analysis, aes(y = motivation, x = numTrips, color = prescribed_group)) +
-  geom_point(alpha = 0.5) +
-  geom_smooth(method = "lm", se = FALSE, color = "black") +
-  facet_wrap(~prescribed_group) +
-  labs(y = "Level of Motivation", x = "Number of Activities") +
-  theme_bw()
-
-## ALL THREE GROUPS
-fixed <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = analysis, model = "within")
-
-plot(fixed)
-
-## CONTROL GROUP
-control <- analysis %>% 
-  filter(prescribed_group == "Control")
-
-fixed_control <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = control, model = "within")
-
-plot(fixed_control)
-
-## AUTISM GROUP
-autism <- analysis %>% 
-  filter(prescribed_group == "Autism")
-
-fixed_autism <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = autism, model = "within")
-
-plot(fixed_autism)
-
-# SOCIAL ANXIETY GROUP
-social_anxiety <- analysis %>% 
-  filter(prescribed_group == "Social Anxiety")
-
-fixed_social_anxiety <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = social_anxiety, model = "within")
-
-plot(fixed_social_anxiety)
-```
 
 @fig-groupAnaly3 shows the relationship between suicidal intensity and the number of activities by group.
 
