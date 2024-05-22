@@ -35,7 +35,8 @@ cm_comp <- c(
   "area" = "Activity Area",
   "length" = "Distance",
   "log(length)" = "log(Distance)",
-  "I(length^2)" = "$Distance^2$")
+  "I(length^2)" = "$Distance^2$",
+  "suic_intensity" = "Suicidal Intesity")
 
 cm_group <- c(
   "numTrips" = "No. of Activities",
@@ -184,7 +185,7 @@ ggplot(motivANOVA, aes(x = Group, y = motivation)) +
   theme_bw()
 ```
 
-After determining that there significant differences in the mean levels of motivation among three groups, a Tukey's Honest Significant Difference (HSD) test was conducted to pinpoint which specific groups differ from each other. The results are shown in @tbl-TukeyMotiv.
+After determining that there significant differences in the mean levels of motivation among three groups, a Tukey's HSD test was conducted to pinpoint which specific groups differ from each other. The results are shown in @tbl-TukeyMotiv.
 
 ```{r table TukeyHSD-motivation, message=FALSE, echo=FALSE}
 #| label: tbl-TukeyMotiv
@@ -376,6 +377,8 @@ modelsummary(models_numActs, gof_map = gm, coef_map = cm_comp,
              )
 ```
 
+Three FE models were estimated to predict the level of motivation. Model I included the number of activities as a predictor, showing a statistically significant positive relationship (coefficient = 0.356, t-statistic = 2.975). Model II incorporated the logarithm of the number of activities, revealing a similar positive association (coefficient = 0.440, t-statistic = 2.698). For the logarithm, a small number of 0.1 was added to each observed number of activities. This removes the issue of taking the logarithm of 0, as there were many 0 activity days. Additional analysis would suggest looking at the Yeo-Johnson transformation. However, Model III failed to find significant relationships for both the number of activities (coefficient = 0.177, t-statistic = 0.563) and the number of activities squared (coefficient = 0.028, t-statistic = 0.616) with motivation. All models were based on a dataset with 2,651 observations, and their Akaike Information Criterion (AIC) values indicated similar model fit across the models. Overall, Models I and II suggested a positive relationship between activity level and motivation, with Model II capturing the relationship more nuance through logarithmic transformation, while Model III did not find statistically significant associations, suggesting potential limitations in model specification or omitted variables.
+
 ### Activity Area Covered
 
 To further analyze the impact of the distance traveled, we applied transformations to the independent variable. We looked at the logarithm of the distance traveled and the distance traveled squared. @tbl-motivDistTrav compares the original model with the distance traveled with these two transformed models.
@@ -403,3 +406,159 @@ modelsummary(models_distTrav, gof_map = gm, coef_map = cm_comp,
              )
 ```
 
+Three FE models were estimated to predict levels of motivation using distance-related predictors: distance, log(distance), and distance squared. In Model I, the distance predictor yielded a coefficient of -0.0003263 with a robust t-statistic of (-1.778). However, this coefficient was not statistically significant at the 5% level. Model II, which included the log transformation of distance, resulted in a coefficient of 0.2324, which was not statistically significant. In addition, Model III with the distance squared was also not a statistically significant model. The number of observations for all models was 2,651, and the AIC values indicated similar model fit across the models. None of the models provided statistically significant results for further analysis.
+
+Based on the results from the models, it appears that the transformations applied to the number of activities and distance variables did not yield improvements in model fit. Therefore, moving forward, we will use the untransformed value for the number of activities in our analyses.
+
+## Models by Group
+
+Considering the data presented on the three groups—control, social anxiety, and autism—several potential connections between their activity engagements, motivation levels, and suicidal ideation can be explored.
+
+Activity engagements may serve as a reflection of one's mental state and well-being. The differences observed in the number of activities and their nature across the groups could indicate variations in their daily routines, coping mechanisms, and social interactions. For instance, individuals in the control group might exhibit higher activity engagement, possibly indicative of better mental health and social integration compared to those in the social anxiety and autism groups.
+
+Motivation levels could play a significant role in influencing activity engagements and, consequently, mental well-being. Lower motivation levels, as observed in the autism group and social anxiety group compared to the control group, might contribute to decreased participation in activities and decreased overall satisfaction with life. This, in turn, could exacerbate feelings of isolation, loneliness, and low self-esteem, which are known risk factors for suicidal ideation.
+
+### Motivation and Number of Activities
+
+After observing statistical differences in the mean motivation, number of activities, and suicidal tendency across the three groups, we have decided to explore modeling each group separately. By doing so, we aim to capture the unique characteristics and behaviors within each group, potentially uncovering more nuanced relationships between variables and outcomes. Additionally, our analysis has revealed the need to use a FE model to account for individual differences among participants in the study. This approach ensures that the effects of observed and unobserved characteristics specific to each participant are appropriately accounted for in the analysis. Moving forward, we will combine these two findings by employing FE models for each group, allowing us to delve deeper into understanding the factors influencing motivation while considering the distinct attributes of each participant subgroup. @fig-Analy shows the relationship between motivation and the number of activities by group before taking into account the FE.
+
+```{r figure groupAnaly, message=FALSE, echo=FALSE}
+#| label: fig-Analy
+#| fig-cap: "Motivation vs Number of Activities for All Participants"
+
+ggplot(model_data, aes(y = motivation, x = numTrips, color = prescribed_group)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  facet_wrap(~prescribed_group) +
+  labs(y = "Level of Motivation", x = "Number of Activities") +
+  theme_bw()
+```
+
+This analysis demonstrates that without accounting for FE, which are necessary due to individual differences and varying baseline motivation levels, there is no significant relationship between the number of activities and motivation for the control group. Conversely, for the autism group, there is a steep slope, indicating that as the number of activities increases, the motivation of individuals also increases. Similarly, the social anxiety group shows a positive slope, though less pronounced than the autism group, suggesting that increased activities correlate with higher motivation levels. These findings contradict expectations from existing literature, which suggests that motivation levels in the autism and social anxiety groups should not necessarily rise with an increase in activities. This discrepancy highlights the importance of using the FE model. Figure @fig-FEAnaly illustrates the individual lines of best fit for each participant, demonstrating how the number of activities influences motivation. Each individual line has the same slope, with varying intercepts to account for different baseline motivation levels. 
+
+```{r figure groupAnaly, message=FALSE, echo=FALSE}
+#| label: fig-FEAnaly
+#| fig-cap: "Motivation vs Number of Activities for All Participants"
+
+## ALL THREE GROUPS
+fixed <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = model_data, model = "within")
+
+plot(fixed)
+```
+
+It is crucial to consider each individual separately because each person has a unique baseline level of motivation. This individual variability necessitates the use of a FE model to accurately account for these differences. Based on the literature and our current analyses, we have determined that applying a fixed effects model to each group—control, autism, and social anxiety—might be important for understanding the true relationship between the number of activities and motivation.
+
+The following three plots present the results of the fixed effects models for each group. These models predict motivation based on the number of activities, while accounting for individual baseline differences. By doing so, we can more accurately assess the impact of activities on motivation within each distinct group. This approach not only provides a clearer picture of how motivation varies with activity levels but also ensures that our conclusions are grounded in a model that respects individual differences. The plots highlight the unique patterns within each group, reinforcing the importance of tailored analyses.
+
+```{r figure groupAnaly, message=FALSE, echo=FALSE}
+#| label: fig-FEAnalyGroup
+#| fig-cap: "Motivation vs Number of Activities Seperated by Group"
+
+## CONTROL GROUP
+control <- model_data %>% 
+  filter(prescribed_group == "Control")
+
+fixed_control <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = control, model = "within")
+
+plot(fixed_control)
+
+## AUTISM GROUP
+autism <- model_data %>% 
+  filter(prescribed_group == "Autism")
+
+fixed_autism <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = autism, model = "within")
+
+plot(fixed_autism)
+
+# SOCIAL ANXIETY GROUP
+social_anxiety <- model_data %>% 
+  filter(prescribed_group == "Social Anxiety")
+
+fixed_social_anxiety <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = social_anxiety, model = "within")
+
+plot(fixed_social_anxiety)
+```
+
+Since these FE models rely on having both an evening survey response for motivation and a number of activities determined by the DBSCAN-TE algorithm, we lose some data. Specifically, we only include userID-activity days when both a motivation level response and a number of activities for the day are available. This reduced the number of individuals from 31 to 23 in the control group, from 29 to 17 in the autism group, and from 28 to 22 in the social anxiety group.
+
+Moreover, when examining the number of unique participants in each group included in the FE models, the numbers decrease further. Only 5 participants remain in the control group, 8 in the autism group, and 19 in the social anxiety group. The FE models require sufficient data points for each individual to perform the analysis effectively, which likely explains the reduction in the number of participants for these models.
+
+The slopes for individuals within each group provide a clearer representation of the impact of the number of activities on motivation levels. After visualizing these relationships, we proceeded to run the fixed effects (FE) models for each group. The results from these models are presented in @tbl-groupFEAnaly.
+
+```{r table groupAnaly, message=FALSE, echo=FALSE}
+#| label: tbl-groupFEAnaly
+#| tbl-cap: "FE models predicting motivation by group as a function of the number of activities"
+
+sep_groups <- model_data %>% 
+  group_by(prescribed_group) %>% 
+  nest() %>% 
+  mutate(
+    model = map(data, function(d) plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = d, model = "within"))
+  ) 
+
+# Number of unique users in each group
+# unique_user_count <- model_data %>%
+#   filter(!is.na(motivation) & !is.na(numTrips)) %>%
+#   group_by(prescribed_group) %>%
+#   summarise(unique_users = n_distinct(userId))
+# print(unique_user_count)
+
+modelsummary(sep_groups$model %>% set_names(str_c("Group: ", sep_groups$prescribed_group)),
+             gof_map = gm, coef_map = cm_comp,
+             vcov = function(x) vcovHC(x, cluster = "time"),
+             estimate = c("{estimate} ({statistic}){stars}"),
+             statistic = NULL,
+             notes = list("Robust t-statistics in parentheses")
+             )
+```
+
+The FE models for the control, autism, and social anxiety groups reveal varying relationships between the number of activities and levels of motivation. For the control group, the coefficient for the number of activities is 0.259 with a t-statistic of 1.716, indicating a marginally significant positive relationship. This suggests that, while the number of activities may slightly increase motivation, the evidence is not robust. In the autism group, the coefficient is 0.361 with a t-statistic of 1.147, suggesting a positive but not statistically significant relationship between activities and motivation. This indicates that an increase in activities may correlate with higher motivation, but the evidence is not strong enough to draw definitive conclusions. The social anxiety group shows a coefficient of 0.483 with a t-statistic of 2.149, indicating a statistically significant positive relationship. This suggests that an increase in the number of activities is associated with a notable increase in motivation for individuals with social anxiety. In addition, the relatively low AIC for the autism group indicates a better fit compared to the control and social anxiety groups.
+
+Overall, these results highlight the importance of considering individual differences in motivation across different groups. The significant positive relationship in the social anxiety group suggests that interventions increasing the number of activities may be particularly effective in boosting motivation for these individuals. Conversely, the control and autism groups did not exhibit strong evidence of such a relationship, indicating that other factors may play a more crucial role in influencing motivation for these populations.
+
+### Motivation and Suicidal Ideation
+
+The prevalence of suicidal ideation across the groups underscores the complex interplay between mental health and activity engagement. Individuals experiencing higher levels of suicidal ideation may exhibit decreased motivation to engage in activities and may withdraw from social interactions, leading to further isolation and worsening mental health outcomes. Conversely, active engagement in meaningful activities and supportive social networks could serve as protective factors against suicidal ideation. In addition, the literature suggests that suicidal behavior is negatively associated with overall well-being [@fonseca-pedreroRiskProtectiveFactors2022; @fumeroAdolescentsBipolarExperiences2021]. Since we connected motivation to well-being, a similar association is drawn between suicidal tendency and motivation.
+
+Based on similar conclusions from the motvation and number of activities analysis, we continued to perform the analysis by group. @tbl-groupFESuic shows the FE models for the impact of suicidal ideation on level of motivation for individuals by group.
+
+```{r table groupAnaly, message=FALSE, echo=FALSE}
+#| label: tbl-groupFESuic
+#| tbl-cap: "FE models predicting motivation by group as a function of suicidal ideation"
+
+analysis <- model_data %>%
+  select(userId, prescribed_group, activityDay, motivation, numTrips, sev_day_avg, suicidal_intensity_q32_even) %>% 
+  filter(!is.na(suicidal_intensity_q32_even) & suicidal_intensity_q32_even != "CONDITION_SKIPPED") %>% 
+  mutate(suic_intensity = as.numeric(suicidal_intensity_q32_even)) %>% 
+  filter(!is.na(suic_intensity)) %>% 
+  group_by(prescribed_group) %>% 
+  nest() %>% 
+  mutate(
+    model = map(data, function(d) plm(motivation ~ suic_intensity, index = c("userId", "activityDay"), data = d, model = "within"))
+  ) 
+
+# Number of unique users in each group
+# unique_user_count <- model_data %>%
+#   filter(!is.na(motivation) & !is.na(numTrips)) %>%
+#   group_by(prescribed_group) %>%
+#   summarise(unique_users = n_distinct(userId))
+# print(unique_user_count)
+
+modelsummary(analysis$model %>% set_names(str_c("Group: ", analysis$prescribed_group)),
+             gof_map = gm, coef_map = cm_comp,
+             vcov = function(x) vcovHC(x, cluster = "time"),
+             estimate = c("{estimate} ({statistic}){stars}"),
+             statistic = NULL,
+             notes = list("Robust t-statistics in parentheses")
+             )
+```
+
+The FE models for individuals in the autism, social anxiety, and control groups reveal distinct relationships between suicidal intensity and motivation levels. In the autism group, the coefficient for suicidal intensity is -0.095 with a robust t-statistic of -1.927, indicating a marginally significant negative relationship. This suggests that higher levels of suicidal intensity may slightly decrease motivation, although the evidence is not robust. Conversely, in the social anxiety group, the coefficient is -0.160 with a robust t-statistic of -5.518, indicating a statistically significant negative relationship. This suggests that higher levels of suicidal intensity are strongly associated with decreased motivation among individuals with social anxiety. Similarly, in the control group, the coefficient is -0.361 with a robust t-statistic of -3.293, indicating a statistically significant negative relationship. This suggests that higher levels of suicidal intensity are significantly associated with reduced motivation among individuals in the control group.
+
+The number of observations and the AIC values across the models reflect varying degrees of fit. The autism group has 484 observations and an AIC of 3,942.104, the social anxiety group has 822 observations and an AIC of 6,934.607, and the control group has 66 observations and an AIC of 568.685. These values indicate differences in the quality of fit among the models, with larger sample sizes generally associated with better model fit.
+
+Overall, these results highlight the importance of considering the impact of suicidal intensity on motivation levels within different groups. While the associations are significant across all groups, the strength and significance of the relationship vary, underscoring the need for tailored interventions to address motivational challenges in each population.
+
+### Activity Type Impacts
+
+[perform analysis about the number of activities to different location types for each group. find what is significant and report here to talk about potential things individuals in each group can do, activity engagement wise, to improve their mental health]
