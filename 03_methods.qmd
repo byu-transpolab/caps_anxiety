@@ -86,7 +86,7 @@ ggplot(raw_trips, aes(x = numTrips)) +
     theme_bw()
 ```
 
-As many participants participated in the study over multiple months, the DBSCAN-TE algorithm identified activities across various regions of the United States. Since all of the participants reside in Utah County, Utah, the majority of the activities are clustered within Utah County. To visually represent the distribution of activities, the @fig-actLocs plot illustrates all identified activities within this geographical area. Notably, a significant concentration of activity points emerges in Provo, close to Brigham Young University, a pattern consistent with expectations since the study is conducted by BYU CAPS.
+As many participants participated in the study over multiple months, the DBSCAN-TE algorithm identified activities across various regions of the United States. Since all of the participants reside in Utah County, Utah, the majority of the activities are clustered within Utah County. To visually represent the distribution of activities, the @fig-actLocs and @fig-actLocs2 plot illustrates all identified activities within this geographical area. Notably, a significant concentration of activity points emerges in Provo, close to Brigham Young University, a pattern consistent with expectations since the study is conducted by BYU CAPS.
 
 ```{r figure actLocations, message=FALSE, echo=FALSE}
 #| label: fig-actLocs
@@ -109,36 +109,42 @@ activity_locations <- activity_types %>%
   st_as_sf() %>% 
   st_crop(parks_bbox) 
 
-# points <- as.data.frame(activity_locations) #convert to dataframe
-# points$lon <- unlist(map(points $geometry,1)) #adding lon column
-# points$lat <- unlist(map(points $geometry,2)) #adding lat column
-# 
-# #Plot using geom_density_2d_filled()
-# ggplot(points, aes(x = lon, y = lat)) +
-#   # This would create filled polygons that we use for create our polygon
-#   geom_density2d_filled(bins = 50) 
-#   geom_density_2d()
-
 # Plot the shape files and overlay the trimmed activity locations
 ggplot() +
   geom_sf(data = activity_locations, color = "red", size = 2, alpha = 0.3) +
   theme_void() # Remove the background
 ```
 
-In addition to determining the total number of activities for each userID-activity day, we also determined the number of activities that took place at four specific location types. To do this, we used OpenStreetMap data to create GeoJSON shapefiles for the locations of parks, grocery stores, libraries, and social recreation sites in Utah County. Then, we overlaid the spatial geometry of the activities with the GeoJSON shapefiles to determine the number of activities that occurred at the specific locations. The polygons for the park sites are shown in @fig-actShapes as an example.
+```{r figure actLocations2, message=FALSE, echo=FALSE}
+#| label: fig-actLocs2
+#| fig-cap: "Density map for activity locations for all userID-activity days in Utah County."
+
+points <- as.data.frame(activity_locations) #convert to dataframe
+points$lon <- unlist(map(points $geometry,1)) #adding lon column
+points$lat <- unlist(map(points $geometry,2)) #adding lat column
+
+ggplot(points, aes(x = lon, y = lat)) +
+  # This would create filled polygons that we use for create our polygon
+  geom_density2d_filled(bins = 10) +
+  geom_density_2d(bins = 10)
+```
+
+In addition to determining the total number of activities for each userID-activity day, we also determined the number of activities that took place at four specific location types. To do this, we used OpenStreetMap data to create GeoJSON shapefiles for the locations of parks, grocery stores, libraries, and social recreation sites in Utah County. Then, we overlaid the spatial geometry of the activities with the GeoJSON shapefiles to determine the number of activities that occurred at the specific locations.
 
 ```{r figure actShapes, message=FALSE, echo=FALSE}
 #| label: fig-actShapes
 #| fig-cap: "Location polygons for park sites in Utah County."
 
-library(sf)
-library(osmdata)
-
-# Load the data
-tar_load(parksSf)
-tar_load(grocerySf)
-tar_load(librarySf)
-tar_load(social_recSf)
+# The polygons for the park sites are shown in @fig-actShapes as an example.
+# 
+# library(sf)
+# library(osmdata)
+# 
+# # Load the data
+# tar_load(parksSf)
+# tar_load(grocerySf)
+# tar_load(librarySf)
+# tar_load(social_recSf)
 
 # # Create a common identifier for each dataset
 # parksSf$source <- "parks"
@@ -155,15 +161,15 @@ tar_load(social_recSf)
 #   scale_fill_manual(values = c("parks" = "darkgreen", "grocery" = "darkblue", "library" = "darkred", "social_rec" = "darkorange")) +
 #   theme_bw()
 
-# Calculate the bounding box of the parkSf
-park_bbox <- st_bbox(parksSf)
-
-# Plot the park polygons with ggplot
-ggplot() +
-  geom_sf(data = parksSf, color = "black", fill = "black") +
-  theme_void() +
-  coord_sf(xlim = c(park_bbox["xmin"], park_bbox["xmax"]),  # Set x limits
-           ylim = c(park_bbox["ymin"], park_bbox["ymax"]))  # Set y limits
+# # Calculate the bounding box of the parkSf
+# park_bbox <- st_bbox(parksSf)
+# 
+# # Plot the park polygons with ggplot
+# ggplot() +
+#   geom_sf(data = parksSf, color = "black", fill = "black") +
+#   theme_void() +
+#   coord_sf(xlim = c(park_bbox["xmin"], park_bbox["xmax"]),  # Set x limits
+#            ylim = c(park_bbox["ymin"], park_bbox["ymax"]))  # Set y limits
 ```
 
 After determining the total number of activities and their respective types, an imputation procedure was executed to enhance dataset completeness. This process aimed to address missing activity data on certain days, whether due to data collection absence or data quality issues, ensuring better alignment with completed mental health surveys. Using rolling averages, missing activity data was estimated for specific timeframes over varying time windows (seven, fourteen, and thirty days) to capture activity trends. The imputation process was applied to total activities and separately for distinct activity types (e.g., parks, grocery stores, libraries, social recreation locations) to accommodate potential variations in activity patterns across contexts.
@@ -213,23 +219,33 @@ We first considered an ordinary least squares regression followed by fixed and r
 
 ### Ordinary Least Squares
 
-Daily motivation levels (y) were considered a function of the seven-day rolling average number of activities (x) described in the previous sections. Using these parameters, a linear regression model was estimated by ordinary least squares (OLS).
+Daily motivation levels (y) were considered a function of the seven-day rolling average number of activities (x) described in the previous sections. Using these parameters, a linear regression model was estimated by ordinary least squares (OLS), the OLS base equation is:
 
-\[ADD EQUATION?\]
+$$
+y_{it} = \alpha + \beta x_{it} + \epsilon_{it}
+$$
 
-For linear regressions, it is assumed that the error terms are independently and identically distributed (IID) with a normal distribution of mean 0. The estimates resulting from this model may be inconsistent due to unobserved individual differences (violating the IID assumption). For example, all individuals have a different baseline or typical level of motivation. We want to account for changes in motivation by individual to see how their motviation deviates from its baseline. There are two common econometric techniques, known as fixed effects and random effects, that attempt to account for these baseline measures, which are discussed in the following sections.
+For linear regressions, it is assumed that the error terms are independently and identically distributed (IID) with a normal distribution of mean 0. The estimates resulting from this model may be inconsistent due to unobserved individual differences (violating the IID assumption). For example, all individuals have a different baseline or typical level of motivation. We want to account for changes in motivation by individual to see how their motivation deviates from its baseline. There are two common econometric techniques, known as fixed effects and random effects, that attempt to account for these baseline measures, which are discussed in the following sections.
 
 ### Fixed Effects
 
-\[ADD EQUATION?\]
+The base equation for the fixed effects (FE) model is:
 
-The fixed effects (FE) model demeans the data by participant and looks at each participant's levels of motivation and seven-day rolling average number of activities individually. The results in having different intercepts for each participant. The FE model is consistent but less efficient because it results in losing degrees of freedom to estimate individual intercepts for each participant. This results in larger standard errors for the estimates which can make it more difficult to recognize significance. The FE model also removes the effect of time constant characteristics, which in this case are the demographic characteristics of each participant. These variables are absorbed by the intercept as they are unique to each participant.
+$$
+y_{it} = \alpha_i + \beta x_{it} + \mu_{it}
+$$
+
+The FE model demeans the data by participant and looks at each participant's levels of motivation and seven-day rolling average number of activities individually. The results in having different intercepts for each participant. The FE model is consistent but less efficient because it results in losing degrees of freedom to estimate individual intercepts for each participant. This results in larger standard errors for the estimates which can make it more difficult to recognize significance. The FE model also removes the effect of time constant characteristics, which in this case are the demographic characteristics of each participant. These variables are absorbed by the intercept as they are unique to each participant.
 
 ### Random Effects
 
-\[ADD EQUATION?\]
+The base equation for the random effects (RE) model is:
 
-The random effects (RE) model semi-demeans the data by participant. Based on a mean for the entire group, a mean is determined with set standard deviations to represent the data of the entire group. The RE model is appropriate to use if it is believed that the the difference in motivation has an influence on the seven-day rolling average number of activities. It is possible that other variables that influence the seven-day rolling average number of activities are not included which can lead to bias in the model. Unlike the FE model, the RE model is more efficient because degrees of freedom are not lost to more estimates, but the results can be biased.
+$$
+y_{it} - \bar{y}_i = \beta ( x_{it} - \bar{x}_i ) + \mu_{it}
+$$
+
+The RE model semi-demeans the data by participant. Based on a mean for the entire group, a mean is determined with set standard deviations to represent the data of the entire group. The RE model is appropriate to use if it is believed that the the difference in motivation has an influence on the seven-day rolling average number of activities. It is possible that other variables that influence the seven-day rolling average number of activities are not included which can lead to bias in the model. Unlike the FE model, the RE model is more efficient because degrees of freedom are not lost to more estimates, but the results can be biased.
 
 ### Autocorrelation and Heteroskedasticity
 
@@ -239,6 +255,6 @@ Autocorrelation occurs when observations in a time series are correlated with pr
 
 Heteroskedasticity refers to the unequal variance of errors across observations in a dataset. In the case of studying motivation over time, heteroskedasticity may arise if the variability in motivation levels differs between individuals or varies systematically over time. This violates the assumption of homoscedasticity, where the variance of the errors remains constant across observations.
 
-Autocorrelation and heteroskedasticity can lead to biased parameter estimates and incorrect inference in statistical models. To address these issues, robust measures for standard errors are used. Specificlaly in our case, Heteroskedasticity and Autocorrelation Consistent (HAC) can be employed. HAC robust standard errors are particularly useful when dealing with time series or panel data where observations may be correlated across time periods. HAC estimators adjust for heteroskedasticity by allowing the variance of the errors to vary across observations. However, they also account for autocorrelation by incorporating a weighting scheme that considers the correlation structure of the data over time. This weighting scheme assigns higher weights to more recent observations and lower weights to distant observations, reflecting the diminishing influence of past observations on current ones.
+Autocorrelation and heteroskedasticity can lead to biased parameter estimates and incorrect inference in statistical models. To address these issues, robust measures for standard errors are used. Specifically in our case, Heteroskedasticity and Autocorrelation Consistent (HAC) can be employed. HAC robust standard errors are particularly useful when dealing with time series or panel data where observations may be correlated across time periods. HAC estimators adjust for heteroskedasticity by allowing the variance of the errors to vary across observations. However, they also account for autocorrelation by incorporating a weighting scheme that considers the correlation structure of the data over time. This weighting scheme assigns higher weights to more recent observations and lower weights to distant observations, reflecting the diminishing influence of past observations on current ones.
 
 By adjusting for both heteroskedasticity and autocorrelation, HAC robust standard errors provide more accurate estimates of the standard errors of regression coefficients, ensuring valid statistical inference in the presence of correlated and heteroskedastic data. This makes them particularly well-suited for analyzing time series or panel data where autocorrelation and heteroskedasticity are common concerns. Overall, HAC robust standard errors are essential tools for conducting robust regression analysis in the presence of correlated and heteroskedastic data, ensuring the reliability and validity of statistical inference.
