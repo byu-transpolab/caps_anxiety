@@ -8,16 +8,16 @@ library(sandwich)
 ```{r model-setups, include=FALSE}
 f <- function(x) format(round(x, 3), big.mark=",")
 gm <- list(
-  list("raw" = "nobs", "clean" = "Number of Observations", "fmt" = f),
+  list("raw" = "nobs", "clean" = "No. of Obs.", "fmt" = f),
   list("raw" = "logLik", "clean" = "Log. Liklihood", "fmt" = f),
   list("raw" = "aic", "clean" = "AIC", "fmt" = f),
-  list("raw" = "r.squared", "clean" = "$R^2$", "fmt" = f))
+  list("raw" = "r.squared", "clean" = "R\u00b2", "fmt" = f))
 
 cm <- c(
-  "sev_day_avg" = "Seven-Day No. of Activities",
+  "sev_day_avg" = "Sev-Day No. of Acts.",
   "sexFemale" = "Female", 
   "age" = "Age", 
-  "fsiq_2" = "IQ", 
+  "fsiq_2" = "IQ Score", 
   "prescribed_groupAutism" = "Autism", 
   "prescribed_groupSocial Anxiety" = "Social Anxiety", 
   "suicidal_ideation_q31_evenTRUE" = "Suicidal Ideation",
@@ -29,33 +29,38 @@ cm <- c(
 
 cm_comp <- c(
   "numTrips" = "No. of Activities",
-  "log(numTrips + 0.1)" = "log(No. of Activities)",
-  "I(numTrips^2)" = "$No. of Activities^2$",
-  "sev_day_avg" = "Seven-Day No. of Activities",
+  "log(numTrips + 0.1)" = "log (No. of Activities)",
+  "I(numTrips^2)" = "No. of Activities\u00b2",
+  "sev_day_avg" = "Sev-Day No. of Acts.",
   "area" = "Activity Area",
   "length" = "Distance",
-  "log(length)" = "log(Distance)",
-  "I(length^2)" = "$Distance^2$",
-  "suic_intensity" = "Suicidal Intesity")
+  "log(length)" = "log (Distance)",
+  "I(length^2)" = "Distance\u00b2",
+  "suic_intensity" = "Suicidal Intesity",
+  "park" = "Park",
+  "library" = "Library",
+  "grocery" = "Grocery Store",
+  "social_rec" = "Social Recreation", 
+  "sev_day_avg_park" = "Seven-Day Park",
+  "sev_day_avg_grocery" = "Seven-Day Grocery",
+  "sev_day_avg_library" = "Seven-Day Library")
 
 cm_group <- c(
   "numTrips" = "No. of Activities",
-  "sev_day_avg" = "Seven-Day No. of Activities",
+  "sev_day_avg" = "Sev-Day No. of Acts.",
   "park" = "Visits to Parks",
   "grocery" = "Visits to Grocery Store",
   "library" = "Visits to Libraries",
   "social_rec" = "Visits to Social Recreation Locations")
 ```
 
-## Group Analysis
+Analyzing travel behavior and mental well-being requires a comprehensive examination of the individual's group. It is important to look at various factors related to how these groups travel and how their travel affects their well-being. Understanding the number and type of activities they engage in, motivational levels, and propensity towards suicidal ideation provides valuable insights for this analysis.
 
-Analyzing travel behavior and mental well-being entails a comprehensive examination of the individual's group. It is become imperative to delve into various factors about how these groups travel and how their travel affects their mental well-being. Understanding the number and type of activities they engage in, motivational levels, and propensity towards suicidal ideation provides valuable insights for this analysis.
+## Activity Engagement by Group
 
-### Activity Engagement by Group
+This analysis examined the activity engagement patterns of the three groups: control, autism, and social anxiety. We analyzed the total number of activities and the seven-day rolling average number of activities. The descriptive statistics in @tbl-groupActs describe these results for each group.
 
-The analysis delved into the activity engagement patterns of the three distinct groups: control, autism, and social anxiety. Examining various facets of activity involvement, the findings offer valuable insights into the behavioral differences across these groups. We analyzed the total number of activities and the seven-day rolling average number of activities. The descriptive statistics in @tbl-groupActs describe these results for each group.
-
-```{r table groupAct, echo=FALSE, message = FALSE}
+```{r table groupAct, echo=FALSE, message = FALSE, warning=FALSE}
 #| label: tbl-groupActs
 #| tbl-cap: "Activity Descriptive Statistics by Group"
 
@@ -67,44 +72,29 @@ acts <- model_data %>%
 # , park, grocery, library, social_rec) %>% 
   group_by(prescribed_group) %>% 
   rename("No. of Activities" = numTrips,
-         "Seven-Day No. of Activities" = sev_day_avg)
+         "Sev-Day No. of Acts." = sev_day_avg)
 
          # "Visits to Parks" = park,
          # "Visits to Grocery Store" = grocery,
          # "Visits to Libraries" = library,
          # "Visits to Social Recreation Locations" = social_rec)
 
-datasummary_balance(~prescribed_group, data = acts, dinm=FALSE)
+datasummary_balance(~prescribed_group, data = acts, dinm=FALSE, align = "lcccccc", output = "markdown") 
+# %>% kable_styling(latex_options="scale_down")
 ```
 
-Starting with the total number of activities, individuals in the control group displayed a moderate level of engagement, as evidenced by a mean of 3.0 activities with a notable standard deviation of 2.7. This suggests a wide range of activity participation within the group. In contrast, participants in the autism group exhibited a lower mean of 2.1 activities, indicating comparatively fewer overall activities. However, the standard deviation of 2.3 suggests that while activity levels are generally lower than the control group, there is still considerable variability within the autism group. Similarly, individuals with social anxiety demonstrated a mean of 2.6 activities, falling between the control and autism groups. The standard deviation of 2.7 suggests variability similar to that observed in the control group. Moving to the seven-day rolling average of activities, trends mirrored those of the total number of activities, with slightly lower standard deviations, indicating less variability in the rolling average compared to the total count. We conducted an ANOVA test to see if the differences in the mean number of activities between the groups are statistically significant.
+Starting with the total number of activities, individuals in the control group had a moderate level of engagement, with an average number of 3.0 activities. In contrast, participants in the autism group had a lower average number of activities, with a mean of 2.1 activities. Similarly, individuals with social anxiety had a mean of 2.6 activities, falling between the control and autism groups. The standard deviations for the three groups ranged from 2.3-2.7. Moving to the seven-day rolling average of activities, trends mirrored those of the total number of activities, with slightly lower standard deviations, indicating less variability in the rolling average compared to the total count.
 
-The ANOVA test was conducted to determine if significant differences exist in the mean number of activities among the three groups: control, autism, and social anxiety. The results from the ANOVA test are shown in @tbl-ANOVAActs and @fig-ANOVAActs shows the mean number of activities and 95% confidence intervals for the differences between the corresponding group means.
+To determine if significant differences existed in the mean number of activities between the three groups, we conducted an ANOVA test. The results unveiled a highly significant effect of the group on the number of activities, as evidenced by an F value of 32.97 and a p-value less than 0.001. This supports that the variation in the number of activities across the groups was unlikely to be attributed to random chance, confirming that there were significant differences among the groups. @fig-ANOVAActs shows the mean number of activities and 95% confidence intervals for the differences between the corresponding group means.
 
-```{r table ANOVAAct, echo=FALSE, message = FALSE}
-#| label: tbl-ANOVAActs
-#| tbl-cap: "ANOVA Test: Number of Activity by Group"
-
-library(xtable)
+```{r figure ANOVAActs, message=FALSE, echo=FALSE, warning=FALSE}
+#| label: fig-ANOVAActs
+#| fig-cap: "Mean number of activities by group."
 
 actsANOVA <- model_data %>% 
   filter(!is.na(numTrips)) %>%
   mutate(prescribed_group = as.factor(prescribed_group)) %>% 
   rename(Group = prescribed_group)
-
-# Perform ANOVA to test for differences in mean number of activities among prescribed groups
-ACTS_anova_result <- aov(numTrips ~ Group, data = actsANOVA)
-
-summary(ACTS_anova_result)
-
-# Summarize ANOVA results
-# AA <- summary(ACTS_anova_result)
-# xtable(AA)
-```
-
-```{r figure ANOVAActs, message=FALSE, echo=FALSE}
-#| label: fig-ANOVAActs
-#| fig-cap: "Mean number of activities by group."
 
 ggplot(actsANOVA, aes(x = Group, y = numTrips)) +
   stat_summary(fun = mean, geom = "point", color = "black") +
@@ -113,27 +103,15 @@ ggplot(actsANOVA, aes(x = Group, y = numTrips)) +
   theme_bw()
 ```
 
-The results unveiled a highly significant effect of the group on the number of activities, as evidenced by an F value of 32.97 and a p-value less than 0.001. This signifies that the variation in the number of activities across the groups is improbable to be attributed to random chance, confirming the presence of substantial differences among the groups.
-
-After determining that there are significant differences in the mean number of activities among three groups, a Tukey's Honest Significant Difference (HSD) test was conducted to pinpoint which specific groups differ from each other. The results are shown in @tbl-TukeyActs.
-
-```{r table TukeyHSD-acts, message=FALSE, echo=FALSE}
-#| label: tbl-TukeyActs
-#| tbl-cap: "TukeyHSD Test: Difference in Mean Motivation Across Groups"
-
-# Perform Tukey's HSD test for pairwise comparisons
-TukeyHSD(ACTS_anova_result)
-```
-
-Tukey's HSD test indicated that there were significant differences in mean number of activities between all pairs of prescribed groups. Specifically, individuals in the autism group engaged in significantly fewer activities on average compared to those in the control group, with a mean difference of -0.896 and a p-value less than 0.001, and the social anxiety group, with a mean difference of -0.375 and a p-value less than 0.001. Similarly, participants in the social anxiety group participated in significantly fewer activities on average than those in the control group with a mean difference of -0.521 and a p-value less than 0.001.
+After we determined that there were significant differences in the mean number of activities among three groups, a Tukey's Honest Significant Difference (HSD) test was conducted to pinpoint which specific groups differ from each other. Tukey's HSD test indicated that there were significant differences in mean number of activities between all pairs of groups. Specifically, individuals in the autism group engaged in significantly fewer activities on average compared to those in the control group, with a mean difference of -0.896 and a p-value less than 0.001, and the social anxiety group, with a mean difference of -0.375 and a p-value less than 0.001. Similarly, participants in the social anxiety group participated in significantly fewer activities on average than those in the control group with a mean difference of -0.521 and a p-value less than 0.001.
 
 These findings suggest that there are significant differences in the mean number of activities among individuals belonging to different groups. Specifically, individuals with autism tend to engage in fewer activities compared to both the control group and the social anxiety group. Similarly, individuals in the social anxiety group participate in fewer activities on average compared to those in the control group. These results highlight the importance of considering group differences when examining activity engagement patterns and potentially mental health outcomes.
 
-### Motivation by Group
+## Motivation by Group
 
-Upon closer examination of the distinct groups, notable differences in well-being also emerge. Drawing from existing literature, it was anticipated that individuals in both the autism and social anxiety groups would exhibit lower levels of well-being compared to those in the control group. Given our use of motivation as an indicator of well-being, we analyzed the reported levels of motivation across each group. @tbl-groupMotiv presents the mean and standard deviation of motivation for each group.
+Upon closer examination of the distinct groups, we noticed notable differences in well-being. Based on the existing literature, we anticipated that individuals in both the autism and social anxiety groups would exhibit lower levels of well-being compared to those in the control group. Given our use of motivation as an indicator of well-being, we analyzed the reported levels of motivation across each group, as reported in the evening survey on a scale from 1-100. @tbl-groupMotiv presents the mean and standard deviation of motivation for each group.
 
-```{r table groupMotiv, message=FALSE, echo=FALSE}
+```{r table groupMotiv, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: tbl-groupMotiv
 #| tbl-cap: "Motivation Levels by Group"
 
@@ -143,66 +121,25 @@ motiv <- model_data %>%
   filter(!is.na(numTrips)) %>%
   select(prescribed_group, motivation) %>% 
   group_by(prescribed_group) %>% 
-  mutate("Level of Motivation" = motivation)
+  mutate("Motivation" = motivation)
 
 motiv_tbl <- motiv %>% 
-  select(prescribed_group, "Level of Motivation")
+  select(prescribed_group, "Motivation")
 
-datasummary_balance(~prescribed_group, data = motiv_tbl, dinm=FALSE)
+datasummary_balance(~prescribed_group, data = motiv_tbl, dinm=FALSE, align = "lcccccc", output = "markdown")
 ```
 
-The findings revealed differences in motivation levels across these groups. The control group had the highest mean motivation score of 47.7, with a standard deviation of 14.2. This suggests that individuals in the control group generally have high motivation levels with relatively little variability, indicating a consistent trend of high motivation within this group. In contrast, the autism group showed the lowest mean motivation score of 34.0 and the highest standard deviation of 19.4. The lower mean score implies that individuals with autism tend to have lower motivation levels compared to those in the control group. Additionally, the high standard deviation indicates significant variability in motivation among participants in this group, suggesting that motivation levels are more dispersed. The social anxiety group had a mean motivation score of 40.3 and a standard deviation of 18.5. This group's motivation levels are higher than those of the autism group but lower than the control group's. The standard deviation, while high, is slightly lower than that of the autism group, indicating considerable but somewhat less variability in motivation levels compared to the autism group. To determine if the differences in mean motivation levels are significantly different, we conducted an ANOVA test.
+The findings revealed differences in motivation levels across these groups. The control group had the highest mean motivation score of 47.7, with the lowest standard deviation of 14.2. This suggests that individuals in the control group generally have high motivation levels with relatively little variability, indicating a consistent trend of high motivation within this group. In contrast, the autism group showed the lowest mean motivation score of 34.0 with the highest standard deviation of 19.4. The lower mean score implied that individuals with autism tend to have lower motivation levels compared to those in the control group. The social anxiety group fell in the middle with a mean motivation score of 40.3.
 
-The ANOVA test was conducted to determine if there are significant differences in the mean levels of motivation among three groups: control, autism, and social anxiety. The results revealed a highly significant effect of the prescribed group on motivation levels, with an F value of 362 and a p-value less than 0.001. This indicates that the variation in motivation levels across the prescribed groups is unlikely to be due to random chance, and there are indeed significant differences among the groups. The results are summarized in @tbl-ANOVAMotiv and @fig-ANOVAMotiv shows the mean level of motivation and 95% confidence intervals for the differences between the corresponding group means.
+The ANOVA test was conducted to determine if there were significant differences in the mean levels of motivation among the three groups. The results revealed a highly significant effect of the group on motivation levels, with an F value of 362 and a p-value less than 0.001. This indicates that the variation in motivation levels across the prescribed groups is unlikely to be due to random chance, and there are indeed significant differences among the groups.
 
-```{r table ANOVA-motivation, message=FALSE, echo=FALSE}
-#| label: tbl-ANOVAMotiv
-#| tbl-cap: "ANOVA Test: Difference in Mean Motivation Across Groups"
+After determining that there significant differences in the mean levels of motivation among three groups, a Tukey's HSD test was conducted to pinpoint which specific groups differ from each other. The autism group had a significantly lower mean motivation level compared to the control group, with a difference of -9.99 points. Similarly, the social anxiety group had a significantly lower mean motivation level compared to the control group, with a difference of -7.74 points. When comparing the social anxiety group to the autism group, the social anxiety group showed a significantly higher mean motivation level by 2.25 points. All three pairs had p-values less than 0.001.
 
-motivANOVA <- model_data %>% 
-  filter(!is.na(motivation))%>%
-  mutate(prescribed_group = as.factor(prescribed_group)) %>% 
-  rename(Group = prescribed_group)
+Overall, the results of the ANOVA test and Tukey's HSD test indicate that there are significant differences in mean motivation levels among the three groups. Specifically, the control group had significantly higher levels of motivation compared to both the autism and social anxiety groups. Moreover, the autism group had significantly higher motivation levels than the social anxiety group. This pattern underscores the impact that the group has on an individual's motivation.
 
-# Perform ANOVA
-MOTIV_anova_result <- aov(motivation ~ Group, data = motivANOVA)
+## Suicidal Ideation by Group
 
-summary(MOTIV_anova_result)
-
-# Print the ANOVA table
-# AM <- summary(MOTIV_anova_result)
-# xtable(AM)
-```
-
-```{r figure ANOVAMotiv, message=FALSE, echo=FALSE}
-#| label: fig-ANOVAMotiv
-#| fig-cap: "Mean levels of motivation by group."
-
-ggplot(motivANOVA, aes(x = Group, y = motivation)) +
-  stat_summary(fun = mean, geom = "point", color = "black") +
-  stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.2) +
-  labs(x = "Group", y = "Motivation") +
-  theme_bw()
-```
-
-After determining that there significant differences in the mean levels of motivation among three groups, a Tukey's HSD test was conducted to pinpoint which specific groups differ from each other. The results are shown in @tbl-TukeyMotiv.
-
-```{r table TukeyHSD-motivation, message=FALSE, echo=FALSE}
-#| label: tbl-TukeyMotiv
-#| tbl-cap: "TukeyHSD Test: Difference in Mean Motivation Across Groups"
-
-TukeyHSD(MOTIV_anova_result)
-```
-
-The autism group had a significantly lower mean motivation level compared to the control group, with a difference of -9.99 points. This difference was highly significant with a p-value of less than 0.001. Similarly, the social anxiety group also exhibited a significantly lower mean motivation level compared to the control group, with a difference of -7.74 points and a p-value less than 0.001. When comparing the social anxiety group to the autism group, the social anxiety group showed a significantly higher mean motivation level by 2.25 points, with this difference also being statistically significant, p-value less than 0.001.
-
-Overall, the results of the ANOVA test indicate that there are significant differences in mean motivation levels among the three prescribed groups. Specifically, both the autism and social anxiety groups have significantly lower motivation levels compared to the control group. Moreover, within the groups that experienced lower motivation, the social anxiety group had significantly higher motivation levels than the autism group.
-
-These findings suggest that the group has a significant influence on motivation levels. The control group exhibited the highest mean motivation levels, followed by the social anxiety group, and then the autism group, which had the lowest mean motivation levels. This pattern underscores the impact that the type of prescribed group may have on an individual's motivation, highlighting the need for further exploration into the association between travel behavior and well-being.
-
-### Suicidal Ideation by Group
-
-The morning and evening surveys included different questions pertaining to suicidal ideation. Specifically, the evening survey delved into various aspects of suicidality, asking participants with the following questions:
+The morning and evening surveys included different questions pertaining to suicidal ideation. Specifically, the evening survey asked participants with the following questions:
 
 -   Have you thought about killing yourself in the past 12 hours or since you last took a survey?
 
@@ -212,9 +149,9 @@ The morning and evening surveys included different questions pertaining to suici
 
 -   How strong was your ability to resist the urge to kill yourself since the last survey you completed (or over the past 12 hours, if you didn't complete the last survey)?
 
-The dataset presents an insightful glimpse into the prevalence of suicidal ideation within distinct demographic groups, shedding light on potential differences in mental health concerns among them. Examining responses to the question "Have you thought about killing yourself in the past 12 hours or since you last took a survey?" across the three groups: control, autism, and social anxiety, unveils intriguing patterns. The responses to this question are summarized by group in @tbl-groupSuicide.
+The dataset presents an insightful glimpse into the prevalence of suicidal ideation within the groups, shedding light on potential differences in mental health concerns among them. We examined responses to the question "Have you thought about killing yourself in the past 12 hours or since you last took a survey?" across the three groups, where responses were "Yes" "No" or "No Response". The responses to this question are summarized by group in @tbl-groupSuicide.
 
-```{r table groupSuicide, message=FALSE, echo=FALSE}
+```{r table groupSuicide, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: tbl-groupSuicide
 #| tbl-cap: "Suicidal Ideation by Group"
 
@@ -233,31 +170,18 @@ suic <- model_data %>%
   group_by(prescribed_group) %>% 
   rename("Suicidal Ideation" = suicidal_ideation_q31_even)
 
-datasummary_balance(~prescribed_group, data = suic, coef_map = cm_group, dinm=FALSE)
+datasummary_balance(~prescribed_group, data = suic, coef_map = cm_group, dinm=FALSE, align = "llcccccc", output = "markdown")
 ```
 
 In the control group, on 66.4% of days participants responded negatively, indicating they did not think about killing themselves. However, on 2.1% of days, group members acknowledged experiencing suicidal ideation during the specified timeframe. Contrastingly, among respondents with autism, on 51.6% of the days, participants denied having suicidal thoughts, while respondents admitted to suicidal ideation with a slightly higher percentage on 4.9% of days. In the social anxiety group, the dynamics were notably different. Here, participants reported no suicidal ideation on a significantly lower percentage, 38.9%, of days, while they reported suicidal ideation on a strikingly higher proportion of days, at 15.6% of days. Across all three groups, there was a significant portion of respondents that chose not to provide a response, perhaps indicating the sensitivity of the question or reluctance to disclose personal struggles.
 
-To dive deeper into the suicidal ideation of individuals in the different groups, we constructed a contingency table. The contingency table organized the data into rows and columns, with each row representing a group (control, autism, social anxiety) and each column representing a response category ("Yes," "No," "No Response") regarding suicidal ideation. Within the table, the counts of individual responses in each group were recorded. Subsequently, a chi-square test of independence was conducted on these counts to assess whether there is a significant association between the prescribed group and the response to suicidal ideation. The results of the chi-square test are shown in @tbl-groupSuicideChi.
-
-```{r table groupSuicideChi, message=FALSE, echo=FALSE}
-#| label: tbl-groupSuicideChi
-#| tbl-cap: "Pearson Chi Test: Suicidal Ideation by Group"
-
-contingency_table <- table(suic$prescribed_group, suic$`Suicidal Ideation`)
-
-chisq_result <- chisq.test(contingency_table)
-
-print(chisq_result)
-```
-
-The test calculated a chi-square statistic of 388.06 with 4 degrees of freedom. The resulting p-value was found to be less than 0.001, signifying substantial evidence against the null hypothesis of no association. Thus, the analysis concludes that there is a statistically significant association between the group and the response to suicidal ideation. This suggests that the group status influences the likelihood of a particular response to suicidal ideation, indicating potential differences in how individuals from different groups perceive and experience suicidal ideation. These findings offer valuable insights into the interplay between group and response to suicidal ideation.
+To dive deeper into the suicidal ideation of individuals in the different groups, we constructed a contingency table with the data organized into rows and columns, with each row representing a group (control, autism, social anxiety) and each column representing a response category ("Yes," "No," "No Response") regarding suicidal ideation. Within the table, the counts of individual responses in each group were recorded. Subsequently, a chi-square test of independence was conducted on these counts to assess whether there is a significant association between the group and the response to suicidal ideation. The test calculated a chi-square statistic of 388.06 with 4 degrees of freedom. The resulting p-value was found to be less than 0.001, signifying substantial evidence against the null hypothesis of no association. Thus, the analysis concluded that there is a statistically significant association between the group and the response to suicidal ideation. This suggests that the group status influences the likelihood of a particular response to suicidal ideation, indicating potential differences in how individuals from different groups perceive and experience suicidal ideation. These findings offer valuable insights into the interplay between group and response to suicidal ideation.
 
 ## Model Comparison and Evaluation
 
-As discussed previously, we ran three different models to analyze the affect of the seven-day rolling average number of activities on motivation levels. We ran the OLS, FE, and RE models with robust standard errors and t-statistics due to the autocorrelation and heteroskedasticity. The results of these three models are shown in @tbl-olsfere.
+As discussed previously, we ran three different models to analyze the affect of the seven-day rolling average number of activities on motivation levels. We ran the OLS, FE, and RE models with robust standard errors and t-statistics due to the potential for autocorrelation and heteroskedasticity. The results of these three models are shown in @tbl-olsfere.
 
-```{r table ols fe re, message=FALSE, echo=FALSE}
+```{r table ols fe re, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: tbl-olsfere
 #| tbl-cap: "OLS, FE, and RE Models"
 #| warnings: FALSE
@@ -269,26 +193,27 @@ tar_load(fe)
 tar_load(re)
 
 models_olsfere <- list(
-    "Ordinary Least Squares Model" = ols,
-    "Fixed Effects Model" = fe,
-    "Random Effects Model" = re
+    "OLS" = ols,
+    "FE" = fe,
+    "RE" = re
    )
 
 modelsummary(models_olsfere, gof_map = gm, coef_map = cm,
               vcov = function(x) vcovHC(x, cluster = "time"),
-              estimate = c("{estimate} ({statistic}){stars}"),
-              statistic = NULL,
-              notes = list("Robust t-statistics in parentheses")
+              estimate = c("{estimate}"),
+             statistic = c("({statistic}){stars}"),
+              notes = list("Robust t-statistics in parentheses"),
+             output = "markdown"
    )
 ```
 
-We used the Hausman test to determine whether the RE model is more appropriate than the FE model. It tests whether the RE estimates are consistent and efficient compared to the FE estimates. The null hypothesis is that the RE estimates are consistent and efficient, while the alternative hypothesis is that the FE estimates are more efficient. We found, using the Hausman test, that the p-value is 0.0013 which is less than 0.05, which means that the results are significant and we reject the null hypothesis. This implies that the coefficients from the FE model and RE model are sufficiently different from each other, which means that the RE model is inconsistent and the FE model should be used in the analysis.
+We used the Hausman test to determine whether the RE model is more appropriate than the FE model. The tests whether the RE estimates are consistent and efficient compared to the FE estimates. The null hypothesis is that the RE estimates are consistent and efficient, while the alternative hypothesis is that the FE estimates are more efficient. We found, using the Hausman test, that the p-value is 0.0013 which is less than 0.05, which means that the results are significant and we reject the null hypothesis. This implies that the coefficients from the FE model and RE model are sufficiently different from each other, which means that the RE model is inconsistent and the FE model should be used for the remainder of the analysis.
 
 ## Effect of Demographic Factors on Motivation
 
-Based on the results of the Hausman test, we found that the FE model should be used in the analysis of the activity pattern and mental health data. One potential downside of the The FE model is that it cannot implement time constant variables. To overcome this limitations, we performed a linear regression analysis to examine how demographic variables (e.g., sex, age, IQ, and group) are associated with the intercepts from the FE model. This allows for understanding of how the baseline levels of motivation differ across different demographic groups. The sex, age, IQ, and group were the independent variables, and the FE intercept values for each userID served as the dependent variable. This model is shown in @tbl-fedemolm.
+Based on the results of the Hausman test, we found that the FE model should be used in the analysis of the activity pattern and mental health data. One potential downside of the FE model is that it cannot implement time constant variables. To overcome this limitation, we performed a linear regression analysis to examine how demographic variables (sex, age, IQ score, and group) are associated with the intercepts from the FE model. This allow us to understand how the baseline levels of motivation differ across groups. The sex, age, IQ score, and group were the independent variables, and the FE intercept values for each userID served as the dependent variable. This model is shown in @tbl-fedemolm.
 
-```{r table fe demo lm, message=FALSE, echo=FALSE}
+```{r table fe demo lm, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: tbl-fedemolm
 #| tbl-cap: "Fixed Effects and Demographics Regression"
 
@@ -297,28 +222,21 @@ tar_load(fe_model)
 modelsummary(fe_model, gof_map = gm, coef_map = cm,
              estimate = c("{estimate} ({statistic}){stars}"),
              statistic = NULL,
-             notes = list("t-statistics in parentheses"))
+             notes = list("t-statistics in parentheses"),
+             output = "markdown")
 ```
 
-The linear model examined the relationship between motivation and various predictor variables, including sex, age, IQ, and group. The analysis revealed several significant findings. First, being female was associated with a decrease in motivation by 6.351 points, on a scale from 0-100, compared to males, which is a statistically significant effect with a p-values less than 0.05. However, age and IQ did not show significant associations with motivation. Conversely, individuals with autism exhibited a substantial decrease in motivation by 10.247 points compared to the control group, and those with social anxiety experienced a similar decrease of 8.544 points, both statistically significant at p less than 0.01. These results suggest that sex and group conditions play significant roles in shaping motivational levels, while age and IQ appear to have limited influence in this context. When looking at the fit of this model to the data, the model explains approximately 26.4% of the variance in motivation, indicating that other unexplored factors may contribute to motivational outcomes. These findings underscore the importance of considering individual differences, particularly sex and group status, when examining levels of motivation.
+The analysis revealed several significant findings. First, being female was associated with a decrease in motivation by 6.351 points, on a scale from 0-100, compared to males, which is a statistically significant effect with a p-values less than 0.05. Age and IQ score did not show significant associations with motivation. Conversely, individuals with autism exhibited a substantial decrease in motivation by 10.247 points compared to the control group, and those with social anxiety experienced a similar decrease of 8.544 points, both statistically significant with p-values less than 0.01. These results suggest that sex and group status play significant roles in shaping motivational levels, while age and IQ appear to have limited influence in this context. When looking at the fit of this model to the data, the model explains approximately 26.4% of the variance in motivation, indicating that other unexplored factors may contribute to motivational outcomes. These findings underscore the importance of considering individual differences, particularly sex and group status, when examining levels of motivation. For this analysis, the group analysis is a main focus and will continue to be explored.
 
 ## Model Comparison for Impact on Motivation
 
-To compare the effects of different aspects of travel behavior on motivation, we conducted a comprehensive analysis considering various factors. Specifically, we examined the impact of the total number of activities, the seven-day rolling average number of activities, the convex hull area, and the total distance traveled on a day.
+To compare the effects of different aspects of travel behavior on motivation, we conducted a comprehensive analysis considering various factors. Specifically, we examined the impact of the total number of activities, the seven-day rolling average number of activities, the convex hull area, and the total distance traveled on a day. Analyzing the total number of activities provides insights into the overall level of engagement and mobility of individuals. The seven-day rolling average number of activities allows us to assess the consistency and stability of individuals' activity patterns over time. The convex hull area represents the spatial extent covered by an individual's activities, providing insights into their travel behavior's spatial distribution and range. Lastly, the total distance traveled on a day captures the extent of physical movement and travel undertaken by individuals.
 
-Analyzing the total number of activities provides insights into the overall level of engagement and mobility of individuals. A higher number of activities may indicate greater involvement in social, recreational, or productive tasks, which could positively result in an increase in motivation. Similarly, a lower number of activities might suggest reduced participation and potential disengagement, possibly leading to decreased motivation.
+By examining these different aspects of travel behavior in relation to motivation, we aimed to discern which factors have the most significant influence and in what ways. This holistic approach will enable us to gain a comprehensive understanding of how travel behavior interacts with motivation, offering valuable insights for promoting mental well-being and enhancing motivation levels among individuals.
 
-The seven-day rolling average number of activities allows us to assess the consistency and stability of individuals' activity patterns over time. Fluctuations in this metric may reflect changes in routine, lifestyle adjustments, or shifts in mental well-being, all of which can influence motivation. A higher rolling average may indicate sustained engagement and stability, potentially contributing to higher motivation levels.
+The analysis examined how motivation is influenced by different independent variables across four distinct models: the Number of Activities, the Seven-Day Rolling Average Number of Activities, the Activity Area, and the Distance Traveled. Motivation served as the dependent variable in each of these models. The results from these models are shown in @tbl-motivimpact.
 
-The convex hull area represents the spatial extent covered by an individual's activities, providing insights into their travel behavior's spatial distribution and range. A larger convex hull area may suggest greater exploration, mobility, and exposure to diverse environments, which could positively impact motivation through experiences and opportunities. Conversely, a larger convex hull area may suggest a lot of commuting which may lead to a decrease in motivation.
-
-Lastly, the total distance traveled on a day captures the extent of physical movement and travel undertaken by individuals. Longer distances traveled may indicate higher levels of physical activity, exploration, or commuting, all of which can impact energy levels and motivation. Understanding how travel distance relates to motivation can provide valuable insights into the interplay between physical activity and mental well-being.
-
-By examining these different aspects of travel behavior in relation to motivation, we aim to discern which factors have the most significant influence and in what ways. This holistic approach will enable us to gain a comprehensive understanding of how travel behavior interacts with motivation, offering valuable insights for promoting mental well-being and enhancing motivation levels among individuals.
-
-The analysis examined how motivation is influenced by different independent variables across four distinct models: the Number of Activities Model, the Seven-Day Rolling Average Number of Activities Model, the Activity Area Model, and the Distance Traveled Model. Motivation served as the dependent variable in each of these models. The results from these models are shown in @tbl-motivimpact.
-
-```{r table motivation impact, message=FALSE, echo=FALSE}
+```{r table motivation impact, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: tbl-motivimpact
 #| tbl-cap: "Comparison of Impacts on Motivation Levels"
 
@@ -335,19 +253,20 @@ models_fe_paras <- list(
   )
 
 modelsummary(models_fe_paras, gof_map = gm, coef_map = cm_comp, 
-             fmt = fmt_sprintf("%.3e"), 
+             fmt = fmt_sprintf("%.2e"), 
              vcov = function(x) vcovHC(x, cluster = "time"),
-             estimate = c("{estimate} ({statistic}){stars}"),
-             statistic = NULL,
-             notes = list("Robust t-statistics in parentheses")
+             estimate = c("{estimate}"),
+             statistic = c("({statistic}){stars}"),
+             notes = list("Robust t-statistics in parentheses"),
+             output = "markdown"
              )
 ```
 
 The findings from these models suggest that there is a positive relationship between the number of activities and motivation and the relationship is statistically significant. For each additional activity a person engages in, their motivation increases 0.356 points. While motivation is on a scale from 1-100, it may not be reasonable to engage is one more activity in a day to increase motivation by 0.356 points, especially considering that the average number of activities for all of the userID-activity days was 2.65 activities.
 
-The results also suggest that there is a negative relationship between the distance traveled and the motivation; this relationship is also statistically significant. In the case of distance traveled, for each additional kilometer traveled, the motivation of the individual decreased by 0.0003263 points. Similar to the case with the number of activities, while the distance traveled is statistically significant, the decrease in motivation seems so minor that it would not be reasonable to use distance traveled to inform changes in motivation.
+The results also suggest that there is a negative relationship between the distance traveled and the motivation; this relationship is also statistically significant. In the case of distance traveled, for each additional 1,000 kilometers traveled, the motivation of the individual decreased by 0.3263 points. Similar to the case with the number of activities, while the distance traveled is statistically significant, the decrease in motivation seems so minor that it would not be reasonable to use distance traveled to inform changes in motivation.
 
-The seven-day rolling average of activities also shows a potential cumulative effect on motivation, though the evidence is weaker. In contrast, the size of the activity area does not appear to influence motivation, indicating that the physical space covered during the day is less important than the number of activities themselves. Additionally, traveling longer distances during the day might slightly decrease motivation.
+The seven-day rolling average of activities also shows a potential cumulative effect on motivation, though the evidence is weaker. In contrast, the size of the activity area does not appear to influence motivation, indicating that the physical space covered during the day is less important than the number of activities themselves.
 
 Overall, while the number of activities, seven-day rolling average number of activities, and distance traveled are important factor for motivation, the low R-squared values across all models suggest that many other factors not included in this analysis likely play a significant role in determining motivation levels.
 
@@ -355,7 +274,7 @@ Overall, while the number of activities, seven-day rolling average number of act
 
 To further analyze the impact of the number of activities, we applied transformations to the independent variable. We looked at the logarithm of the number of activities and the number of activities squared. @tbl-motivnumActs compares the original model with the number of trips with these two transformed models.
 
-```{r table motivation numActs, message=FALSE, echo=FALSE}
+```{r table motivation numActs, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: tbl-motivnumActs
 #| tbl-cap: "Comparison of the Number of Activities Models"
 
@@ -371,74 +290,49 @@ models_numActs <- list(
 
 modelsummary(models_numActs, gof_map = gm, coef_map = cm_comp,
              vcov = function(x) vcovHC(x, cluster = "time"),
-             estimate = c("{estimate} ({statistic}){stars}"),
-             statistic = NULL,
-             notes = list("Robust t-statistics in parentheses")
+             estimate = c("{estimate}"),
+             statistic = c("({statistic}){stars}"),
+             notes = list("Robust t-statistics in parentheses"),
+             output = "markdown"
              )
 ```
 
-Three FE models were estimated to predict the level of motivation. Model I included the number of activities as a predictor, showing a statistically significant positive relationship (coefficient = 0.356, t-statistic = 2.975). Model II incorporated the logarithm of the number of activities, revealing a similar positive association (coefficient = 0.440, t-statistic = 2.698). For the logarithm, a small number of 0.1 was added to each observed number of activities. This removes the issue of taking the logarithm of 0, as there were many 0 activity days. Additional analysis would suggest looking at the Yeo-Johnson transformation. However, Model III failed to find significant relationships for both the number of activities (coefficient = 0.177, t-statistic = 0.563) and the number of activities squared (coefficient = 0.028, t-statistic = 0.616) with motivation. All models were based on a dataset with 2,651 observations, and their Akaike Information Criterion (AIC) values indicated similar model fit across the models. Overall, Models I and II suggested a positive relationship between activity level and motivation, with Model II capturing the relationship more nuance through logarithmic transformation, while Model III did not find statistically significant associations, suggesting potential limitations in model specification or omitted variables.
+Model I included the number of activities as a predictor, showing a statistically significant positive relationship. Model II incorporated the logarithm of the number of activities, revealing a similar positive association, although with diminishing marginal increase. For Model II, looking at the logarithm number of activities, a small number of 0.1 was added to each observed number of activities. This removes the issue of taking the logarithm of 0, as there were many 0 activity days. Additional analysis would suggest looking at the Yeo-Johnson transformation. In addition, Model III failed to find significant relationships when the number of activities squared was added to the number of activities.
 
-### Activity Area Covered
-
-To further analyze the impact of the distance traveled, we applied transformations to the independent variable. We looked at the logarithm of the distance traveled and the distance traveled squared. @tbl-motivDistTrav compares the original model with the distance traveled with these two transformed models.
-
-```{r table motivation numActs, message=FALSE, echo=FALSE}
-#| label: tbl-motivDistTrav
-#| tbl-cap: "Comparison of the Distance Traveled Models"
-
-tar_load(fe_length_mod)
-tar_load(fe_length_log)
-tar_load(fe_length_squared)
-
-models_distTrav <- list(
-  "I" = fe_length_mod,
-  "II" = fe_length_log,
-  "III" = fe_length_squared
-  )
-
-modelsummary(models_distTrav, gof_map = gm, coef_map = cm_comp,
-             fmt = fmt_sprintf("%.3e"),
-             vcov = function(x) vcovHC(x, cluster = "time"),
-             estimate = c("{estimate} ({statistic}){stars}"),
-             statistic = NULL,
-             notes = list("Robust t-statistics in parentheses")
-             )
-```
-
-Three FE models were estimated to predict levels of motivation using distance-related predictors: distance, log(distance), and distance squared. In Model I, the distance predictor yielded a coefficient of -0.0003263 with a robust t-statistic of (-1.778). However, this coefficient was not statistically significant at the 5% level. Model II, which included the log transformation of distance, resulted in a coefficient of 0.2324, which was not statistically significant. In addition, Model III with the distance squared was also not a statistically significant model. The number of observations for all models was 2,651, and the AIC values indicated similar model fit across the models. None of the models provided statistically significant results for further analysis.
-
-Based on the results from the models, it appears that the transformations applied to the number of activities and distance variables did not yield improvements in model fit. Therefore, moving forward, we will use the untransformed value for the number of activities in our analyses.
+Overall, Models I and II suggested a positive relationship between activity level and motivation, while Model III did not find statistically significant associations. While both Model I and II had statistically significant results, neither provides sufficient justification for increasing the number of activities engaged in to boost motivation.
 
 ## Models by Group
 
-Considering the data presented on the three groups—control, social anxiety, and autism—several potential connections between their activity engagements, motivation levels, and suicidal ideation can be explored.
-
-Activity engagements may serve as a reflection of one's mental state and well-being. The differences observed in the number of activities and their nature across the groups could indicate variations in their daily routines, coping mechanisms, and social interactions. For instance, individuals in the control group might exhibit higher activity engagement, possibly indicative of better mental health and social integration compared to those in the social anxiety and autism groups.
-
-Motivation levels could play a significant role in influencing activity engagements and, consequently, mental well-being. Lower motivation levels, as observed in the autism group and social anxiety group compared to the control group, might contribute to decreased participation in activities and decreased overall satisfaction with life. This, in turn, could exacerbate feelings of isolation, loneliness, and low self-esteem, which are known risk factors for suicidal ideation.
+After observing statistical differences in the mean motivation, number of activities, and suicidal tendency across the three groups, we decided to explore modeling each group separately. By doing so, we aimed to capture the unique characteristics and behaviors within each group, potentially uncovering more nuanced relationships between variables and outcomes. Additionally, since our analysis revealed the need to use a FE model to account for individual differences among participants in the study. This approach ensures that the effects of observed and unobserved characteristics specific to each participant are appropriately accounted for in the analysis. Moving forward, we will combine these two findings by employing FE models for each group, allowing us to explore the factors influencing motivation while considering the distinct attributes of each participant subgroup.
 
 ### Motivation and Number of Activities
 
-After observing statistical differences in the mean motivation, number of activities, and suicidal tendency across the three groups, we have decided to explore modeling each group separately. By doing so, we aim to capture the unique characteristics and behaviors within each group, potentially uncovering more nuanced relationships between variables and outcomes. Additionally, our analysis has revealed the need to use a FE model to account for individual differences among participants in the study. This approach ensures that the effects of observed and unobserved characteristics specific to each participant are appropriately accounted for in the analysis. Moving forward, we will combine these two findings by employing FE models for each group, allowing us to delve deeper into understanding the factors influencing motivation while considering the distinct attributes of each participant subgroup. @fig-Analy shows the relationship between motivation and the number of activities by group before taking into account the FE.
+@fig-Analy shows the relationship between motivation and the number of activities by group before taking into account the FE.
 
-```{r figure groupAnaly, message=FALSE, echo=FALSE}
+```{r figure groupAnaly, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: fig-Analy
-#| fig-cap: "Motivation vs Number of Activities for All Participants"
+#| fig-cap: "Motivation vs number of activities for all three groups."
 
-ggplot(model_data, aes(y = motivation, x = numTrips, color = prescribed_group)) +
+numActs <- model_data %>% 
+  filter(!is.na(numTrips) & !is.na(motivation))
+
+ggplot(numActs, aes(y = motivation, x = numTrips, color = prescribed_group)) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = FALSE, color = "black") +
   facet_wrap(~prescribed_group) +
   labs(y = "Level of Motivation", x = "Number of Activities") +
-  theme_bw()
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  guides(color = FALSE)
 ```
 
-This analysis demonstrates that without accounting for FE, which are necessary due to individual differences and varying baseline motivation levels, there is no significant relationship between the number of activities and motivation for the control group. Conversely, for the autism group, there is a steep slope, indicating that as the number of activities increases, the motivation of individuals also increases. Similarly, the social anxiety group shows a positive slope, though less pronounced than the autism group, suggesting that increased activities correlate with higher motivation levels. These findings contradict expectations from existing literature, which suggests that motivation levels in the autism and social anxiety groups should not necessarily rise with an increase in activities. This discrepancy highlights the importance of using the FE model. Figure @fig-FEAnaly illustrates the individual lines of best fit for each participant, demonstrating how the number of activities influences motivation. Each individual line has the same slope, with varying intercepts to account for different baseline motivation levels. 
+This analysis demonstrated that without accounting for FE there is no significant relationship between the number of activities and motivation for the control group. Conversely, for the autism group, there is a steep slope, indicating that as the number of activities increases, the motivation of individuals also increases. Similarly, the social anxiety group shows a positive slope, though less pronounced than the autism group, suggesting that increased activities correlate with higher motivation levels. These findings contradict expectations from existing literature, which suggests that motivation levels in the autism and social anxiety groups should not necessarily rise with an increase in activities. This discrepancy highlights the importance of using the FE model.
 
-```{r figure groupAnaly, message=FALSE, echo=FALSE}
+When using the FE models, individual lines of best fit are created for each participant. Each has a different intercept, but they all have the same slope. @fig-FEAnaly presents these plots, demonstrating how the number of activities influences motivation.
+
+```{r figure groupAnaly, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: fig-FEAnaly
-#| fig-cap: "Motivation vs Number of Activities for All Participants"
+#| fig-cap: "FE model for motivation vs number of activities for all participants."
 
 ## ALL THREE GROUPS
 fixed <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = model_data, model = "within")
@@ -446,48 +340,44 @@ fixed <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = m
 plot(fixed)
 ```
 
-It is crucial to consider each individual separately because each person has a unique baseline level of motivation. This individual variability necessitates the use of a FE model to accurately account for these differences. Based on the literature and our current analyses, we have determined that applying a fixed effects model to each group—control, autism, and social anxiety—might be important for understanding the true relationship between the number of activities and motivation.
+While we know that it is important to model each participant individually to account for different baseline levels of motivation, we determined that applying a FE model to each group—control, autism, and social anxiety—might be important for understanding the true relationship between the number of activities and motivation.
 
-The following three plots present the results of the fixed effects models for each group. These models predict motivation based on the number of activities, while accounting for individual baseline differences. By doing so, we can more accurately assess the impact of activities on motivation within each distinct group. This approach not only provides a clearer picture of how motivation varies with activity levels but also ensures that our conclusions are grounded in a model that respects individual differences. The plots highlight the unique patterns within each group, reinforcing the importance of tailored analyses.
+@fig-groupFE presents the results of the FE models for each group. These models predict motivation based on the number of activities, while accounting for individual baseline differences. By doing so, we can more accurately assess the impact of activities on motivation within each distinct group. The plots highlight the unique patterns within each group, reinforcing the importance of tailored analyses. THe plot for the autism group in @fig-groupFE, for example, shows a steeper slope when pooling all of the data together, however, when the individuals are analyzed separately, the slope is much less steep.
 
-```{r figure groupAnaly, message=FALSE, echo=FALSE}
-#| label: fig-FEAnalyGroup
-#| fig-cap: "Motivation vs Number of Activities Seperated by Group"
+```{r figure groupFE, message=FALSE, echo=FALSE, warning=FALSE}
+#| label: fig-groupFE
+#| fig-cap: "FE model for motivation vs number of activities by group"
+#| fig-subcap: 
+#|   - "Control"
+#|   - "Autism"
+#|   - "Social Anxiety"
+#| layout-ncol: 2
 
 ## CONTROL GROUP
 control <- model_data %>% 
   filter(prescribed_group == "Control")
-
 fixed_control <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = control, model = "within")
-
-plot(fixed_control)
 
 ## AUTISM GROUP
 autism <- model_data %>% 
   filter(prescribed_group == "Autism")
-
 fixed_autism <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = autism, model = "within")
-
-plot(fixed_autism)
 
 # SOCIAL ANXIETY GROUP
 social_anxiety <- model_data %>% 
   filter(prescribed_group == "Social Anxiety")
-
 fixed_social_anxiety <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = social_anxiety, model = "within")
 
+plot(fixed_control)
+plot(fixed_autism)
 plot(fixed_social_anxiety)
 ```
 
-Since these FE models rely on having both an evening survey response for motivation and a number of activities determined by the DBSCAN-TE algorithm, we lose some data. Specifically, we only include userID-activity days when both a motivation level response and a number of activities for the day are available. This reduced the number of individuals from 31 to 23 in the control group, from 29 to 17 in the autism group, and from 28 to 22 in the social anxiety group.
+Since these FE models rely on having both an evening survey response for motivation and a number of activities determined by the DBSCAN-TE algorithm, we lose some data. This reduced the number of individuals from 31 to 23 in the control group, from 29 to 17 in the autism group, and from 28 to 22 in the social anxiety group. The FE models require sufficient data points for each individual to perform the analysis effectively, which likely explains the reduction in the number of participants for these models. After visualizing these relationships, we proceeded to run the FE models for each group. The results from these models are presented in @tbl-groupFEAnaly.
 
-Moreover, when examining the number of unique participants in each group included in the FE models, the numbers decrease further. Only 5 participants remain in the control group, 8 in the autism group, and 19 in the social anxiety group. The FE models require sufficient data points for each individual to perform the analysis effectively, which likely explains the reduction in the number of participants for these models.
-
-The slopes for individuals within each group provide a clearer representation of the impact of the number of activities on motivation levels. After visualizing these relationships, we proceeded to run the fixed effects (FE) models for each group. The results from these models are presented in @tbl-groupFEAnaly.
-
-```{r table groupAnaly, message=FALSE, echo=FALSE}
+```{r table groupAnaly, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: tbl-groupFEAnaly
-#| tbl-cap: "FE models predicting motivation by group as a function of the number of activities"
+#| tbl-cap: "FE Models: Motivation and Number of Activities by Group"
 
 sep_groups <- model_data %>% 
   group_by(prescribed_group) %>% 
@@ -496,35 +386,29 @@ sep_groups <- model_data %>%
     model = map(data, function(d) plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = d, model = "within"))
   ) 
 
-# Number of unique users in each group
-# unique_user_count <- model_data %>%
-#   filter(!is.na(motivation) & !is.na(numTrips)) %>%
-#   group_by(prescribed_group) %>%
-#   summarise(unique_users = n_distinct(userId))
-# print(unique_user_count)
-
 modelsummary(sep_groups$model %>% set_names(str_c("Group: ", sep_groups$prescribed_group)),
              gof_map = gm, coef_map = cm_comp,
              vcov = function(x) vcovHC(x, cluster = "time"),
-             estimate = c("{estimate} ({statistic}){stars}"),
-             statistic = NULL,
-             notes = list("Robust t-statistics in parentheses")
+             estimate = c("{estimate}"),
+             statistic = c("({statistic}){stars}"),
+             notes = list("Robust t-statistics in parentheses"),
+             output = "markdown"
              )
 ```
 
-The FE models for the control, autism, and social anxiety groups reveal varying relationships between the number of activities and levels of motivation. For the control group, the coefficient for the number of activities is 0.259 with a t-statistic of 1.716, indicating a marginally significant positive relationship. This suggests that, while the number of activities may slightly increase motivation, the evidence is not robust. In the autism group, the coefficient is 0.361 with a t-statistic of 1.147, suggesting a positive but not statistically significant relationship between activities and motivation. This indicates that an increase in activities may correlate with higher motivation, but the evidence is not strong enough to draw definitive conclusions. The social anxiety group shows a coefficient of 0.483 with a t-statistic of 2.149, indicating a statistically significant positive relationship. This suggests that an increase in the number of activities is associated with a notable increase in motivation for individuals with social anxiety. In addition, the relatively low AIC for the autism group indicates a better fit compared to the control and social anxiety groups.
+The FE models for the control, autism, and social anxiety groups reveal varying relationships between the number of activities and levels of motivation. For the control group, the coefficient for the was 0.259, with a marginally significant positive relationship. This suggests that, while the number of activities may slightly increase motivation, the evidence is not robust. In the autism group, the coefficient was 0.361 with a positive but not statistically significant relationship between activities and motivation. This indicates that an increase in activities may correlate with higher motivation, but the evidence is not strong enough to draw definitive conclusions. The social anxiety group had a coefficient of 0.483 with a statistically significant positive relationship. This suggests that an increase in the number of activities is associated with a notable increase in motivation for individuals with social anxiety.
 
 Overall, these results highlight the importance of considering individual differences in motivation across different groups. The significant positive relationship in the social anxiety group suggests that interventions increasing the number of activities may be particularly effective in boosting motivation for these individuals. Conversely, the control and autism groups did not exhibit strong evidence of such a relationship, indicating that other factors may play a more crucial role in influencing motivation for these populations.
 
 ### Motivation and Suicidal Ideation
 
-The prevalence of suicidal ideation across the groups underscores the complex interplay between mental health and activity engagement. Individuals experiencing higher levels of suicidal ideation may exhibit decreased motivation to engage in activities and may withdraw from social interactions, leading to further isolation and worsening mental health outcomes. Conversely, active engagement in meaningful activities and supportive social networks could serve as protective factors against suicidal ideation. In addition, the literature suggests that suicidal behavior is negatively associated with overall well-being [@fonseca-pedreroRiskProtectiveFactors2022; @fumeroAdolescentsBipolarExperiences2021]. Since we connected motivation to well-being, a similar association is drawn between suicidal tendency and motivation.
+The prevalence of suicidal ideation across the groups underscores the complex interplay between mental health and activity engagement. The literature suggests that suicidal behavior is negatively associated with overall well-being [@fonseca-pedreroRiskProtectiveFactors2022; @fumeroAdolescentsBipolarExperiences2021]. Since we connected motivation to well-being, a similar association is drawn between suicidal tendency and motivation.
 
-Based on similar conclusions from the motvation and number of activities analysis, we continued to perform the analysis by group. @tbl-groupFESuic shows the FE models for the impact of suicidal ideation on level of motivation for individuals by group.
+Based on similar conclusions from the motivation and number of activities analysis, we continued to perform the analysis by group. @tbl-groupFESuic shows the FE models for the impact of suicidal intensity, which was scored from 1-100, on level of motivation, which was also scored from 1-100, for individuals by group.
 
-```{r table groupAnaly, message=FALSE, echo=FALSE}
+```{r table groupAnaly, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: tbl-groupFESuic
-#| tbl-cap: "FE models predicting motivation by group as a function of suicidal ideation"
+#| tbl-cap: "FE Models: Motivation and Suicidal Intensity by Group"
 
 analysis <- model_data %>%
   select(userId, prescribed_group, activityDay, motivation, numTrips, sev_day_avg, suicidal_intensity_q32_even) %>% 
@@ -537,28 +421,80 @@ analysis <- model_data %>%
     model = map(data, function(d) plm(motivation ~ suic_intensity, index = c("userId", "activityDay"), data = d, model = "within"))
   ) 
 
-# Number of unique users in each group
-# unique_user_count <- model_data %>%
-#   filter(!is.na(motivation) & !is.na(numTrips)) %>%
-#   group_by(prescribed_group) %>%
-#   summarise(unique_users = n_distinct(userId))
-# print(unique_user_count)
-
 modelsummary(analysis$model %>% set_names(str_c("Group: ", analysis$prescribed_group)),
              gof_map = gm, coef_map = cm_comp,
              vcov = function(x) vcovHC(x, cluster = "time"),
-             estimate = c("{estimate} ({statistic}){stars}"),
-             statistic = NULL,
-             notes = list("Robust t-statistics in parentheses")
+             estimate = c("{estimate}"),
+             statistic = c("({statistic}){stars}"),
+             notes = list("Robust t-statistics in parentheses"),
+             output = "markdown"
              )
 ```
 
-The FE models for individuals in the autism, social anxiety, and control groups reveal distinct relationships between suicidal intensity and motivation levels. In the autism group, the coefficient for suicidal intensity is -0.095 with a robust t-statistic of -1.927, indicating a marginally significant negative relationship. This suggests that higher levels of suicidal intensity may slightly decrease motivation, although the evidence is not robust. Conversely, in the social anxiety group, the coefficient is -0.160 with a robust t-statistic of -5.518, indicating a statistically significant negative relationship. This suggests that higher levels of suicidal intensity are strongly associated with decreased motivation among individuals with social anxiety. Similarly, in the control group, the coefficient is -0.361 with a robust t-statistic of -3.293, indicating a statistically significant negative relationship. This suggests that higher levels of suicidal intensity are significantly associated with reduced motivation among individuals in the control group.
-
-The number of observations and the AIC values across the models reflect varying degrees of fit. The autism group has 484 observations and an AIC of 3,942.104, the social anxiety group has 822 observations and an AIC of 6,934.607, and the control group has 66 observations and an AIC of 568.685. These values indicate differences in the quality of fit among the models, with larger sample sizes generally associated with better model fit.
+The FE models for individuals in the autism, social anxiety, and control groups reveal distinct relationships between suicidal intensity and motivation levels. In the autism group, the coefficient for suicidal intensity is -0.095, indicating a marginally significant negative relationship. This suggests that higher levels of suicidal intensity may slightly decrease motivation, although the evidence is not robust. Conversely, in the social anxiety group, the coefficient is -0.160, with a statistically significant negative relationship. This suggests that higher levels of suicidal intensity are strongly associated with decreased motivation among individuals with social anxiety. Similarly, in the control group, the coefficient is -0.361, with a statistically significant negative relationship. This suggests that higher levels of suicidal intensity are significantly associated with reduced motivation among individuals in the control group.
 
 Overall, these results highlight the importance of considering the impact of suicidal intensity on motivation levels within different groups. While the associations are significant across all groups, the strength and significance of the relationship vary, underscoring the need for tailored interventions to address motivational challenges in each population.
 
-### Activity Type Impacts
+## Activity Types
 
-[perform analysis about the number of activities to different location types for each group. find what is significant and report here to talk about potential things individuals in each group can do, activity engagement wise, to improve their mental health]
+We investigated the impact of activity numbers at various locations on motivation levels across each group. Analyzed locations encompassed parks, grocery stores, libraries, and social recreation spaces. The analysis factored in raw activity counts determined by the DBSCAN-TE algorithm, along with seven-day and fourteen-day moving averages. While all activity locations and measurements were included, only a few yielded statistically significant results. Notably, significant findings emerged for the seven-day average park activities and grocery store activities.
+
+### Activities at Parks
+
+@tbl-groupFEParks presents the FE models for the seven-day rolling average number of activities at parks for the three groups.
+
+```{r table groupParks, message=FALSE, echo=FALSE, warning=FALSE}
+#| label: tbl-groupFEParks
+#| tbl-cap: "FE Models: Motivation and Number of Activities at Parks by Group"
+
+locations <- model_data %>% 
+  select(userId, activityDay, prescribed_group, motivation, numTrips, park, sev_day_avg_park, library, sev_day_avg_library, grocery, sev_day_avg_grocery, social_rec) %>% 
+  group_by(prescribed_group) %>% 
+  nest() %>% 
+  mutate(
+    model = map(data, function(d) plm(motivation ~ sev_day_avg_park, index = c("userId", "activityDay"), data = d, model = "within"))
+  ) 
+
+modelsummary(locations$model %>% set_names(str_c("Group: ", locations$prescribed_group)),
+             gof_map = gm, coef_map = cm_comp,
+             vcov = function(x) vcovHC(x, cluster = "time"),
+             estimate = c("{estimate}"),
+             statistic = c("({statistic}){stars}"),
+             notes = list("Robust t-statistics in parentheses"),
+             output = "markdown"
+             )
+```
+
+In examining park activities, statistically significant results were observed solely for the control group. A positive correlation emerged, indicating that each additional park activity within a seven-day period corresponded with a 3.017-point increase in motivation scores. This suggests that frequent park visits over a week are linked to heightened motivation levels among individuals in the control group. Conversely, the analysis did not unveil any significant correlation between park visits and motivation levels for the autism and social anxiety groups. This implies that park activities within the examined time frames do not notably affect motivation levels for these groups.
+
+### Activities at Grocery Stores
+
+@tbl-groupFEGrocery presents the FE models for the number of activities at grocery stores for the three groups.
+
+```{r table groupGrocery, message=FALSE, echo=FALSE, warning=FALSE}
+#| label: tbl-groupFEGrocery
+#| tbl-cap: "FE Models: Motivation and Number of Activities at Grocery Stores by Group"
+
+locations <- model_data %>% 
+  select(userId, activityDay, prescribed_group, motivation, numTrips, park, sev_day_avg_park, library, sev_day_avg_library, grocery, sev_day_avg_grocery, social_rec) %>% 
+  group_by(prescribed_group) %>% 
+  nest() %>% 
+  mutate(
+    model = map(data, function(d) plm(motivation ~ grocery, index = c("userId", "activityDay"), data = d, model = "within"))
+  ) 
+
+modelsummary(locations$model %>% set_names(str_c("Group: ", locations$prescribed_group)),
+             gof_map = gm, coef_map = cm_comp,
+             vcov = function(x) vcovHC(x, cluster = "time"),
+             estimate = c("{estimate}"),
+             statistic = c("({statistic}){stars}"),
+             notes = list("Robust t-statistics in parentheses"),
+             output = "markdown"
+             )
+```
+
+The examination of grocery store visits unveiled intriguing trends across the different groups. Notably, a statistically significant negative correlation was found for the autism group, indicating a decrease in motivation by 2.725 points with each additional grocery store activity (p \< 0.001). Similarly, the control group exhibited a slight negative correlation (p \< 0.1), with each extra grocery store visit reducing motivation by 2.690 points. Conversely, no statistical significance was observed for the social anxiety group. These findings underscore a nuanced connection between grocery store visits and motivation, with notable negative impacts identified in the autism group, while no significant associations were evident in the control and social anxiety groups.
+
+### Activity Impact on Motivation
+
+These findings matter because they highlight the different ways in which activities influence the mental well-being of individuals with autism, social anxiety, and those without these conditions. The significant correlations for the control group in park visits suggest that engaging in outdoor activities can be beneficial for general well-being, while the negative correlations for grocery visits underscore the potential stressors associated with routine tasks for those with autism and in the control group. Understanding these differences is crucial for developing tailored interventions. For instance, enhancing access to and encouraging regular visits to parks might improve well-being for the general population, while reducing stressors in grocery store environments could benefit individuals with autism. The lack of significant findings for the social anxiety group suggests that other factors may be more influential in their well-being, warranting further investigation.
