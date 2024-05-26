@@ -90,6 +90,9 @@ fin
 # In terms of activities at specific locations, engagement at parks, grocery stores, libraries, and social recreation locations was generally infrequent across all groups. For instance, activities at parks yielded minimal mean values and low standard deviations, suggesting sporadic engagement. Similarly, activities at grocery stores and libraries were rare, with mean values close to zero and minimal variability. Notably, individuals with social anxiety exhibited slightly higher mean values and greater variability in activities at grocery stores compared to other groups. Activities at social recreation locations, while still infrequent, showed slightly higher mean values across all groups, with some variability in engagement, particularly among individuals with control and social anxiety.
 
 
+# Moreover, when examining the number of unique participants in each group included in the FE models, the numbers decrease further. Only 5 participants remain in the control group, 8 in the autism group, and 19 in the social anxiety group. 
+
+
 library(purrr)
 
 
