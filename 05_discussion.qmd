@@ -86,8 +86,6 @@ fixed_social_anxiety <- plm(motivation ~ suic_intensity, index = c("userId", "ac
 plot(fixed_social_anxiety)
 ```
 
-
-
 @fig-groupAnaly3 shows the relationship between suicidal intensity and the number of activities by group.
 
 ```{r figure groupAnaly3, message=FALSE, echo=FALSE}
@@ -100,4 +98,69 @@ ggplot(analysis, aes(y = suic_intensity, x = numTrips, color = prescribed_group)
   facet_wrap(~prescribed_group) +
   labs(y = "Suicide Intensity", x = "Number of Activities") +
   theme_bw()
+```
+
+
+ANOVA AND TUKEY'S HSD
+
+```{r, echo=FALSE, message = FALSE, warning=FALSE}
+## | label: tbl-ANOVAActs
+## | tbl-cap: "ANOVA Test: Number of Activity by Group"
+
+actsANOVA <- model_data %>% 
+  filter(!is.na(numTrips)) %>%
+  mutate(prescribed_group = as.factor(prescribed_group)) %>% 
+  rename(Group = prescribed_group)
+
+# Perform ANOVA to test for differences in mean number of activities among prescribed groups
+ACTS_anova_result <- aov(numTrips ~ Group, data = actsANOVA)
+```
+
+```{r, message=FALSE, echo=FALSE, warning=FALSE}
+##| label: tbl-TukeyActs
+##| tbl-cap: "TukeyHSD Test: Difference in Mean Motivation Across Groups"
+
+# Perform Tukey's HSD test for pairwise comparisons
+results <- TukeyHSD(ACTS_anova_result)
+```
+
+```{r, message=FALSE, echo=FALSE, warning=FALSE}
+##| label: tbl-ANOVAMotiv
+##| tbl-cap: "ANOVA Test: Difference in Mean Motivation Across Groups"
+
+motivANOVA <- model_data %>% 
+  filter(!is.na(motivation))%>%
+  mutate(prescribed_group = as.factor(prescribed_group)) %>% 
+  rename(Group = prescribed_group)
+
+# Perform ANOVA
+MOTIV_anova_result <- aov(motivation ~ Group, data = motivANOVA)
+```
+
+```{r, message=FALSE, echo=FALSE, warning=FALSE}
+##| label: fig-ANOVAMotiv
+##| fig-cap: "Mean levels of motivation by group."
+
+# ggplot(motivANOVA, aes(x = Group, y = motivation)) +
+#   stat_summary(fun = mean, geom = "point", color = "black") +
+#   stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.2) +
+#   labs(x = "Group", y = "Motivation") +
+#   theme_bw()
+```
+
+
+```{r, message=FALSE, echo=FALSE, warning=FALSE}
+##| label: tbl-TukeyMotiv
+##| tbl-cap: "TukeyHSD Test: Difference in Mean Motivation Across Groups"
+
+result <- TukeyHSD(MOTIV_anova_result)
+```
+
+```{r, message=FALSE, echo=FALSE, warning=FALSE}
+##| label: tbl-groupSuicideChi
+##| tbl-cap: "Pearson Chi Test: Suicidal Ideation by Group"
+
+contingency_table <- table(suic$prescribed_group, suic$`Suicidal Ideation`)
+
+chisq_result <- chisq.test(contingency_table)
 ```
