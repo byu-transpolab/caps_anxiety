@@ -18,19 +18,23 @@ options(modelsummary_format_numeric_latex = "plain")
 # prints missing data in tables as blank space
 options(knitr.kable.NA = '') 
 # tells kableExtra to not load latex table packages in the chunk output
-options(kableExtra.latex.load_packages = FALSE) 
+# options(kableExtra.latex.load_packages = FALSE) 
+
 # round and format numbers that get printed in the text of the article.
-inline_hook <- function(x) {
-  if (is.numeric(x)) {
-    format(x, digits = 3, big.mark = ",")
-  } else x
-}
-knitr::knit_hooks$set(inline = inline_hook)
-knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+# inline_hook <- function(x) {
+#   if (is.numeric(x)) {
+#     format(x, digits = 3, big.mark = ",")
+#   } else x
+# }
+# knitr::knit_hooks$set(inline = inline_hook)
+# knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+
 # options for latex-only output
 if(knitr::is_latex_output()) {
   knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, dev = 'tikz', sanitize = TRUE)
-} 
-if(knitr::pandoc_to("docx")) {
-  knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 }
+# if(knitr::pandoc_to("docx")) {
+#   knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+# }
+
+# knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning = FALSE, fig.align = "center", dev = "cairo_pdf", fig.pos = "H")
