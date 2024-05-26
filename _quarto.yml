@@ -1,13 +1,34 @@
 project:
   type: book
 
-# This defines the .qmd files that are in your document
+execute:
+  cache: true
+  freeze: auto
+  echo: false
+  warning: false
+
+# layout: fancy, oneside, masters
+layout: masters
+department: Civil and Construction Engineering
+student: Emily Kae Youngs
+chair: Gregory S. Macfarlane
+committee:
+  - Jared A. Nielsen
+  - Grant G. Schultz
+
+# Title with custom formatting for fancy title page
+customtitle: |
+    | Exploring the Link Between
+    | Travel Behavior and Mental Health
 book:
-  title: "Exploring the link between travel behavior and mental health."
+  output-file: "Exploring the link between travel behavior and mental health"
+  title: |
+    | Exploring the Link Between
+    | Travel Behavior and Mental Health
   author:
-    - name: Gregory S. Macfarlane
-      orcid: 0000-0003-3999-7584
-      email: gregmacfarlane@byu.edu
+    - name: Emily K. Youngs
+      orcid: 0009-0001-6847-1154
+      email: emmykae@byu.edu
       affiliations:
         - id: byuce
           name: Civil and Construction Engineering Department, Brigham Young University
@@ -16,13 +37,9 @@ book:
           state: UT
           country: USA
           postal-code: 84602
-    - name: Emily K. Youngs
-      orcid: 0009-0001-6847-1154
-      email: emmykae@byu.edu
-      affiliations:
-        - ref: byuce
-    - name: Gillian Martin
-      email: gregmacfarlane@gmail.com
+    - name: Gregory S. Macfarlane
+      orcid: 0000-0003-3999-7584
+      email: gregmacfarlane@byu.edu
       affiliations:
         - ref: byuce
     - name: Jared A. Nielsen
@@ -36,7 +53,12 @@ book:
         state: UT
         country: USA
         postal-code: 84602
-  date: "`r Sys.Date()`"
+    - name: Grant G. Schultz
+      orcid: 0000-0002-0675-2970
+      email: gschultz@byu.edu
+      affiliations:
+        - ref: byuce
+  date: "5/25/2024"
   chapters:
     - index.qmd
     - 02_litreview.qmd
@@ -44,29 +66,95 @@ book:
     - 04_results.qmd
     - 06_limitations.qmd
     - 07_conclusions.qmd
-    - acknowledgments.qmd
+    # - acknowledgments.qmd
     - references.qmd
-  keyword: "active mobility, life-stages, and quality of life"
   abstract: |
-    NEED TO WRITE
-    The mental health of young adults is a major concern in much of the world. The causes of this concern are not straightforward, and multiple factors have been considered.
-    Travel behavior is proposed as an element in individual mental health in a number of dimensions. 
-    In this research, we explore a unique dataset of young adults who have expressed suicide ideation in professional therapy contexts. Using data from a mobile application revealing the individual's overall well-being and travel behaviors over a six-month period, we examine the relationship between travel behavior and expressed suicidal ideation.
+    This study investigates the impact of travel behavior on the mental health 
+    of young adults who have expressed suicidal ideation. Through statistical 
+    modeling and comprehensive data analysis, the research aims to uncover 
+    insights into how travel behavior influences motivation levels and mental 
+    well-being across different neurological and physiological groups. The dataset used in this 
+    study includes location-based services (LBS) data collected from participants 
+    over varying periods, allowing for a longitudinal analysis of travel patterns 
+    and mental health parameters.
+    
+    Participants were part of either control, social anxiety, or autism groups, 
+    with their travel behavior and mental health data analyzed using statistical
+    models. The relationship between suicidality, motivation levels, and travel 
+    behaviors was explored, along with the impact of engagement in activities at
+    different location types on motivation levels. The study used the DBSCAN-TE 
+    algorithm to identify activities from the LBS data, with efforts made to 
+    address data quality issues and impute missing activity information.
+    
+    Significant differences in activity engagement and motivation levels were 
+    observed among individuals in the autism, social anxiety, and control groups. 
+    The study found that those in the control group took part in more activities 
+    and expressed higher levels of motivation than those in the autism or social 
+    anxiety groups. In addition, simply increasing activity engagement may not 
+    be sufficient to significantly boost motivation levels. However, for those in 
+    the control group, more activities in parks lead to an statistically significant
+    increase in motivation and for those in the autism group, more activities to
+    grocery stores lead to a statistically significant decrease in motivation. 
+    The research highlights the complex interplay between travel behavior, 
+    activity engagement, and mental health outcomes, emphasizing the need for 
+    tailored interventions based on individual needs.
+    
+    The study faced limitations related to data quality, including sparse data
+    due to participants turning off their phones or the app failing to record 
+    data accurately. The lack of detailed information on activity duration and 
+    the inability to confirm activity engagement for all participants were also 
+    noted as limitations.
+    
+    All in all, this research sheds light on the intricate relationship 
+    between travel behavior and mental health among young adults with suicidal 
+    ideation. By understanding how travel patterns impact motivation levels and
+    mental well-being, tailored interventions can be developed to support 
+    individuals grappling with mental health challenges. Future studies should 
+    focus on improving data quality and incorporating measures to enhance the 
+    reliability of activity data collection for more robust analyses.
+
+keywords:
+  - travel behavior
+  - mental health
+  - motivation
+  - suicidality
+  - activity types
+  - DBSCAN-TE
+ 
+acknowledgments: |
+  I would like to express my gratitude to Dr. Macfarlane, my committee chair, as 
+  well as Dr. Schultz and Dr. Nielsen, for their invaluable guidance and support 
+  in teaching me how to conduct research and write effectively. Their expertise 
+  and encouragement have been instrumental in the completion of this thesis.
+  I am also grateful to the BYU Civil and Construction Engineering Department 
+  for providing the opportunities and resources necessary for my academic and 
+  professional growth during my time at BYU.
+  
+  I would also like to express heartfelt thanks to my family and friends for 
+  their unwavering support throughout this journey. 
+  A special thank you to my husband, Josh, whose constant reassurance and encouragement
+  have buoyed me up.
+  
+  This data used in this research was collected with help from an Interdisciplinary 
+  Research Grant at Brigham Young University, and administered under IRB protocol 
+  F2020-242. The investigators on the overarching grant include Terisa Gabrielsen, 
+  Jared Nielsen, and Mikle South.
 
 bibliography: groupreferences.bib
 
 format:
   html:
     theme: cosmo
-  elsevier-pdf:
+  byu-thesis-pdf:
+    keep-tex: true
+    highlight-style: arrow
     include-in-header: 
       - packages.tex
-    journal:
-      name: 17th International Conference on Travel Behaviour Research
-      cite-style: authoryear
-    keep-tex: true
-    top-level-division: section
-    toc: false
-
+    fig-pos: "H"
+    tbl-pos: "H"
+    # header-includes:
+    #   - \usepackage{float}
+    #   - \floatplacement{table}{H}
+    
 editor: visual
 
