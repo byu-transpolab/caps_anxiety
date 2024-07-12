@@ -58,7 +58,7 @@ book:
       email: gschultz@byu.edu
       affiliations:
         - ref: byuce
-  date: "5/25/2024"
+  date: "5/28/2024"
   chapters:
     - index.qmd
     - 02_litreview.qmd
@@ -83,6 +83,7 @@ book:
     models. The relationship between suicidality, motivation levels, and travel 
     behaviors was explored, along with the impact of engagement in activities at
     different location types on motivation levels. The study used the DBSCAN-TE 
+    (density-based spatial clustering of applications with noise, time, and entropy)
     algorithm to identify activities from the LBS data, with efforts made to 
     address data quality issues and impute missing activity information.
     
@@ -105,7 +106,7 @@ book:
     the inability to confirm activity engagement for all participants were also 
     noted as limitations.
     
-    All in all, this research sheds light on the intricate relationship 
+    All in all, this research sheds light on the complex relationship 
     between travel behavior and mental health among young adults with suicidal 
     ideation. By understanding how travel patterns impact motivation levels and
     mental well-being, tailored interventions can be developed to support 
@@ -141,6 +142,7 @@ acknowledgments: |
   Jared Nielsen, and Mikle South.
 
 bibliography: groupreferences.bib
+csl: apa.csl
 
 format:
   html:
@@ -151,10 +153,8 @@ format:
     include-in-header: 
       - packages.tex
     fig-pos: "H"
-    tbl-pos: "H"
-    # header-includes:
-    #   - \usepackage{float}
-    #   - \floatplacement{table}{H}
+    
+toc-depth: 2.0
     
 editor: visual
 
