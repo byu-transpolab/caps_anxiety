@@ -139,7 +139,7 @@ Overall, the results of the ANOVA test and Tukey's HSD test indicate that there 
 
 ## Suicidal Ideation by Group
 
-The morning and evening surveys included different questions pertaining to suicidal ideation. Specifically, the evening survey asked participants with the following questions:
+The morning and evening surveys included different questions pertaining to suicidal ideation. Specifically, the evening survey asked participants the following questions:
 
 -   Have you thought about killing yourself in the past 12 hours or since you last took a survey?
 
@@ -149,7 +149,7 @@ The morning and evening surveys included different questions pertaining to suici
 
 -   How strong was your ability to resist the urge to kill yourself since the last survey you completed (or over the past 12 hours, if you didn't complete the last survey)?
 
-The dataset presents an insightful glimpse into the prevalence of suicidal ideation within the groups, shedding light on potential differences in mental health concerns among them. We examined responses to the question "Have you thought about killing yourself in the past 12 hours or since you last took a survey?" across the three groups, where responses were "Yes" "No" or "No Response". The responses to this question are summarized by group in @tbl-groupSuicide.
+The dataset presents an insightful glimpse into the prevalence of suicidal ideation within the groups, shedding light on potential differences in mental health concerns among them. We examined responses to the question "Have you thought about killing yourself in the past 12 hours or since you last took a survey?" across the three groups, where responses were "Yes" "No" or "No Response." The responses to this question are summarized by group in @tbl-groupSuicide.
 
 ```{r table groupSuicide, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: tbl-groupSuicide
@@ -179,7 +179,7 @@ To dive deeper into the suicidal ideation of individuals in the different groups
 
 ## Model Comparison and Evaluation
 
-As discussed previously, we ran three different models to analyze the affect of the seven-day rolling average number of activities on motivation levels. We ran the OLS, FE, and RE models with robust standard errors and t-statistics due to the potential for autocorrelation and heteroskedasticity. The results of these three models are shown in @tbl-olsfere.
+As discussed previously, we ran three different models to analyze the effect of the seven-day rolling average number of activities on motivation levels. We ran the OLS, FE, and RE models with robust standard errors and t-statistics due to the potential for autocorrelation and heteroskedasticity. The results of these three models are shown in @tbl-olsfere.
 
 ```{r table ols fe re, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: tbl-olsfere
@@ -201,17 +201,18 @@ models_olsfere <- list(
 modelsummary(models_olsfere, gof_map = gm, coef_map = cm,
               vcov = function(x) vcovHC(x, cluster = "time"),
               estimate = c("{estimate}"),
-             statistic = c("({statistic}){stars}"),
-              notes = list("Robust t-statistics in parentheses"),
-             output = "markdown"
+              statistic = c("({statistic}){stars}"),
+              notes = c("Robust t-statistics in parentheses.",
+              "p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001"),
+              output = "markdown"
    )
 ```
 
-We used the Hausman test to determine whether the RE model is more appropriate than the FE model. The tests whether the RE estimates are consistent and efficient compared to the FE estimates. The null hypothesis is that the RE estimates are consistent and efficient, while the alternative hypothesis is that the FE estimates are more efficient. We found, using the Hausman test, that the p-value is 0.0013 which is less than 0.05, which means that the results are significant and we reject the null hypothesis. This implies that the coefficients from the FE model and RE model are sufficiently different from each other, which means that the RE model is inconsistent and the FE model should be used for the remainder of the analysis.
+We used the Hausman test to determine whether the RE model is more appropriate than the FE model. The Hausman test tests whether the RE estimates are consistent and efficient compared to the FE estimates. The null hypothesis is that the RE estimates are consistent and efficient, while the alternative hypothesis is that the FE estimates are more efficient. We found, using the Hausman test, that the p-value is 0.0013 which is less than 0.05, which means that the results are significant and we reject the null hypothesis. This implies that the coefficients from the FE model and RE model are sufficiently different from each other, which means that the RE model is inconsistent and the FE model should be used for the remainder of the analysis.
 
 ## Effect of Demographic Factors on Motivation
 
-Based on the results of the Hausman test, we found that the FE model should be used in the analysis of the activity pattern and mental health data. One potential downside of the FE model is that it cannot implement time constant variables. To overcome this limitation, we performed a linear regression analysis to examine how demographic variables (sex, age, IQ score, and group) are associated with the intercepts from the FE model. This allows us to understand how the baseline levels of motivation differ across groups. The sex, age, IQ score, and group were the independent variables, and the FE intercept values for each userID served as the dependent variable. The results from this model are shown in @tbl-fedemolm.
+Based on the results of the Hausman test, we found that the FE model should be used in the analysis of the activity pattern and mental health data. One potential downside of the FE model is that it cannot implement time constant variables. To overcome this limitation, we performed a linear regression analysis to examine how demographic variables (e.g., sex, age, IQ score, and group) are associated with the intercepts from the FE model. This allows us to understand how the baseline levels of motivation differ across groups. The sex, age, IQ score, and group were the independent variables, and the FE intercept values for each userID served as the dependent variable. The results from this model are shown in @tbl-fedemolm.
 
 ```{r table fe demo lm, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: tbl-fedemolm
@@ -266,7 +267,7 @@ The findings from these models suggest that there is a positive relationship bet
 
 The results from Model IV suggest that there is a negative relationship between the distance traveled and the motivation; this relationship is also statistically significant. In the case of distance traveled, for each additional 1,000 kilometers traveled, the motivation of the individual decreased by 0.3263 points. Similar to the case with the number of activities, while the distance traveled is statistically significant, the decrease in motivation seems so minor that it would not be reasonable to use distance traveled to inform changes in motivation.
 
-Model II with the seven-day rolling average of activities also shows a potential cumulative effect on motivation, though the evidence is weaker. In contrast, Model III with the size of the activity area does not appear to influence motivation, indicating that the physical space covered during the day is less important than the number of activities themselves.
+Model II, with the seven-day rolling average number of activities, also shows a potential cumulative effect on motivation, though the evidence is weaker. In contrast, Model III, with the size of the activity area, does not appear to influence motivation since the model is not statistically significant, indicating that the physical space covered during the day is less important than the number of activities themselves. Even if Model III was statistically significant, then the negative effect on motivation would be so minor compared to the area covered that it would also not be reasonable to use the activity area to inform changes in motivation.
 
 Overall, while the number of activities, seven-day rolling average number of activities, and distance traveled are important factor for motivation, the low R-squared values across all models suggest that many other factors not included in this analysis likely play a significant role in determining motivation levels.
 
@@ -303,11 +304,11 @@ Overall, Models I and II suggested a positive relationship between activity leve
 
 ## Models by Group
 
-After observing statistical differences in the mean motivation, number of activities, and suicidal tendency across the three groups, we decided to explore modeling each group separately. By doing so, we aimed to capture the unique characteristics and behaviors within each group, potentially uncovering more nuanced relationships between variables and outcomes. Additionally, since our analysis revealed the need to use a FE model to account for individual differences among participants in the study. This approach ensures that the effects of observed and unobserved characteristics specific to each participant are appropriately accounted for in the analysis. Moving forward, we will combine these two findings by employing FE models for each group, allowing us to explore the factors influencing motivation while considering the distinct attributes of each participant subgroup.
+After observing statistical differences in the mean motivation, number of activities, and suicidal tendency across the three groups, we decided to explore modeling each group separately. By doing so, we aimed to capture the unique characteristics and behaviors within each group, potentially uncovering more nuanced relationships between variables and outcomes. Additionally, since our analysis revealed the need to use a FE model to account for individual differences among participants in the study, this approach ensures that the effects of observed and unobserved characteristics specific to each participant are appropriately accounted for in the analysis. Moving forward, we will combine these two findings by employing FE models for each group, allowing us to explore the factors influencing motivation while considering the distinct attributes of each participant subgroup.
 
 ### Motivation and Number of Activities
 
-To visualize the need to look at each group separately and each individually seperately, we plotted the number of activities and levels of motivation for all individuals with each group. @fig-Analy shows the relationship between motivation and the number of activities by group before taking into account the FE.
+To visualize the need to look at each group separately and each individually separately, we plotted the number of activities and levels of motivation for all individuals within each group. @fig-Analy shows the relationship between motivation and the number of activities by group before taking into account the FE.
 
 ```{r figure groupAnaly, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: fig-Analy
@@ -328,7 +329,7 @@ ggplot(numActs, aes(y = motivation, x = numTrips, color = prescribed_group)) +
 
 This analysis demonstrated that without accounting for FE there is no significant relationship between the number of activities and motivation for the control group. Conversely, for the autism group, there is a steep slope, indicating that as the number of activities increases, the motivation of individuals also increases. Similarly, the social anxiety group shows a positive slope, though less pronounced than the autism group, suggesting that increased activities correlate with higher motivation levels. These findings contradict expectations from existing literature, which suggests that motivation levels in the autism and social anxiety groups should not necessarily rise with an increase in activities. This discrepancy highlights the importance of using the FE model.
 
-When using the FE models, individual lines of best fit are created for each participant. Each has a different intercept, but they all have the same slope. @fig-FEAnaly presents these plots, demonstrating how the number of activities influences motivation.
+@fig-FEAnaly presents these plots, demonstrating how the number of activities influences motivation. The pooling line, which is dashed, shows what the intercept and slope would be if all of the data was analyzed together instead of looking at each individual by using FE. When using the FE models, individual lines of best fit are created for each participant. This means that each individual has a different intercept, but they all have the same slope.
 
 ```{r figure groupAnaly, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: fig-FEAnaly
@@ -340,13 +341,13 @@ fixed <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = m
 plot(fixed)
 ```
 
-While we know that it is important to model each participant individually to account for different baseline levels of motivation, we determined that applying a FE model to each group—control, autism, and social anxiety—might be important for understanding the true relationship between the number of activities and motivation.
+While we know that it is important to model each participant individually to account for different individual baseline levels of motivation, we determined that applying a FE model to each group—control, autism, and social anxiety—might be important for understanding the true relationship between the number of activities and motivation since each group may also have different baseline levels of motivation.
 
-@fig-groupFE presents the results of the FE models for each group. These models predict motivation based on the number of activities, while accounting for individual baseline differences. By doing so, we can more accurately assess the impact of activities on motivation within each distinct group. The plots highlight the unique patterns within each group, reinforcing the importance of tailored analyses. The plot for the autism group in @fig-groupFE, for example, shows a steeper slope when pooling all of the data together, however, when the individuals are analyzed separately, the slope is much less steep.
+@fig-groupFE presents the results of the FE models for all three groups: control, autism, and social anxiety. These models predict motivation based on the number of activities, while accounting for individual baseline differences and well as group baseline differences. By doing so, we can more accurately assess the impact of activities on motivation within each distinct group. The plots highlight the unique patterns within each group, reinforcing the importance of tailored analyses. The plot for the autism group in @fig-groupFE, for example, shows a steeper slope when pooling all of the data together, however, when the individuals are analyzed separately, the slope is much less steep.
 
 ```{r figure groupFE, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: fig-groupFE
-#| fig-cap: "FE model for motivation vs number of activities by group"
+#| fig-cap: "FE model for motivation vs number of activities by group."
 #| fig-subcap: 
 #|   - "Control"
 #|   - "Autism"
@@ -396,7 +397,7 @@ modelsummary(sep_groups$model %>% set_names(str_c("Group: ", sep_groups$prescrib
              )
 ```
 
-The FE models for the control, autism, and social anxiety groups reveal varying relationships between the number of activities and levels of motivation. For the control group, the coefficient for the was 0.259, with a marginally significant positive relationship. This suggests that, while the number of activities may slightly increase motivation, the evidence is not strong. In the autism group, the coefficient was 0.361 with a positive but not statistically significant relationship between number of activities and motivation. This indicates that an increase in activities may correlate with higher motivation, but the evidence is not strong enough to draw definitive conclusions. The social anxiety group had a coefficient of 0.483 with a statistically significant positive relationship. This suggests that an increase in the number of activities is associated with a notable increase in motivation for individuals with social anxiety.
+The FE models for the control, autism, and social anxiety groups reveal varying relationships between the number of activities and levels of motivation. For the control group, the coefficient was 0.259, with a marginally significant positive relationship. This suggests that, while the number of activities may slightly increase motivation, the evidence is not strong. In the autism group, the coefficient was 0.361 with a positive but not statistically significant relationship between number of activities and motivation. This indicates that an increase in activities may correlate with higher motivation, but the evidence is not strong enough to draw definitive conclusions. The social anxiety group had a coefficient of 0.483 with a statistically significant positive relationship. This suggests that an increase in the number of activities is associated with a notable increase in motivation for individuals with social anxiety.
 
 Overall, these results highlight the importance of considering individual differences in motivation across different groups. The significant positive relationship in the social anxiety group suggests that interventions increasing the number of activities may be particularly effective in boosting motivation for these individuals. Conversely, the control and autism groups did not exhibit strong evidence of such a relationship, indicating that other factors may play a more crucial role in influencing motivation for these populations.
 
@@ -437,7 +438,7 @@ Overall, these results highlight the importance of considering the impact of sui
 
 ## Activity Types
 
-We investigated the impact of activity numbers at various locations on motivation levels across each group. Analyzed locations encompassed parks, grocery stores, libraries, and social recreation spaces. The analysis factored in activity counts determined by the DBSCAN-TE algorithm, along with seven-day and fourteen-day moving averages. While all activity locations and measurements were included, only a few yielded statistically significant results. Notably, significant findings emerged for the seven-day average park activities and grocery store activities.
+We investigated the impact of activity numbers at various locations on motivation levels across each group. Analyzed locations encompassed parks, grocery stores, libraries, and social recreation spaces. The analysis factored in activity counts determined by the DBSCAN-TE algorithm, along with seven-day and 14-day moving averages. While all activity locations and measurements were included, only a few yielded statistically significant results. Notably, significant findings emerged for the seven-day average park activities and grocery store activities.
 
 ### Activities at Parks
 

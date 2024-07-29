@@ -69,9 +69,15 @@ book:
     # - acknowledgments.qmd
     - references.qmd
   abstract: |
-    This study investigates the impact of travel behavior on the mental health 
-    of young adults who have expressed suicidal ideation. Through statistical 
-    modeling and comprehensive data analysis, the research aims to uncover 
+    This study explores the critical link between travel behavior and mental 
+    health, focusing on young adults who have expressed suicidal ideation. By 
+    analyzing how daily activities and movement patterns impact mental well-being, 
+    the research aims to explore targeted mental health interventions for 
+    individuals. The importance of this work lies in 
+    its potential to improve the quality of life for individuals by 
+    informing more personalized and effective mental health strategies.
+
+    Through statistical modeling and comprehensive data analysis, the research aims to uncover 
     insights into how travel behavior influences motivation levels and mental 
     well-being across different neurological and physiological groups. The dataset used in this 
     study includes location-based services (LBS) data collected from participants 
@@ -93,7 +99,7 @@ book:
     and expressed higher levels of motivation than those in the autism or social 
     anxiety groups. In addition, simply increasing activity engagement may not 
     be sufficient to significantly boost motivation levels. However, for those in 
-    the control group, more activities in parks lead to an statistically significant
+    the control group, more activities in parks lead to a statistically significant
     increase in motivation and for those in the autism group, more activities to
     grocery stores lead to a statistically significant decrease in motivation. 
     The research highlights the complex interplay between travel behavior, 
@@ -154,7 +160,7 @@ format:
       - packages.tex
     fig-pos: "H"
     
-toc-depth: 2.0
+toc-depth: 3.0
     
 editor: visual
 
