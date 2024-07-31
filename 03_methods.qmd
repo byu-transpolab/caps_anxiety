@@ -231,39 +231,45 @@ With the data carefully prepared, processed into distinct activity categories an
 
 ## Statistical Modeling
 
-After joining together the semantic activities, other travel pattern parameters, and survey responses, we created statistical models to investigate the relationship between mental health and travel behavior. For our analysis, we analyzed an ordinary least squares (OLS), fixed effects (FE) model, and random effects (RE) model to determine which was the best fit for our data [@wooldridgeIntroductoryEconometricsModern2009]. For all three models, the motivation, as reported in the evening surveys on a scale from 0-100, served as the dependent variable. The level of motivation was used as a measure for overall well-being. In addition, the seven-day rolling average number of activities, as described previously, served as the independent variable for the models. In addition to the model analysis, we accounted for the potential for heteroskedasticity and autocorrelation in the selected models.
+We combined semantic activities, travel pattern parameters, and survey responses to create statistical models that explore the relationship between mental health and travel behavior. Using motivation as an indicator of overall mental health and well-being, we analyzed how various factors influenced motivation, as represented in @eq-motivation
+
+$$
+\text{Motivation}_{it} \; \tilde{} \; \beta (\vec{X}_{it})
+$$ {#eq-motivation}
+
+We examined a range of models using various variables related to the individuals and their travel behavior. These variables are outlined in @eq-variables
+
+$$
+X = 
+\begin{cases} 
+\text{individual descriptors}_i \\
+\text{number of activities}_{it} \\
+\text{avg. number of activities}_{i(t-t_7)} \\
+\text{activity locations}_{it} \\
+\end{cases}
+$$ {#eq-variables}
+
+For our analysis, we analyzed an ordinary least squares (OLS), fixed effects (FE) model, and random effects (RE) model to determine which was the best fit for our data [@wooldridgeIntroductoryEconometricsModern2009]. For all three models, the motivation, as reported in the evening surveys on a scale from 0-100, served as the dependent variable. The level of motivation was used as a measure for overall well-being. In addition, the seven-day rolling average number of activities, as described previously, served as the independent variable for the models. In addition to the model analysis, we accounted for the potential for heteroskedasticity and autocorrelation in the selected models.
 
 ### Ordinary Least Squares
 
-Daily motivation levels were considered a function of the seven-day rolling average number of activities described in the previous sections. Using these parameters, a linear regression model was estimated by OLS. @eq-ols shows the base OLS equation where $\alpha_{i}$ represents the fixed effects in the model, or the time invariant variables.
-
-$$
+Daily motivation levels were considered a function of the seven-day rolling average number of activities described in the previous sections. Using these parameters, a linear regression model was estimated by OLS. @eq-ols shows the base OLS equation where $\alpha_{i}$ represents the fixed effects in the model, or the time invariant variables $$
 \text{Motivation} = \alpha_{i} + \beta (\text{sev-day avg. no. of acts.}_{it}) + \mu_{it}
-$$ {#eq-ols}
-
-For linear regressions, it is assumed that the error terms are independently and identically distributed (IID) with a normal distribution of mean 0. The estimates resulting from this model may be inconsistent due to unobserved individual differences (violating the IID assumption). For example, all individuals have a different baseline or typical level of motivation. We want to account for changes in motivation by individual to see how their motivation deviates from its baseline. There are two common econometric techniques, known as FE and RE, that attempt to account for these baseline measures, which are discussed in the following sections.
+$$ {#eq-ols} For linear regressions, it is assumed that the error terms are independently and identically distributed (IID) with a normal distribution of mean 0. The estimates resulting from this model may be inconsistent due to unobserved individual differences (violating the IID assumption). For example, all individuals have a different baseline or typical level of motivation. We want to account for changes in motivation by individual to see how their motivation deviates from its baseline. There are two common econometric techniques, known as FE and RE, that attempt to account for these baseline measures, which are discussed in the following sections.
 
 ### Fixed Effects
 
-The FE model, also called the within transformation, demeans the data by participant and looks at each participant's levels of motivation and seven-day rolling average number of activities individually. The results in having different intercepts for each participant. @eq-fe shows the base equation for the FE model.
-
-$$
-y_{it} - \bar{y}_i = \beta ( x_{it} - \bar{x}_i ) + \mu_{it} -\bar{\mu}_i
-$$ {#eq-fe}
-
-Since $\alpha_i$ from the OLS model is fixed overtime, these unobserved effects disappear in the FE model. In this case, the time constant characteristics are the demographic characteristics of each participant. These variables are absorbed by the intercept as they are unique to each participant.
+The FE model, also called the within transformation, demeans the data by participant and looks at each participant's levels of motivation and seven-day rolling average number of activities individually. The results in having different intercepts for each participant. @eq-fe shows the base equation for the FE model $$
+y_{it} - \bar{y}_i = \beta ( x_{it} - \bar{x}_i ) + \mu_{it} -\bar{\mu}_i 
+$$ {#eq-fe} Since $\alpha_i$ from the OLS model is fixed overtime, these unobserved effects disappear in the FE model. In this case, the time constant characteristics are the demographic characteristics of each participant. These variables are absorbed by the intercept as they are unique to each participant.
 
 The FE model is consistent but less efficient because it results in losing degrees of freedom to estimate individual intercepts for each participant. This results in larger standard errors for the estimates which can make it more difficult to recognize significance.
 
 ### Random Effects
 
-The RE model semi-demeans the data by participant. Based on a mean for the entire group, a mean is determined with set standard deviations to represent the data of the entire group. @eq-fe shows the base equation for the RE model. The RE model assumes that $\alpha_i$, the unobserved effect, is uncorrelated with the seven-day rolling average number of activities. $\lambda$ represents a "transformation that eliminates serial correlation in the errors" [@wooldridgeIntroductoryEconometricsModern2009, pg. 490].
-
-$$
-y_{it} - \lambda \bar{y}_i = \beta_0 (1- \lambda) + \beta_1 ( x_{it1} - \lambda\bar{x}_{i1}) + ... + \beta_k ( x_{itk} - \lambda\bar{x}_{ik}) + (\nu_{it} -\lambda\bar{\nu}_i)
-$$ {#eq-re}
-
-The RE model is appropriate to use if it is believed that the the difference in motivation has an influence on the seven-day rolling average number of activities. It is possible that other variables that influence the seven-day rolling average number of activities are not included which can lead to bias in the model. Unlike the FE model, the RE model is more efficient because degrees of freedom are not lost to more estimates, but the results can be biased.
+The RE model semi-demeans the data by participant. Based on a mean for the entire group, a mean is determined with set standard deviations to represent the data of the entire group. @eq-re shows the base equation for the RE model. The RE model assumes that $\alpha_i$, the unobserved effect, is uncorrelated with the seven-day rolling average number of activities. $\lambda$ represents a "transformation that eliminates serial correlation in the errors" [@wooldridgeIntroductoryEconometricsModern2009, pg. 490] $$ 
+y_{it}-\lambda\bar{y}_i = \beta_0(1-\lambda)+\beta_1 ( x_{it1}-\lambda\bar{x}_{i1})+...+\beta_k (x_{itk}-\lambda\bar{x}_{ik})+(\nu_{it}-\lambda\bar{\nu}_i) 
+$$ {#eq-re} The RE model is appropriate to use if it is believed that the the difference in motivation has an influence on the seven-day rolling average number of activities. It is possible that other variables that influence the seven-day rolling average number of activities are not included which can lead to bias in the model. Unlike the FE model, the RE model is more efficient because degrees of freedom are not lost to more estimates, but the results can be biased.
 
 ### Autocorrelation and Heteroskedasticity
 
