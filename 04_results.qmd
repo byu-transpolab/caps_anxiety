@@ -79,7 +79,9 @@ acts <- model_data %>%
          # "Visits to Libraries" = library,
          # "Visits to Social Recreation Locations" = social_rec)
 
-datasummary_balance(~prescribed_group, data = acts, dinm=FALSE, align = "lcccccc", output = "markdown") 
+datasummary_balance(~prescribed_group, data = acts, dinm=FALSE, align = "lcccccc", output = "tinytable") |>
+  tinytable::theme_tt("resize", direction = "down")
+
 # %>% kable_styling(latex_options="scale_down")
 ```
 
@@ -126,7 +128,8 @@ motiv <- model_data %>%
 motiv_tbl <- motiv %>% 
   select(prescribed_group, "Motivation")
 
-datasummary_balance(~prescribed_group, data = motiv_tbl, dinm=FALSE, align = "lcccccc", output = "markdown")
+datasummary_balance(~prescribed_group, data = motiv_tbl, dinm=FALSE, align = "lcccccc", output = "tinytable") |>
+  tinytable::theme_tt("resize", direction = "down")
 ```
 
 The findings revealed differences in motivation levels across the groups. The control group had the highest mean motivation score of 47.7, with the lowest standard deviation of 14.2. This suggests that individuals in the control group generally have high motivation levels with relatively little variability, indicating a consistent trend of high motivation within this group. In contrast, the autism group showed the lowest mean motivation score of 34.0 with the highest standard deviation of 19.4. The lower mean score implied that individuals with autism tend to have lower motivation levels compared to those in the control group. The social anxiety group fell in the middle with a mean motivation score of 40.3.
@@ -170,7 +173,8 @@ suic <- model_data %>%
   group_by(prescribed_group) %>% 
   rename("Suicidal Ideation" = suicidal_ideation_q31_even)
 
-datasummary_balance(~prescribed_group, data = suic, coef_map = cm_group, dinm=FALSE, align = "llcccccc", output = "markdown")
+datasummary_balance(~prescribed_group, data = suic, coef_map = cm_group, dinm=FALSE, align = "llcccccc", output = "tinytable") |>
+  tinytable::theme_tt("resize", direction = "down")
 ```
 
 In the control group, on 66.4% of days participants responded negatively, indicating they did not think about killing themselves. However, on 2.1% of days, group members acknowledged experiencing suicidal ideation during the specified timeframe. Contrastingly, among respondents with autism, on 51.6% of the days, participants denied having suicidal thoughts, while respondents admitted to suicidal ideation with a slightly higher percentage on 4.9% of days. In the social anxiety group, the dynamics were notably different. Here, participants reported no suicidal ideation on a significantly lower percentage, 38.9%, of days, while they reported suicidal ideation on a strikingly higher proportion of days, at 15.6% of days. Across all three groups, there was a portion of respondents who chose not to provide a response, perhaps indicating the sensitivity of the question or reluctance to disclose personal struggles.
@@ -200,11 +204,9 @@ models_olsfere <- list(
 
 modelsummary(models_olsfere, gof_map = gm, coef_map = cm,
               vcov = function(x) vcovHC(x, cluster = "time"),
-              estimate = c("{estimate}"),
-              statistic = c("({statistic}){stars}"),
-              notes = c("Robust t-statistics in parentheses.",
-              "p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001"),
-              output = "markdown"
+              estimate = c("{estimate}{stars}"),
+              statistic = c("({statistic})"),
+              notes = list("Robust t-statistics in parentheses. + p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001")
    )
 ```
 
@@ -212,7 +214,13 @@ We used the Hausman test to determine whether the RE model is more appropriate t
 
 ## Effect of Demographic Factors on Motivation
 
-Based on the results of the Hausman test, we found that the FE model should be used in the analysis of the activity pattern and mental health data. One potential downside of the FE model is that it cannot implement time constant variables. To overcome this limitation, we performed a linear regression analysis to examine how demographic variables (e.g., sex, age, IQ score, and group) are associated with the intercepts from the FE model. This allows us to understand how the baseline levels of motivation differ across groups. The sex, age, IQ score, and group were the independent variables, and the FE intercept values for each userID served as the dependent variable. The results from this model are shown in @tbl-fedemolm.
+Based on the results of the Hausman test, we found that the FE model should be used in the analysis of the activity pattern and mental health data. One potential downside of the FE model is that it cannot implement time constant variables. To overcome this limitation, we performed a linear regression analysis to examine how demographic variables (e.g., sex, age, IQ score, and group) are associated with the intercepts from the FE model. This linear regression is described generally in @eq-linreg
+
+$$
+\bar{y}_{i} \; \tilde{} \; \beta (\vec{X}_{it})
+$$ {#eq-linreg}
+
+This allows us to understand how the baseline levels of motivation differ across groups. The sex, age, IQ score, and group were the independent variables, and the FE intercept values for each userID served as the dependent variable. The results from this model are shown in @tbl-fedemolm.
 
 ```{r table fe demo lm, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: tbl-fedemolm
@@ -223,8 +231,8 @@ tar_load(fe_model)
 modelsummary(fe_model, gof_map = gm, coef_map = cm,
              estimate = c("{estimate} ({statistic}){stars}"),
              statistic = NULL,
-             notes = list("t-statistics in parentheses"),
-             output = "markdown")
+             notes = list("t-statistics in parentheses. + p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001")
+             )
 ```
 
 The analysis revealed several significant findings. First, being female was associated with a decrease in motivation by 6.351 points, on a scale from 0-100, compared to males, which is a statistically significant effect with a p-values less than 0.05. Age and IQ score did not show significant associations with motivation. Conversely, individuals with autism exhibited a substantial decrease in motivation by 10.247 points compared to the control group, and those with social anxiety experienced a similar decrease of 8.544 points, both statistically significant results with p-values less than 0.01. These results suggest that sex and group status play significant roles in shaping motivational levels, while age and IQ appear to have limited influence in this context. When looking at the fit of this model to the data, the model explains approximately 26.4% of the variance in motivation, indicating that other unexplored factors may contribute to motivational outcomes. These findings underscore the importance of considering individual differences, particularly sex and group status, when examining levels of motivation. For this analysis, the group typology is a main focus and will continue to be explored.
@@ -256,10 +264,9 @@ models_fe_paras <- list(
 modelsummary(models_fe_paras, gof_map = gm, coef_map = cm_comp, 
              fmt = fmt_sprintf("%.2e"), 
              vcov = function(x) vcovHC(x, cluster = "time"),
-             estimate = c("{estimate}"),
-             statistic = c("({statistic}){stars}"),
-             notes = list("Robust t-statistics in parentheses"),
-             output = "markdown"
+             estimate = c("{estimate}{stars}"),
+             statistic = c("({statistic})"),
+             notes = list("Robust t-statistics in parentheses. + p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001")
              )
 ```
 
@@ -291,10 +298,9 @@ models_numActs <- list(
 
 modelsummary(models_numActs, gof_map = gm, coef_map = cm_comp,
              vcov = function(x) vcovHC(x, cluster = "time"),
-             estimate = c("{estimate}"),
-             statistic = c("({statistic}){stars}"),
-             notes = list("Robust t-statistics in parentheses"),
-             output = "markdown"
+             estimate = c("{estimate}{stars}"),
+             statistic = c("({statistic})"),
+             notes = list("Robust t-statistics in parentheses. + p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001")
              )
 ```
 
@@ -390,11 +396,11 @@ sep_groups <- model_data %>%
 modelsummary(sep_groups$model %>% set_names(str_c("Group: ", sep_groups$prescribed_group)),
              gof_map = gm, coef_map = cm_comp,
              vcov = function(x) vcovHC(x, cluster = "time"),
-             estimate = c("{estimate}"),
-             statistic = c("({statistic}){stars}"),
-             notes = list("Robust t-statistics in parentheses"),
-             output = "markdown"
-             )
+             estimate = c("{estimate}{stars}"),
+             statistic = c("({statistic})"),
+             notes = list("Robust t-statistics in parentheses. + p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001"),
+             output = "tinytable") |>
+  tinytable::theme_tt("resize", direction = "down")
 ```
 
 The FE models for the control, autism, and social anxiety groups reveal varying relationships between the number of activities and levels of motivation. For the control group, the coefficient was 0.259, with a marginally significant positive relationship. This suggests that, while the number of activities may slightly increase motivation, the evidence is not strong. In the autism group, the coefficient was 0.361 with a positive but not statistically significant relationship between number of activities and motivation. This indicates that an increase in activities may correlate with higher motivation, but the evidence is not strong enough to draw definitive conclusions. The social anxiety group had a coefficient of 0.483 with a statistically significant positive relationship. This suggests that an increase in the number of activities is associated with a notable increase in motivation for individuals with social anxiety.
@@ -425,11 +431,11 @@ analysis <- model_data %>%
 modelsummary(analysis$model %>% set_names(str_c("Group: ", analysis$prescribed_group)),
              gof_map = gm, coef_map = cm_comp,
              vcov = function(x) vcovHC(x, cluster = "time"),
-             estimate = c("{estimate}"),
-             statistic = c("({statistic}){stars}"),
-             notes = list("Robust t-statistics in parentheses"),
-             output = "markdown"
-             )
+             estimate = c("{estimate}{stars}"),
+             statistic = c("({statistic})"),
+             notes = list("Robust t-statistics in parentheses. + p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001"),
+             output = "tinytable") |>
+  tinytable::theme_tt("resize", direction = "down")
 ```
 
 The FE models for individuals in the autism, social anxiety, and control groups reveal distinct relationships between suicidal intensity and motivation levels. In the autism group, the coefficient for suicidal intensity is -0.095, indicating a marginally significant negative relationship. This suggests that higher levels of suicidal intensity may slightly decrease motivation, although the evidence is not robust. Conversely, in the social anxiety group, the coefficient is -0.160, with a statistically significant negative relationship. This suggests that higher levels of suicidal intensity are strongly associated with decreased motivation among individuals with social anxiety. Similarly, in the control group, the coefficient is -0.361, with a statistically significant negative relationship. This suggests that higher levels of suicidal intensity are significantly associated with reduced motivation among individuals in the control group.
@@ -459,11 +465,11 @@ locations <- model_data %>%
 modelsummary(locations$model %>% set_names(str_c("Group: ", locations$prescribed_group)),
              gof_map = gm, coef_map = cm_comp,
              vcov = function(x) vcovHC(x, cluster = "time"),
-             estimate = c("{estimate}"),
-             statistic = c("({statistic}){stars}"),
-             notes = list("Robust t-statistics in parentheses"),
-             output = "markdown"
-             )
+             estimate = c("{estimate}{stars}"),
+             statistic = c("({statistic})"),
+             notes = list("Robust t-statistics in parentheses. + p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001"),
+             output = "tinytable") |>
+  tinytable::theme_tt("resize", direction = "down")
 ```
 
 In examining park activities, statistically significant results were observed solely for the control group. A positive correlation emerged, indicating that each additional park activity within a seven-day period corresponded with a 3.017-point increase in motivation scores. This suggests that frequent park visits over a week are linked to heightened motivation levels among individuals in the control group. Conversely, the analysis did not unveil any significant correlation between park visits and motivation levels for the autism and social anxiety groups. This implies that park activities within the examined time frames do not notably affect motivation levels for these groups.
@@ -487,11 +493,11 @@ locations <- model_data %>%
 modelsummary(locations$model %>% set_names(str_c("Group: ", locations$prescribed_group)),
              gof_map = gm, coef_map = cm_comp,
              vcov = function(x) vcovHC(x, cluster = "time"),
-             estimate = c("{estimate}"),
-             statistic = c("({statistic}){stars}"),
-             notes = list("Robust t-statistics in parentheses"),
-             output = "markdown"
-             )
+             estimate = c("{estimate}{stars}"),
+             statistic = c("({statistic})"),
+             notes = list("Robust t-statistics in parentheses. + p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001"),
+             output = "tinytable") |>
+  tinytable::theme_tt("resize", direction = "down")
 ```
 
 The examination of grocery store visits unveiled intriguing trends across the different groups. Notably, a statistically significant negative correlation was found for the autism group, indicating a decrease in motivation by 2.725 points with each additional grocery store activity (p \< 0.001). Similarly, the control group exhibited a slight negative correlation (p \< 0.1), with each extra grocery store visit reducing motivation by 2.690 points. Conversely, no statistical significance was observed for the social anxiety group. These findings underscore a nuanced connection between grocery store visits and motivation, with notable negative impacts identified in the autism group, while no significant associations were evident in the control and social anxiety groups.
