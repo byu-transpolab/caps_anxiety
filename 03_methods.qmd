@@ -225,9 +225,13 @@ By calculating rolling averages and imputing missing activity data, the imputati
 
 In addition to analyzing the number of activities and their locations, we analyzed other parameters to describe the travel patterns of individuals. These parameters were included because while the accuracy of the DBSCAN-TE algorithm in identifying activities is 91.5% accurate, it is not 100% accurate [@richesTransformingGPSPoints2022]. We noticed some inaccuracy when we examined some of the raw LBS data. Instances appeared where activities seemed apparent but went undetected by the algorithm. These discrepancies prompted a deeper investigation into additional parameters that might shed light on daily travel patterns.
 
-The additional parameters we introduced were the convex hull area and total distance traveled. The convex hull is the shape formed by connecting the outermost points of the LBS points in such a way that the resulting polygon is convex, meaning that any line segment connecting two points within the shapes lies entirely within the shape itself. By calculating the area enclosed by the convex hull, we gained a measure of the geographic footprint of the recorded LBS data, independent of the location of activities. This value is reported in square kilometers.
+The additional parameters we introduced were the convex hull area and total distance traveled. The convex hull is the shape formed by connecting the outermost points of the LBS points in such a way that the resulting polygon is convex, meaning that any line segment connecting two points within the shapes lies entirely within the shape itself. By calculating the area enclosed by the convex hull, we gained a measure of the geographic footprint of the recorded LBS data, independent of the location of activities. This value is reported in square kilometers. @fig-convex_hull_area illustrates the convex hull of a set of of hypothetical LBS points.
 
-We also evaluated the total distance traveled by each individual on each activity day. To determine the total distance traveled, we computed the length of the polyline, representing the trajectory of movement between consecutive LBS points, during a participant's day. This value is reported in meters.
+![Additional travel parameters: Convex hull area.](convex_hull_area.png){#fig-convex_hull_area width="2in"}
+
+We also evaluated the total distance traveled by each individual on each activity day. To determine the total distance traveled, we computed the length of the polyline, representing the trajectory of movement between consecutive LBS points, during a participant's day. This value is reported in meters. @fig-distance_travelled illustrated the total distance traveled of a set of hypothetical LBS points.
+
+![Additional travel parameters: Total distance traveled.](distance_travelled.png){#fig-distance_travelled width="2in"}
 
 Overall, our analysis more than merely quantified the number of activities and their locations as we introduced two additional parameters, the convex hull area and total distance traveled, to contribute to a comprehensive characterization of travel patterns.
 
