@@ -19,3 +19,15 @@ Future studies could focus on improving the accuracy of location-tracking algori
 One other potential limitation of our study is the inability to confirm which specific activities individuals participated in throughout the day. While we have identified activities using the DBSCAN-TE algorithm, there is a possibility that certain activities were not accurately identified by the algorithm, leading to their omission from our analysis. This lack of precision could potentially result in some activities going undetected, thereby limiting the comprehensiveness of our activity analysis.
 
 To address this limitation in future research, integrating activity diaries into our survey methodology could prove beneficial. By incorporating activity diaries, participants would have the opportunity to provide detailed accounts of their daily activities, including specific locations where these activities took place. This additional information could enhance the completeness and accuracy of our activity analysis, as it would provide valuable insights into the types and locations of activities individuals engage in throughout the day.
+
+## Overall Recommendations
+
+To build on the findings of this study and address its limitations, future research should prioritize the following:
+
+-   Enhance Data Collection Methods: Consider using multiple data sources or complementary methods to ensure comprehensive data capture. Invest in refining activity identification algorithms and explore advanced machine learning techniques to improve accuracy and reduce gaps in activity data.
+
+-   Capture Detailed Activity Duration: Focus on capturing both activity types and durations by implementing time-tracking features to better understand the impact of activities on mental well-being.
+
+-   Implement Participant Activity Diaries: Integrate activity diaries to confirm activity engagement and duration. Enhance the completeness and accuracy of daily activity engagement.
+
+By addressing these recommendations, future studies can improve the quality of data, enhance the accuracy of activity analysis, and provide a more comprehensive understanding of the interplay between activity patterns and mental health.
