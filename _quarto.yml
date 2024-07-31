@@ -64,8 +64,8 @@ book:
     - 02_litreview.qmd
     - 03_methods.qmd
     - 04_results.qmd
+    - 05_conclusions.qmd
     - 06_limitations.qmd
-    - 07_conclusions.qmd
     # - acknowledgments.qmd
     - references.qmd
   abstract: |
@@ -82,7 +82,7 @@ book:
     well-being across different neurological and physiological groups. The dataset used in this 
     study includes location-based services (LBS) data collected from participants 
     over varying periods, allowing for a longitudinal analysis of travel patterns 
-    and mental health parameters.
+    and mental health parameters for individuals.
     
     Participants were part of either control, social anxiety, or autism groups, 
     with their travel behavior and mental health data analyzed using statistical
@@ -142,7 +142,7 @@ acknowledgments: |
   A special thank you to my husband, Josh, whose constant reassurance and encouragement
   have buoyed me up.
   
-  This data used in this research was collected with help from an Interdisciplinary 
+  The data used in this research was collected with help from an Interdisciplinary 
   Research Grant at Brigham Young University, and administered under IRB protocol 
   F2020-242. The investigators on the overarching grant include Terisa Gabrielsen, 
   Jared Nielsen, and Mikle South.
