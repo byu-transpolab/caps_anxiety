@@ -16,7 +16,15 @@ In this research, we explored a unique dataset of young adults who have expresse
 
 tar_load(descrip_stats)
 
-datasummary_balance(~Group, descrip_stats, dinm=FALSE, align = "llcccccc", output = "markdown")
+datasummary_balance(~Group, descrip_stats, dinm=FALSE, align = "llcccccc", output = "tinytable") |>
+  tinytable::theme_tt("resize", direction = "down")
+                    
+  #                   output = "kableExtra") %>%
+  # kable_styling(latex_options="scale_down")
+                    
+
+
+  
 ```
 
 To begin gathering data, participants installed an application on their phone that collected cellular LBS data. The participants participated to varying degrees with some providing 1 month of LBS data and others providing up to 1 year of data. There was a period of time, about 1 month, when no LBS data was collected by the application. In addition to collecting LBS data, the application prompted participants to complete a survey answering questions about their mental health. Surveys were administered in the mornings and evenings and asked questions such as, “Have you felt stressed since you last took a survey?” “How would you gauge your motivation in the past day?” and “Have you thought about killing yourself in the past 12 hours or since you last took a survey?” among others. Participants were monetarily incentivized to complete the mental health surveys.
