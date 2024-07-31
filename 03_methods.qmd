@@ -51,24 +51,6 @@ P_t =
 \end{cases}
 $$ {#eq-lbs-score}
 
-$$
-\text{Motivation}_{it} \; \tilde{} \; \beta (\vec{X}_{it})
-$$
-
-$$
-\text{y}_{i} \; \tilde{} \; \beta (\vec{X}_{it})
-$$
-
-$$
-X = 
-\begin{cases} 
-\text{SE}_i \\
-\text{number of activities}_{it} \\
-\text{avg. number of activities}_{i(t-t_7)} \\
-\text{activity locations}_{it} \\
-\end{cases}
-$$
-
 To determine the combined score for each hour, the score based on the hour of the day and the score based on the number of LBS points were multiplied together. @eq-combined-score describes this step and $S_t$ is the combined score for the given hour.
 
 $$
