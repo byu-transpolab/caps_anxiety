@@ -72,20 +72,20 @@ book:
     This study explores the critical link between travel behavior and mental 
     health, focusing on young adults who have expressed suicidal ideation. By 
     analyzing how daily activities and movement patterns impact mental well-being, 
-    the research aims to explore targeted mental health interventions for 
+    the research aims to explore travel related mental health approaches for 
     individuals. The importance of this work lies in 
     its potential to improve the quality of life for individuals by 
     informing more personalized and effective mental health strategies.
 
-    Through statistical modeling and comprehensive data analysis, the research aims to uncover 
+    Through comprehensive data analysis and statistical modeling, the research aims to uncover 
     insights into how travel behavior influences motivation levels and mental 
     well-being across different neurological and physiological groups. The dataset used in this 
     study includes location-based services (LBS) data collected from participants 
-    over varying periods, allowing for a longitudinal analysis of travel patterns 
+    over varying periods of time, allowing for a longitudinal analysis of travel patterns 
     and mental health parameters for individuals.
     
-    Participants were part of either control, social anxiety, or autism groups, 
-    with their travel behavior and mental health data analyzed using statistical
+    Participants were part of either autism, social anxiety, or control groups, 
+    and their travel behavior and mental health data were analyzed using statistical
     models. The relationship between suicidality, motivation levels, and travel 
     behaviors was explored, along with the impact of engagement in activities at
     different location types on motivation levels. The study used the DBSCAN-TE 
@@ -130,7 +130,7 @@ keywords:
  
 acknowledgments: |
   I would like to express my gratitude to Dr. Macfarlane, my committee chair, as 
-  well as Dr. Schultz and Dr. Nielsen, for their invaluable guidance and support 
+  well as to Dr. Schultz and Dr. Nielsen, for their invaluable guidance and support 
   in teaching me how to conduct research and write effectively. Their expertise 
   and encouragement have been instrumental in the completion of this thesis.
   I am also grateful to the BYU Civil and Construction Engineering Department 
