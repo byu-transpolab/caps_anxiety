@@ -342,9 +342,46 @@ This analysis demonstrated that without accounting for FE there is no significan
 #| fig-cap: "FE model for motivation vs number of activities for all participants."
 
 ## ALL THREE GROUPS
-fixed <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = model_data, model = "within")
+fixed <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = model_data)
 
-plot(fixed)
+# plot(fixed, pooling = TRUE, within = TRUE)
+# 
+# plot(fixed)
+
+z <- fixef(fixed) 
+fe <- tibble(fe = z, userId = names(z))
+data_f <- model_data |>
+  as_tibble() |>
+  transmute(
+    userId, activityDay, motivation, numTrips
+  ) %>% 
+  left_join(fe, by = "userId") %>% 
+  filter(!is.na(fe) & !is.na(numTrips) & !is.na(motivation))
+
+userId_mean <- data_f %>% 
+  group_by(userId) %>% 
+  summarise(
+    motivation = mean(motivation),
+    numTrips = mean(numTrips),
+    fe = mean(fe)
+  )
+
+segw = 1
+ggplot() + 
+  geom_point(data = data_f, aes(x = numTrips, y = motivation), alpha = 0.2, color = "gray30") + 
+  geom_smooth(data = data_f, aes(x = numTrips, y = motivation, linetype = "Pooling"), method = "lm", se = FALSE, color = "black", linewidth = 1) + 
+  geom_point(data = userId_mean, aes(x = numTrips, y = motivation), color = "lightseagreen", shape = 21, size = 1.5, fill = "lightseagreen") +
+  geom_segment(data = userId_mean, aes(x = numTrips - segw, xend = numTrips + segw,
+                                       y = motivation - segw * fixed$coefficients[1],
+                                       yend = motivation + segw * fixed$coefficients[1],
+                                       linetype = "Within"), color = "lightseagreen", linewidth = 0.6) +
+  theme_bw() +
+  xlab("Number of Activities") +
+  ylab("Level of Motivation") +
+  scale_linetype_manual(name = "Legend", values = c("Pooling" = "dashed", "Within" = "solid")) +
+  theme(legend.position = "right") +
+  scale_x_continuous(breaks = seq(min(data_f$numTrips, na.rm = TRUE), max(data_f$numTrips, na.rm = TRUE), by = 2)) +
+  scale_y_continuous(breaks = seq(min(data_f$motivation, na.rm = TRUE), max(data_f$motivation, na.rm = TRUE), by = 20))
 ```
 
 While we know that it is important to model each participant individually to account for different individual baseline levels of motivation, we determined that applying a FE model to each group—control, autism, and social anxiety—might be important for understanding the true relationship between the number of activities and motivation since each group may also have different baseline levels of motivation.
@@ -353,31 +390,65 @@ While we know that it is important to model each participant individually to acc
 
 ```{r figure groupFE, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: fig-groupFE
-#| fig-cap: "FE model for motivation vs number of activities by group."
-#| fig-subcap: 
-#|   - "Control"
-#|   - "Autism"
-#|   - "Social Anxiety"
-#| layout-ncol: 2
+#| fig-cap: "FE model for motivation vs. number of activities by group."
 
-## CONTROL GROUP
-control <- model_data %>% 
-  filter(prescribed_group == "Control")
-fixed_control <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = control, model = "within")
+z <- fixef(fixed) 
+fe <- tibble(fe = z, userId = names(z))
+data_f <- model_data |>
+  as_tibble() |>
+  transmute(
+    userId, activityDay, prescribed_group, motivation, numTrips
+  ) %>% 
+  left_join(fe, by = "userId") %>% 
+  filter(!is.na(fe) & !is.na(numTrips) & !is.na(motivation))
 
-## AUTISM GROUP
-autism <- model_data %>% 
-  filter(prescribed_group == "Autism")
-fixed_autism <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = autism, model = "within")
+userId_mean <- data_f %>% 
+  group_by(userId, prescribed_group) %>% 
+  summarise(
+    motivation = mean(motivation),
+    numTrips = mean(numTrips),
+    fe = mean(fe)
+  )
 
-# SOCIAL ANXIETY GROUP
-social_anxiety <- model_data %>% 
-  filter(prescribed_group == "Social Anxiety")
-fixed_social_anxiety <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = social_anxiety, model = "within")
+segw = 2
+ggplot() + 
+  geom_point(data = data_f, aes(x = numTrips, y = motivation), alpha = 0.2, color = "gray30") + 
+  geom_smooth(data = data_f, aes(x = numTrips, y = motivation, linetype = "Pooling"), method = "lm", se = FALSE, color = "black", linewidth = 1) + 
+  geom_point(data = userId_mean, aes(x = numTrips, y = motivation, color = prescribed_group, fill = prescribed_group), shape = 21, size = 1.5) +
+  geom_segment(data = userId_mean, aes(x = numTrips - segw, xend = numTrips + segw,
+                                       y = motivation - segw * fixed$coefficients[1],
+                                       yend = motivation + segw * fixed$coefficients[1],
+                                       color = prescribed_group, linetype = "Within"), linewidth = 0.6) +
+  facet_wrap(~prescribed_group) +
+  guides(color = FALSE, fill = FALSE) +
+  theme_bw() +
+  xlab("Number of Activities") +
+  ylab("Level of Motivation") +
+  scale_linetype_manual(name = "Legend", values = c("Pooling" = "dashed", "Within" = "solid")) +
+  theme(legend.position = "right") +
+  scale_x_continuous(breaks = seq(min(data_f$numTrips, na.rm = TRUE), max(data_f$numTrips, na.rm = TRUE), by = 2)) +
+  scale_y_continuous(breaks = seq(min(data_f$motivation, na.rm = TRUE), max(data_f$motivation, na.rm = TRUE), by = 20))
+```
 
-plot(fixed_control)
-plot(fixed_autism)
-plot(fixed_social_anxiety)
+```{r}
+# ## CONTROL GROUP
+# control <- model_data %>% 
+#   filter(prescribed_group == "Control")
+# fixed_control <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = control, model = "within")
+# 
+# ## AUTISM GROUP
+# autism <- model_data %>% 
+#   filter(prescribed_group == "Autism")
+# fixed_autism <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = autism, model = "within")
+# 
+# # SOCIAL ANXIETY GROUP
+# social_anxiety <- model_data %>% 
+#   filter(prescribed_group == "Social Anxiety")
+# fixed_social_anxiety <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = social_anxiety, model = "within")
+# 
+# plot(fixed_control)
+# plot(fixed_autism)
+# plot(fixed_social_anxiety)
 ```
 
 Since these FE models rely on having both an evening survey response for motivation and a number of activities determined by the DBSCAN-TE algorithm, we lose some data. This reduced the number of individuals from 31 to 23 in the control group, from 29 to 17 in the autism group, and from 28 to 22 in the social anxiety group. The FE models require sufficient data points for each individual to perform the analysis effectively, which likely explains the reduction in the number of participants for these models. After visualizing these relationships, we proceeded to run the FE models for each group. The results from these models are presented in @tbl-groupFEAnaly.
