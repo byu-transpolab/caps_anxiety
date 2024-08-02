@@ -1,6 +1,6 @@
 # Conclusions
 
-This study has provided valuable insights into the complex relationship between travel behavior and mental health among young adults with suicidal ideation. By analyzing LBS data and conducting statistical modeling, we uncovered significant differences in activity engagement and motivation levels across different neurological or physiological groups.
+This study has provided valuable insights into the complex relationship between travel behavior and mental health among young adults with suicidal ideation. By analyzing LBS data and conducting statistical modeling, we uncovered significant differences in activity engagement, motivation levels, and suicidal ideation across different neurological or physiological groups.
 
 ## Overall Implications
 
@@ -14,7 +14,7 @@ Overall, these findings highlight significant differences in activity engagement
 
 ## Group Specific Implications
 
-Different types of activities had varying effects on motivation levels across the groups studied. For individuals with social anxiety, a positive relationship was observed between the number of activities engaged in and their motivation levels, indicating that increased activity participation could enhance their well-being. Conversely, for autistic individuals, there was a negative correlation between grocery store visits and motivation levels, suggesting that grocery store environments may present stressors that adversely affect their well-being. These findings are important as they provide insight into the distinct challenges faced by individuals with social anxiety and autism. Additionally, the strong positive correlation between park visits and motivation levels in the control group highlights the beneficial impact of outdoor green-space activities on well-being.
+Different types of activities had varying effects on motivation levels across the groups studied. For individuals with social anxiety, a positive relationship was observed between the number of activities engaged in and their motivation levels, indicating that increased activity participation could enhance their well-being. Conversely, for autistic individuals, there was a negative correlation between grocery store visits and motivation levels, suggesting that grocery store environments may present stressors that adversely affect their well-being. These findings are important as they provide insight into the distinct challenges faced by individuals with social anxiety and autism. Additionally, the strong positive correlation between seven-day average park visits and motivation levels in the control group highlights the beneficial impact of outdoor green-space activities on well-being.
 
 In summary, each group benefits differently from various activities, underscoring the importance of personalized approaches to improving well-being tailored to the specific needs and preferences of individuals in each group.
 
@@ -22,8 +22,8 @@ In summary, each group benefits differently from various activities, underscorin
 
 In this research, we explored the critical link between travel behavior and mental health, focusing on young adults with suicidal ideation. By analyzing daily activities and movement patterns, the study highlights the importance of considering these factors in mental health interventions. The contributions of this work bridge the gap between travel behavior and mental health research, emphasizing the need for personalized approaches that take into account the unique challenges faced by individuals with autism and social anxiety.
 
-The study reveals that individuals with autism and social anxiety engage in fewer activities and have lower motivation levels compared to the control group, underscoring the significant impact of these conditions on daily life and personal drive. Additionally, the correlation between suicidal ideation and decreased motivation across all groups highlights critical areas for intervention and prevention.
+The study reveals that individuals with autism and social anxiety engage in fewer activities and have lower motivation levels compared to the control group, underscoring the significant impact of these conditions on daily life. Additionally, the correlation between suicidal ideation and decreased motivation across all groups highlights critical areas for intervention and prevention.
 
 The practical implications of these findings are significant. By understanding how travel behavior influences motivation levels and well-being, mental health practitioners can develop targeted strategies to support individuals struggling with mental health challenges. For example, interventions can be tailored to address specific needs related to travel patterns, such as mitigating stressors in grocery store environments for autistic individuals or encouraging activity engagement for those with social anxiety.
 
-Overall, this research underscores the importance of considering travel behavior as a key factor in promoting mental well-being. It offers a roadmap for future studies to delve deeper into this intersection, ultimately aiming to enhance the quality of life for individuals by informing more personalized and effective mental health strategies.
+Overall, this research underscores the importance of considering travel behavior as a key factor in promoting mental well-being. It offers a roadmap for future studies to explore this intersection further, ultimately aiming to enhance the quality of life for individuals by informing more personalized and effective mental health strategies.
