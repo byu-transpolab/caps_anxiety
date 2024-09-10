@@ -8,7 +8,7 @@ execute:
   warning: false
 
 # layout: fancy, oneside, masters
-layout: masters
+layout: twoside, masters
 department: Civil and Construction Engineering
 student: Emily Kae Youngs
 chair: Gregory S. Macfarlane
@@ -18,13 +18,13 @@ committee:
 
 # Title with custom formatting for fancy title page
 customtitle: |
-    | Exploring the Link Between
+    | Exploring the Link Between 
     | Travel Behavior and Mental Health
 book:
   output-file: "Exploring the link between travel behavior and mental health"
   title: |
-    | Exploring the Link Between
-    | Travel Behavior and Mental Health
+    | Exploring the Link Between Travel Behavior
+    | and Mental Health
   author:
     - name: Emily K. Youngs
       orcid: 0009-0001-6847-1154
