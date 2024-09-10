@@ -18,8 +18,8 @@ tar_load(descrip_stats)
 
 datasummary_balance(~Group, descrip_stats, dinm=FALSE, align = "llcccccc", 
 
-                    output = "tinytable") |>
-  tinytable::theme_tt("resize", direction = "down")
+                  output = "tinytable") |>
+tinytable::theme_tt("resize", direction = "down")
                     
   #                   output = "kableExtra") %>%
   # kable_styling(latex_options="scale_down")
@@ -103,19 +103,21 @@ After preparing the data, we had a total of 4,405 userID-activity days with suff
 
 The first parameter is the epsilon neighborhood distance, $\epsilon$, which defines the radius within which points must fall to be considered part of a cluster. The second parameter is the minimum number of points, $\rho$, representing the minimum number of points that must be present within the defined radius for it to be considered a cluster. @fig-parameters_1_2 shows an example of the epsilon neighborhood distance and minimum number of points.
 
-![DBSCAN-TE: Epsilon neighborhood distance and minimum number of points.](parameters_1_2.png){#fig-parameters_1_2 width="2in"}
+![DBSCAN-TE: Epsilon neighborhood distance and minimum number of points.](parameters_1_2.png){#fig-parameters_1_2 width="2.5in"}
 
 The temporal sequence constraint, $\Delta T$, which is the third parameter, ensures that clusters do not include points with a significant gap in timestamps. $\Delta T$ is the maximum time interval allowed between two consecutive points in a cluster before it is considered that multiple activities occurred within the same cluster at different times. This is achieved by calculating the time difference between each consecutive point in the spatial cluster. If the time elapsed between any two consecutive points within the cluster exceeds the $\Delta T$ constraint, the cluster is divided into two at that point. For instance, if the data points in cluster 1.0 exceed the $\Delta T$ constraint, the cluster would be split into two: 1.0 and 1.1. This concept for hypothetical consecutive points 1 through 7 is illustrated in @fig-parameter_3. For example, LBS points from 8:00 AM and 9:00 PM should not belong to the same cluster if there are intervening points from another location. In this situation, the LBS points would be split into separate clusters, assuming the individual left and later returned to the activity location.
 
-![DBSCAN-TE: Temporal sequence constraint.](parameter_3.png){#fig-parameter_3 width="3.5in"}
+![DBSCAN-TE: Temporal sequence constraint.](parameter_3.png){#fig-parameter_3 width="5in"}
 
 The fourth parameter is the entropy constraint, $\tau$, which determines whether LBS points are part of a stationary cluster or a moving trajectory. This parameter prevents slowly moving points from being misidentified as clusters by examining the chaos and pattern of LBS data. For example, points moving slowly in an orderly pattern, such as driving from stoplight to stoplight, are excluded. However, slowly moving but sporadic points, indicating movement within a single location like a building or park, can be part of a cluster.
 
 The entropy of each cluster is calculated by determining the distance and angle in radians between consecutive points. The distance of a ray represents the time elapsed between two consecutive points, while the angle indicates the direction of movement. All the rays in the cluster are plotted within a 2π circle divided into 8 quadrants. If multiple rays from the same cluster fall within the same quadrant, they are considered orderly and likely represent a moving trajectory rather than a stationary cluster. Conversely, if the rays are distributed across different quadrants, they are considered chaotic and more likely to indicate a cluster or activity. Examples of hypothetical consecutive points 1 through 7 with low and high entropy are shown in [@fig-parameter_4; @richesTransformingGPSPoints2022].
 
-![DBSCAN-TE: Entropy constraint with (a) low and (b) high entropy.](parameter_4.png){#fig-parameter_4 width="4.25in"}
+![DBSCAN-TE: Entropy constraint with (a) low and (b) high entropy.](parameter_4.png){#fig-parameter_4 width="5.5in"}
 
-These four parameters for the DBSCAN-TE algorithm were previously optimized and applied to determine the activity locations for each userID-activity day [@macfarlaneClassifyingLocationPoints2024]. Although the DBSCAN-TE algorithm was only used on high-scoring userID-activity days, it did not produce results for all of them. Out of the 4,405 userID-activity days, 3,845 yielded results after the algorithm was implemented. Once all of the activity locations were determined, we summed them to determine the total number of activities for each day. @fig-numAct shows the distribution of the number of activities for the 3,845 userID-activity days. The average number of activities engaged in each day was 2.65 activities.
+These four parameters for the DBSCAN-TE algorithm were previously optimized and applied to the LBS data to determine the activity locations for each userID-activity day [@macfarlaneClassifyingLocationPoints2024]. Although the DBSCAN-TE algorithm was only used on high-scoring userID-activity days, it did not produce results for all of them. Out of the 4,405 userID-activity days, 3,845 yielded results after the algorithm was implemented. 
+
+After identifying all the activity locations, we totaled them to calculate the number of activities for each userID-activity day. @fig-numAct shows the distribution of the number of activities for the 3,845 userID-activity days. The average number of activities engaged in each day was 2.65 activities.
 
 ```{r figure numAct, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: fig-numAct
