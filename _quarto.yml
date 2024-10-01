@@ -8,7 +8,7 @@ execute:
   warning: false
 
 # layout: fancy, oneside, masters
-layout: masters
+layout: twoside, masters
 department: Civil and Construction Engineering
 student: Emily Kae Youngs
 chair: Gregory S. Macfarlane
@@ -18,13 +18,13 @@ committee:
 
 # Title with custom formatting for fancy title page
 customtitle: |
-    | Exploring the Link Between
+    | Exploring the Link Between 
     | Travel Behavior and Mental Health
 book:
   output-file: "Exploring the link between travel behavior and mental health"
   title: |
-    | Exploring the Link Between
-    | Travel Behavior and Mental Health
+    | Exploring the Link Between Travel Behavior
+    | and Mental Health
   author:
     - name: Emily K. Youngs
       orcid: 0009-0001-6847-1154
@@ -64,22 +64,28 @@ book:
     - 02_litreview.qmd
     - 03_methods.qmd
     - 04_results.qmd
+    - 05_conclusions.qmd
     - 06_limitations.qmd
-    - 07_conclusions.qmd
     # - acknowledgments.qmd
     - references.qmd
   abstract: |
-    This study investigates the impact of travel behavior on the mental health 
-    of young adults who have expressed suicidal ideation. Through statistical 
-    modeling and comprehensive data analysis, the research aims to uncover 
+    This study explores the critical link between travel behavior and mental 
+    health, focusing on young adults who have expressed suicidal ideation. By 
+    analyzing how daily activities and movement patterns impact mental well-being, 
+    the research aims to explore travel related mental health approaches for 
+    individuals. The importance of this work lies in 
+    its potential to improve the quality of life for individuals by 
+    informing more personalized and effective mental health strategies.
+
+    Through comprehensive data analysis and statistical modeling, the research aims to uncover 
     insights into how travel behavior influences motivation levels and mental 
     well-being across different neurological and physiological groups. The dataset used in this 
     study includes location-based services (LBS) data collected from participants 
-    over varying periods, allowing for a longitudinal analysis of travel patterns 
-    and mental health parameters.
+    over varying periods of time, allowing for a longitudinal analysis of travel patterns 
+    and mental health parameters for individuals.
     
-    Participants were part of either control, social anxiety, or autism groups, 
-    with their travel behavior and mental health data analyzed using statistical
+    Participants were part of either autism, social anxiety, or control groups, 
+    and their travel behavior and mental health data were analyzed using statistical
     models. The relationship between suicidality, motivation levels, and travel 
     behaviors was explored, along with the impact of engagement in activities at
     different location types on motivation levels. The study used the DBSCAN-TE 
@@ -93,7 +99,7 @@ book:
     and expressed higher levels of motivation than those in the autism or social 
     anxiety groups. In addition, simply increasing activity engagement may not 
     be sufficient to significantly boost motivation levels. However, for those in 
-    the control group, more activities in parks lead to an statistically significant
+    the control group, more activities in parks lead to a statistically significant
     increase in motivation and for those in the autism group, more activities to
     grocery stores lead to a statistically significant decrease in motivation. 
     The research highlights the complex interplay between travel behavior, 
@@ -124,7 +130,7 @@ keywords:
  
 acknowledgments: |
   I would like to express my gratitude to Dr. Macfarlane, my committee chair, as 
-  well as Dr. Schultz and Dr. Nielsen, for their invaluable guidance and support 
+  well as to Dr. Schultz and Dr. Nielsen, for their invaluable guidance and support 
   in teaching me how to conduct research and write effectively. Their expertise 
   and encouragement have been instrumental in the completion of this thesis.
   I am also grateful to the BYU Civil and Construction Engineering Department 
@@ -136,7 +142,7 @@ acknowledgments: |
   A special thank you to my husband, Josh, whose constant reassurance and encouragement
   have buoyed me up.
   
-  This data used in this research was collected with help from an Interdisciplinary 
+  The data used in this research was collected with help from an Interdisciplinary 
   Research Grant at Brigham Young University, and administered under IRB protocol 
   F2020-242. The investigators on the overarching grant include Terisa Gabrielsen, 
   Jared Nielsen, and Mikle South.
@@ -154,7 +160,7 @@ format:
       - packages.tex
     fig-pos: "H"
     
-toc-depth: 2.0
+toc-depth: 3.0
     
 editor: visual
 
