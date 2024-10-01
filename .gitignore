@@ -6,6 +6,7 @@
 /_book/
 /_site/
 /_targets/
+/cache/
 elsarticle-num.bst
 elsarticle.cls
 index.spl
