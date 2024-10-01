@@ -7,6 +7,8 @@
 /_site/
 /_targets/
 /cache/
+/_freeze/
+/site_libs/
 elsarticle-num.bst
 elsarticle.cls
 index.spl
@@ -21,3 +23,4 @@ data/caps_data/
 
 Term Project Proposal.Rmd
 Term-Project-Proposal.html
+rosm.cache/

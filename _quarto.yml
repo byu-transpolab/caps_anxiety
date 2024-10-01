@@ -7,8 +7,6 @@ execute:
   echo: false
   warning: false
 
-# layout: fancy, oneside, masters
-layout: twoside, masters
 department: Civil and Construction Engineering
 student: Emily Kae Youngs
 chair: Gregory S. Macfarlane
@@ -17,14 +15,9 @@ committee:
   - Grant G. Schultz
 
 # Title with custom formatting for fancy title page
-customtitle: |
-    | Exploring the Link Between 
-    | Travel Behavior and Mental Health
 book:
-  output-file: "Exploring the link between travel behavior and mental health"
-  title: |
-    | Exploring the Link Between Travel Behavior
-    | and Mental Health
+  output-file: "caps-anxiety"
+  title:  Exploring the Link Between Travel Behavior and Mental Health
   author:
     - name: Emily K. Youngs
       orcid: 0009-0001-6847-1154
@@ -53,12 +46,7 @@ book:
         state: UT
         country: USA
         postal-code: 84602
-    - name: Grant G. Schultz
-      orcid: 0000-0002-0675-2970
-      email: gschultz@byu.edu
-      affiliations:
-        - ref: byuce
-  date: "5/28/2024"
+  date: "10/10/2024"
   chapters:
     - index.qmd
     - 02_litreview.qmd
@@ -66,7 +54,7 @@ book:
     - 04_results.qmd
     - 05_conclusions.qmd
     - 06_limitations.qmd
-    # - acknowledgments.qmd
+    - acknowledgments.qmd
     - references.qmd
   abstract: |
     This study explores the critical link between travel behavior and mental 
@@ -148,17 +136,25 @@ acknowledgments: |
   Jared Nielsen, and Mikle South.
 
 bibliography: groupreferences.bib
+cite-method: citeproc
 csl: apa.csl
 
 format:
   html:
     theme: cosmo
-  byu-thesis-pdf:
+  elsevier-pdf:
+    journal: 
+      name: Travel Behaviour and Society
+      formatting: review
+      model: 3p
     keep-tex: true
     highlight-style: arrow
+    top-level-division: section
     include-in-header: 
       - packages.tex
     fig-pos: "H"
+    toc: false
+
     
 toc-depth: 3.0
     

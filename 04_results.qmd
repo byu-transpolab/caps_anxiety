@@ -79,10 +79,8 @@ acts <- model_data %>%
          # "Visits to Libraries" = library,
          # "Visits to Social Recreation Locations" = social_rec)
 
-datasummary_balance(~prescribed_group, data = acts, dinm=FALSE, align = "lcccccc", output = "tinytable") |>
-  tinytable::theme_tt("resize", direction = "down")
-
-# %>% kable_styling(latex_options="scale_down")
+datasummary_balance(~prescribed_group, data = acts, dinm=FALSE, align = "lcccccc", output = "kableExtra") |> 
+  kable_styling(latex_options="scale_down")
 ```
 
 Starting with the total number of activities, individuals in the control group had a moderate level of engagement, with an average number of 3.0 activities. In contrast, participants in the autism group had a lower average number of activities, with a mean of 2.1 activities. Similarly, individuals with social anxiety had a mean of 2.6 activities, falling between the control and autism groups. The standard deviations for the three groups ranged from 2.3-2.7. Moving to the seven-day rolling average of activities, trends mirrored those of the total number of activities, with slightly lower standard deviations, indicating less variability in the rolling average compared to the total count.
@@ -128,8 +126,8 @@ motiv <- model_data %>%
 motiv_tbl <- motiv %>% 
   select(prescribed_group, "Motivation")
 
-datasummary_balance(~prescribed_group, data = motiv_tbl, dinm=FALSE, align = "lcccccc", output = "tinytable") |>
-  tinytable::theme_tt("resize", direction = "down")
+datasummary_balance(~prescribed_group, data = motiv_tbl, dinm=FALSE, align = "lcccccc", output = "kableExtra")
+
 ```
 
 The findings revealed differences in motivation levels across the groups. The control group had the highest mean motivation score of 47.7, falling slightly below the middle range of the "typical motivation" category, with the lowest standard deviation of 14.2. This suggests that individuals in the control group generally have moderate motivation levels with relatively little variability, indicating a consistent trend of moderate motivation within this group. In contrast, the autism group showed the lowest mean motivation score of 34.0, falling in the "enough motivation to get by" category, with the highest standard deviation of 19.4. The lower mean score implied that individuals with autism tend to have lower motivation levels compared to those in the control group. The social anxiety group fell in the middle with a mean motivation score of 40.3, which is on the lowest end of the "typical motivation" category.
@@ -173,8 +171,7 @@ suic <- model_data %>%
   group_by(prescribed_group) %>% 
   rename("Suicidal Ideation" = suicidal_ideation_q31_even)
 
-datasummary_balance(~prescribed_group, data = suic, coef_map = cm_group, dinm=FALSE, align = "llcccccc", output = "tinytable") |>
-  tinytable::theme_tt("resize", direction = "down")
+datasummary_balance(~prescribed_group, data = suic, coef_map = cm_group, dinm=FALSE, align = "llcccccc", output = "tinytable") 
 ```
 
 In the control group, on 66.4% of days participants responded negatively, indicating they did not think about killing themselves. However, on 2.1% of days, group members acknowledged experiencing suicidal ideation during the specified timeframe. Contrastingly, among respondents with autism, on 51.6% of the days, participants denied having suicidal thoughts, while respondents admitted to suicidal ideation with a slightly higher percentage on 4.9% of days. In the social anxiety group, the dynamics were notably different. Here, participants reported no suicidal ideation on a significantly lower percentage, 38.9% of days, while they reported suicidal ideation on a strikingly higher proportion of days, at 15.6% of days. Across all three groups, there was a portion of respondents who chose not to provide a response, perhaps indicating the sensitivity of the question or reluctance to disclose personal struggles.
@@ -471,8 +468,7 @@ modelsummary(sep_groups$model %>% set_names(str_c("Group: ", sep_groups$prescrib
              estimate = c("{estimate}{stars}"),
              statistic = c("({statistic})"),
              notes = list("Robust t-statistics in parentheses. + p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001"),
-             output = "tinytable") |>
-  tinytable::theme_tt("resize", direction = "down")
+             output = "kableExtra") 
 ```
 
 The FE models for the control, autism, and social anxiety groups reveal varying relationships between the number of activities and levels of motivation. For the control group, the coefficient was 0.259, with a marginally significant positive relationship. This suggests that, while the number of activities may slightly increase motivation, the evidence is not strong. In the autism group, the coefficient was 0.361 with a positive but not statistically significant relationship between number of activities and motivation. This indicates that an increase in activities may correlate with higher motivation, but the evidence is not strong enough to draw definitive conclusions. The social anxiety group had a coefficient of 0.483 with a statistically significant positive relationship. This suggests that an increase in the number of activities is associated with a notable increase in motivation for individuals with social anxiety.
@@ -506,8 +502,7 @@ modelsummary(analysis$model %>% set_names(str_c("Group: ", analysis$prescribed_g
              estimate = c("{estimate}{stars}"),
              statistic = c("({statistic})"),
              notes = list("Robust t-statistics in parentheses. + p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001"),
-             output = "tinytable") |>
-  tinytable::theme_tt("resize", direction = "down")
+             output = "tinytable")
 ```
 
 The FE models for individuals in the autism, social anxiety, and control groups reveal distinct relationships between suicidal intensity and motivation levels. In the autism group, the coefficient for suicidal intensity is -0.095, indicating a marginally significant negative relationship. This suggests that higher levels of suicidal intensity may slightly decrease motivation, although the evidence is not robust. Conversely, in the social anxiety group, the coefficient is -0.160, with a statistically significant negative relationship. This suggests that higher levels of suicidal intensity are strongly associated with decreased motivation among individuals with social anxiety. Similarly, in the control group, the coefficient is -0.361, with a statistically significant negative relationship. This suggests that higher levels of suicidal intensity are significantly associated with reduced motivation among individuals in the control group.

@@ -17,12 +17,8 @@ In this research, we explored a unique dataset of young adults who have expresse
 tar_load(descrip_stats)
 
 datasummary_balance(~Group, descrip_stats, dinm=FALSE, align = "llcccccc", 
-
-                  output = "tinytable") |>
-tinytable::theme_tt("resize", direction = "down")
-                    
-  #                   output = "kableExtra") %>%
-  # kable_styling(latex_options="scale_down")
+                     output = "kableExtra", booktabs = TRUE) %>%
+  kable_styling(latex_options="scale_down")
 ```
 
 To begin gathering data, participants installed an application on their phone that collected cellular LBS data. The participants participated to varying degrees with some providing 1 month of LBS data and others providing up to 1 year of data. There was a period of time, about 1 month, when no LBS data was collected by the application. In addition to collecting LBS data, the application prompted participants to complete a survey answering questions about their mental health. Surveys were administered in the mornings and evenings and asked questions such as, “Have you felt stressed since you last took a survey?” “How would you gauge your motivation in the past day?” and “Have you thought about killing yourself in the past 12 hours or since you last took a survey?” among others. Participants were monetarily incentivized to complete the mental health surveys.
@@ -35,15 +31,16 @@ The raw LBS data included the ID associated with each participant (userID), the 
 
 Traditionally, we think of each day ending at 11:59 PM and then the next day starting at 12:00 AM. We decided that to best capture individuals' daily travel, we would shift the 24-hour period to be from 3:00 AM to 2:59 AM. This shift accounts for the travel that people engage in after 12:00 AM, but before 3:00 AM. Ultimately, this adjustment ensures that any timestamps recorded between 12:00 AM and 2:59 AM were attributed to the preceding calendar date, classifying them as the final data points of the preceding day rather than the initial data points for the following day. The data points in the 24-hour period from 3:00 AM to 2:59 AM make up the activity day. Moreover, the evening mental health survey closed at 3:00 AM each day, so a survey taken between 12:00 AM and 3:00 AM would be the evening survey and would be associated with the activity day as previously described.
 
-Once the activity days were established and the data points were categorized and grouped by activity day, we assessed the quality and completeness of the LBS data for each combination of userID and activity day. There were 12,051 userID-activity days, each with varying quality of LBS data. To assess the LBS data, the data were grouped by userID, activity day, and hour of the day and a scoring algorithm was implemented. This algorithm identified userID-activity days that have a high score, indicating a sufficient quantity and distribution of LBS data points. The scoring mechanism is based on two factors: the hour of the day and the number of LBS points recorded in that hour. For hours from 8:00 AM to 11:59 PM, which are hours where the likelihood of significant activity engagement is greater, a score of 3 was assigned to the hour and for the remaining hours of each activity day, a score of 1 was assigned to the hour. This aspect of the scoring algorithm is described in @eq-hourly-score where $H_t$ is the hourly score and $t$ is the hour of the day $$
-H_t = 
-\begin{cases} 
+Once the activity days were established and the data points were categorized and grouped by activity day, we assessed the quality and completeness of the LBS data for each combination of userID and activity day. There were 12,051 userID-activity days, each with varying quality of LBS data. To assess the LBS data, the data were grouped by userID, activity day, and hour of the day and a scoring algorithm was implemented. This algorithm identified userID-activity days that have a high score, indicating a sufficient quantity and distribution of LBS data points. The scoring mechanism is based on two factors: the hour of the day and the number of LBS points recorded in that hour. For hours from 8:00 AM to 11:59 PM, which are hours where the likelihood of significant activity engagement is greater, a score of 3 was assigned to the hour and for the remaining hours of each activity day, a score of 1 was assigned to the hour. This aspect of the scoring algorithm is described in @eq-hourly-score where $H_t$ is the hourly score and $t$ is the hour of the day 
+$$
+H_t = \begin{cases} 
 3 & \text{if } 8 \leq t \leq 23 \\
 1 & \text{otherwise}
 \end{cases}
 $$ {#eq-hourly-score}
 
-The other aspect adjusted the overall score based on the number of LBS points recorded within the given hour. The algorithm categorized each hour into a tier based on the number of LBS points and assigned a score corresponding to each tier. The tiers are described as follows: for an hour with less than 500 points, a score of 0 was assigned; for an hour with between 500 and 1500 points, a score of 1 was assigned; for an hour with between 1500 and 2500 points, a score of 2 was assigned; and for an hour with more than 2500 points, a score of 3 was assigned. This aspect of the scoring algorithm is described in @eq-lbs-score where $P_t$ is the hourly LBS score and where $LBS_t$ is the number of LBS points in that hour $$
+The other aspect adjusted the overall score based on the number of LBS points recorded within the given hour. The algorithm categorized each hour into a tier based on the number of LBS points and assigned a score corresponding to each tier. The tiers are described as follows: for an hour with less than 500 points, a score of 0 was assigned; for an hour with between 500 and 1500 points, a score of 1 was assigned; for an hour with between 1500 and 2500 points, a score of 2 was assigned; and for an hour with more than 2500 points, a score of 3 was assigned. This aspect of the scoring algorithm is described in @eq-lbs-score where $P_t$ is the hourly LBS score and where $LBS_t$ is the number of LBS points in that hour 
+$$
 P_t = 
 \begin{cases} 
 0 & \text{if } \text{LBS}_t < 500 \\
