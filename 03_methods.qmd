@@ -4,11 +4,11 @@
 
 ```
 
-To examine the relationship between travel behavior and mental health, it was necessary to clean, process, and analyze the data. This process involved evaluating the data quality, ensuring its integrity, and using the DBSCAN-TE (density-based spatial clustering of applications with noise, time, and entropy) algorithm to identify activities. Various statistical models were subsequently applied to understand the connection between travel behavior and mental health. This section offers a detailed overview of the research methods used to investigate the correlation between travel behavior and mental health among young adults with suicidal ideation.
+To explore the relationship between travel behavior and mental health, the data was cleaned, processed, and analyzed. This involved assessing data quality, ensuring integrity, and using the DBSCAN-TE algorithm to identify activities. Various statistical models were then applied to examine the connection between travel behavior and mental health. This section outlines the research methods used to study the correlation between travel behavior and mental health in young adults with suicidal ideation.
 
 ## Study Data
 
-In this research, we explored a unique dataset of young adults who have expressed suicidal ideation in professional therapy contexts. This study was conducted by the Brigham Young University’s (BYU) Counseling and Psychology Services (CAPS) office. The study included 88 young adults residing in Utah County, each belonging to one of four groups based on a psychological evaluation: autism, social anxiety, control, or no group. Those who were part of the no-group initially thought that they were part of the social anxiety group or the autism group, but after the psychological evaluation, it was found that they were not part of either of those groups. The individuals in the no-group were grouped together with the control group for this analysis. Of the 88 participants in the study, 28 belong to the social anxiety group, 29 belong to the autism group, and the remaining 31 are part of the control group. @tbl-descriptivestats provides the participants' age, IQ score, sex, and race descriptive statistics by group. The average participant was 23.8 years old with an average IQ score of 120.8. The autism group had the highest average age and average IQ score of the three groups. In all, there were 65 individuals assigned female at birth and 23 individuals assigned male at birth. While the self-identified gender of each participant was also recorded, the sex assigned at birth was used for this analysis. The three groups had a similar distribution of males and females. The majority of participants were White, but Hispanic or Latino and Asian participants were also part of the study.
+This research analyzed a unique dataset of 88 young adults in Utah County who expressed suicidal ideation in therapy, as part of a study conducted by Brigham Young University’s (BYU) Counseling and Psychology Services (CAPS). Participants were divided into four groups based on psychological evaluation: autism, social anxiety, control, or no group. The no-group participants initially believed they belonged to the autism or social anxiety groups, but after evaluation, they were reclassified and combined with the control group. The study included 28 individuals in the social anxiety group, 29 in the autism group, and 31 in the control group. Descriptive statistics such as age, IQ, sex, and race are provided in @tbl-descriptivestats. The average participant was 23.8 years old, with an average IQ of 120.8, and the autism group had the highest average age and IQ. The sample included 65 individuals assigned female at birth and 23 assigned male at birth, with a similar gender distribution across the groups. Most participants were White, but Hispanic or Latino and Asian individuals were also represented.
 
 ```{r table descripstats, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: tbl-descriptivestats
@@ -21,26 +21,24 @@ datasummary_balance(~Group, descrip_stats, dinm=FALSE, align = "llcccccc",
   kable_styling(latex_options="scale_down")
 ```
 
-To begin gathering data, participants installed an application on their phone that collected cellular LBS data. The participants participated to varying degrees with some providing 1 month of LBS data and others providing up to 1 year of data. There was a period of time, about 1 month, when no LBS data was collected by the application. In addition to collecting LBS data, the application prompted participants to complete a survey answering questions about their mental health. Surveys were administered in the mornings and evenings and asked questions such as, “Have you felt stressed since you last took a survey?” “How would you gauge your motivation in the past day?” and “Have you thought about killing yourself in the past 12 hours or since you last took a survey?” among others. Participants were monetarily incentivized to complete the mental health surveys.
+Participants installed an app on their phones that collected cellular LBS data, with some providing data for one month and others up to a year. There was a one-month gap when no LBS data was collected. In addition to LBS data, the app prompted participants to complete mental health surveys in the mornings and evenings, asking questions like, "Have you felt stressed since your last survey?" "How would you gauge your motivation?" and "Have you thought about killing yourself in the past 12 hours?" Participants were monetarily incentivized to complete the surveys.
 
-With the integration of LBS data and mental health survey responses, this dataset enabled us to analyze the impact of individual travel behavior on mental well-being, with a particular focus on understanding the interaction between travel behavior, mental health, and individuals from the three different groups. Before analyzing these connections, we cleaned and processed the data.
+By integrating LBS data and survey responses, we can analyze the interaction between travel behavior and mental health, especially in relation to the three groups. Before proceeding with the analysis, we cleaned and processed the data.
 
 ## Cleaning the Data
 
-The raw LBS data included the ID associated with each participant (userID), the timestamp consisting of the date and time when the data was collected, and the geometry, meaning latitude and longitude, of each data point. The first step in cleaning the data was to prepare the raw LBS data to be distilled into semantic activities and activity locations. To prepare the data for further analysis, we determined the activity day, implemented a scoring algorithm, and trimmed down the LBS data.
+The raw LBS data included each participant's ID (userID), timestamp (date and time), and location coordinates (latitude and longitude). The first step in data cleaning was to prepare the raw LBS data for further analysis by determining the activity day, applying a scoring algorithm, and refining the dataset.
 
-Traditionally, we think of each day ending at 11:59 PM and then the next day starting at 12:00 AM. We decided that to best capture individuals' daily travel, we would shift the 24-hour period to be from 3:00 AM to 2:59 AM. This shift accounts for the travel that people engage in after 12:00 AM, but before 3:00 AM. Ultimately, this adjustment ensures that any timestamps recorded between 12:00 AM and 2:59 AM were attributed to the preceding calendar date, classifying them as the final data points of the preceding day rather than the initial data points for the following day. The data points in the 24-hour period from 3:00 AM to 2:59 AM make up the activity day. Moreover, the evening mental health survey closed at 3:00 AM each day, so a survey taken between 12:00 AM and 3:00 AM would be the evening survey and would be associated with the activity day as previously described.
+To capture daily travel patterns more accurately, we shifted the traditional 24-hour period (typically ending at 11:59 PM) to span from 3:00 AM to 2:59 AM. This adjustment ensured that any data points between 12:00 AM and 2:59 AM were classified as part of the previous day’s travel activities. The data from this adjusted 24-hour window became the "activity day." Since the evening mental health survey closed at 3:00 AM, any surveys taken between 12:00 AM and 3:00 AM were linked to the preceding activity day, aligning travel and mental health data accordingly.
 
-Once the activity days were established and the data points were categorized and grouped by activity day, we assessed the quality and completeness of the LBS data for each combination of userID and activity day. There were 12,051 userID-activity days, each with varying quality of LBS data. To assess the LBS data, the data were grouped by userID, activity day, and hour of the day and a scoring algorithm was implemented. This algorithm identified userID-activity days that have a high score, indicating a sufficient quantity and distribution of LBS data points. The scoring mechanism is based on two factors: the hour of the day and the number of LBS points recorded in that hour. For hours from 8:00 AM to 11:59 PM, which are hours where the likelihood of significant activity engagement is greater, a score of 3 was assigned to the hour and for the remaining hours of each activity day, a score of 1 was assigned to the hour. This aspect of the scoring algorithm is described in @eq-hourly-score where $H_t$ is the hourly score and $t$ is the hour of the day 
-$$
+After establishing activity days and categorizing data points, we evaluated the quality and completeness of the LBS data for each combination of userID and activity day. In total, there were 12,051 userID-activity days with varying data quality. To assess this, the data was grouped by userID, activity day, and hour of the day, and a scoring algorithm was applied. This algorithm identified userID-activity days that have a high score, indicating a sufficient quantity and distribution of LBS data points. The scoring mechanism is based on two factors: the hour of the day and the number of LBS points recorded in that hour. For hours between 8:00 AM and 11:59 PM—when significant activity was more likely—a score of 3 was assigned, while for all other hours, a score of 1 was assigned. This aspect of the scoring algorithm is described in @eq-hourly-score where $H_t$ is the hourly score and $t$ is the hour of the day $$
 H_t = \begin{cases} 
 3 & \text{if } 8 \leq t \leq 23 \\
 1 & \text{otherwise}
 \end{cases}
 $$ {#eq-hourly-score}
 
-The other aspect adjusted the overall score based on the number of LBS points recorded within the given hour. The algorithm categorized each hour into a tier based on the number of LBS points and assigned a score corresponding to each tier. The tiers are described as follows: for an hour with less than 500 points, a score of 0 was assigned; for an hour with between 500 and 1500 points, a score of 1 was assigned; for an hour with between 1500 and 2500 points, a score of 2 was assigned; and for an hour with more than 2500 points, a score of 3 was assigned. This aspect of the scoring algorithm is described in @eq-lbs-score where $P_t$ is the hourly LBS score and where $LBS_t$ is the number of LBS points in that hour 
-$$
+The algorithm also adjusted the overall score based on the number of LBS points recorded within each hour, categorizing each hour into tiers and assigning corresponding scores. The tiers were defined as follows: hours with fewer than 500 points received a score of 0; hours with 500 to 1500 points received a score of 1; hours with 1500 to 2500 points received a score of 2; and hours with over 2500 points received a score of 3. This aspect of the scoring algorithm is described in @eq-lbs-score where $P_t$ is the hourly LBS score and where $LBS_t$ is the number of LBS points in that hour $$
 P_t = 
 \begin{cases} 
 0 & \text{if } \text{LBS}_t < 500 \\
@@ -54,13 +52,13 @@ To determine the combined score for each hour, the score based on the hour of th
 S_t = H_t \times P_t
 $$ {#eq-combined-score}
 
-Then to determine the final score of the activity day, the scores for each hour of the day were summed to determine the total daily score for the activity day. \clearpage @eq-total-score shows this step in the calculation and $S_{\text{day}}$ is the total daily score. The $S_{\text{day}}$ is for the activity day which is from 3:00 AM to 2:59 AM, as previously described $$
+Then to determine the final score of the activity day, the scores for each hour of the day were summed to determine the total daily score for the activity day. @eq-total-score shows this step in the calculation and $S_{\text{day}}$ is the total daily score. The $S_{\text{day}}$ is for the activity day which is from 3:00 AM to 2:59 AM, as previously described $$
 S_{\text{day}} = \sum_{t=3}^{2} S_t
 $$ {#eq-total-score}
 
-Based on this scoring algorithm, the highest possible score for an activity day is 168 points. By summing the scores for the day and selecting high scoring days, the algorithm provided a comprehensive assessment of the quality of LBS points collected on a given day for each userID-activity day combination. We determined that a "high scoring” day had a final score of 95 points or more. This threshold was chosen as a cutoff to retain only those userID-activity day combinations with a relatively high quality LBS dataset to ensure that only sufficiently complete and accurate data was retained for further analysis in determining the trip patterns for the participants.
+The scoring algorithm assigned a maximum possible score of 168 points for an activity day. By summing the daily scores and selecting high-scoring days, the algorithm provided a comprehensive assessment of the quality of LBS points for each userID-activity day combination. A "high scoring" day was defined as having a score of 95 points or more, ensuring that only sufficiently complete and accurate data was retained for further analysis of participants' trip patterns.
 
-@fig-allScoredDays illustrates the distribution of daily scores across all userID-activity days. The average total daily score for these days was around 70 points, which is slightly under the midpoint of the potential score range of 84 points. Notably, 2,965 of the 12,051 userID-activity days resulted in a total daily score of 0. This observation suggests that many of these days were characterized by sporadic and incomplete data collection. The efficacy of the scoring algorithm in identifying such instances with unreliable, low-quality data underscores its benefit in data sorting and quality assessment. After applying the 95-point threshold, 4,405 out of 12,051 userID-activity days were retained. This indicates that approximately 37% of the userID-activity days had LBS data of sufficient quality to be kept.
+@fig-allScoredDays shows the distribution of daily scores across all userID-activity days, with an average total daily score of around 70 points, just below the midpoint of the possible score range of 84 points. Notably, 2,965 of the 12,051 userID-activity days had a total score of 0, indicating sporadic and incomplete data collection. The effectiveness of the scoring algorithm in identifying low-quality data highlights its value for data sorting and quality assessment. After applying the 95-point threshold, 4,405 out of 12,051 userID-activity days were retained, meaning approximately 37% had LBS data of sufficient quality for analysis.
 
 ```{r figure scored days, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: fig-allScoredDays
@@ -74,7 +72,7 @@ ggplot(preprocessed_subset, aes(x = total_daily_score)) +
     theme_bw()
 ```
 
-To understand what different quality LBS data days look like, we plotted the number of LBS points for four random userID-activity days for each hour to visualize the quality of the LBS data. These examples are shown in @fig-exampScoredDays. The visualization of the number of LBS points per hour, coupled with the score from the algorithm, offers a beneficial insight into the data quality assessment. These randomly chosen days serve as representative examples, showcasing the spectrum of data quality inherent in our LBS dataset.
+To illustrate the quality of LBS data, we plotted the number of LBS points for four random userID-activity days by hour, as shown in @fig-exampScoredDays. This visualization, combined with the scores from the algorithm, provides valuable insights into data quality assessment. These randomly selected days showcase the spectrum of data quality within our LBS dataset.
 
 ```{r figure scored days, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: fig-exampScoredDays
@@ -90,31 +88,15 @@ ggplot(scored_days_samp_plot, aes(x = factor(hour, levels = c(3, 4, 5, 6, 7, 8, 
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
-Once we determined the activity day and which userID-activity days had high scores, indicating high quality and completeness, we trimmed down some of the redundant LBS data. When the participants' phones were turned on, the data collection application recorded an LBS data point every second. To improve workability of the data and reduce the redundancy of the LBS data points, we extracted a random sample of 6 LBS points per minute for each high scoring userID-activity day. The same sized random sample of LBS points was used in the optimization of the DBSCAN-TE algorithm, which will be described in the following section [@macfarlaneClassifyingLocationPoints2024].
+After determining the activity days and identifying high-scoring userID-activity days, we streamlined the LBS data by reducing redundancy. The data collection application recorded an LBS data point every second, so we extracted a random sample of 6 LBS points per minute for each high-scoring userID-activity day. This sampling approach was consistent with the optimization used in the DBSCAN-TE algorithm, described in the following section [@macfarlaneClassifyingLocationPoints2024].
 
-All in all, the data cleaning process involved several crucial steps to ensure the quality and integrity of the dataset. Initially, by shifting the 24-hour period to be from 3:00 AM to 2:59 AM, we captured individuals' daily travel more accurately, considering activities that occurred after midnight but before 3:00 AM. This adjustment also aligned with the closure of the evening mental health survey at 3:00 AM, ensuring consistent association with the correct activity day. Subsequently, we implemented a scoring algorithm to assess the quality and completeness of the LBS data for each userID-activity day combination. High scoring days, defined by a final score of 95 points or more, were retained for further analysis, ensuring the inclusion of data with sufficient completeness and accuracy. The scoring algorithm reduced the number of user-ID activities days by 63%. This selection process resulted in a refined dataset ready for subsequent analysis. Furthermore, to streamline the dataset and reduce redundancy, a random sample of 6 LBS points per minute was extracted for each high scoring userID-activity day. These steps collectively ensured that the dataset was prepared for analyzing individual travel behavior and its relationship with mental health outcomes.
+The data cleaning process involved essential steps to ensure dataset quality and integrity. We shifted the 24-hour period to 3:00 AM to 2:59 AM, capturing daily travel more accurately, particularly for activities occurring after midnight. This adjustment aligned with the evening mental health survey closing at 3:00 AM, ensuring consistency in activity day association. We then implemented a scoring algorithm to evaluate the quality and completeness of the LBS data for each userID-activity day combination. High-scoring days, defined as those with scores of 95 points or more, were retained for analysis, leading to a 63% reduction in userID-activity days. These measures refined the dataset, preparing it for subsequent analysis of individual travel behavior and its relationship with mental health outcomes.
 
 ## Processing the Data
 
-After preparing the data, we had a total of 4,405 userID-activity days with sufficient data to implement the DBCAN-TE algorithm to determine activity locations. The DBSCAN-TE algorithm classifies activities that occurred during one’s day. When given a set of points in some space, the algorithm groups together points that are closely packed into clusters and labels that cluster location as an activity. There are four parameters in the DBSCAN-TE algorithm.
+After preparing the data, we identified 4,405 userID-activity days with sufficient information to implement the DBSCAN-TE algorithm for determining activity locations. This algorithm classifies daily activities by grouping closely packed points into clusters and labeling those clusters as activity locations. The DBSCAN-TE algorithm uses four parameters, which were optimized and applied to the LBS data to identify activity locations for each userID-activity day [@macfarlaneClassifyingLocationPoints2024; @richesTransformingGPSPoints2022]. Although it was only applied to high-scoring userID-activity days, results were produced for 3,845 out of the 4,405 days.
 
-The first parameter is the epsilon neighborhood distance, $\epsilon$, which defines the radius within which points must fall to be considered part of a cluster. The second parameter is the minimum number of points, $\rho$, representing the minimum number of points that must be present within the defined radius for it to be considered a cluster. @fig-parameters_1_2 shows an example of the epsilon neighborhood distance and minimum number of points.
-
-![DBSCAN-TE: Epsilon neighborhood distance and minimum number of points.](parameters_1_2.png){#fig-parameters_1_2 width="2.5in"}
-
-The temporal sequence constraint, $\Delta T$, which is the third parameter, ensures that clusters do not include points with a significant gap in timestamps. $\Delta T$ is the maximum time interval allowed between two consecutive points in a cluster before it is considered that multiple activities occurred within the same cluster at different times. This is achieved by calculating the time difference between each consecutive point in the spatial cluster. If the time elapsed between any two consecutive points within the cluster exceeds the $\Delta T$ constraint, the cluster is divided into two at that point. For instance, if the data points in cluster 1.0 exceed the $\Delta T$ constraint, the cluster would be split into two: 1.0 and 1.1. This concept for hypothetical consecutive points 1 through 7 is illustrated in @fig-parameter_3. For example, LBS points from 8:00 AM and 9:00 PM should not belong to the same cluster if there are intervening points from another location. In this situation, the LBS points would be split into separate clusters, assuming the individual left and later returned to the activity location.
-
-![DBSCAN-TE: Temporal sequence constraint.](parameter_3.png){#fig-parameter_3 width="5in"}
-
-The fourth parameter is the entropy constraint, $\tau$, which determines whether LBS points are part of a stationary cluster or a moving trajectory. This parameter prevents slowly moving points from being misidentified as clusters by examining the chaos and pattern of LBS data. For example, points moving slowly in an orderly pattern, such as driving from stoplight to stoplight, are excluded. However, slowly moving but sporadic points, indicating movement within a single location like a building or park, can be part of a cluster.
-
-The entropy of each cluster is calculated by determining the distance and angle in radians between consecutive points. The distance of a ray represents the time elapsed between two consecutive points, while the angle indicates the direction of movement. All the rays in the cluster are plotted within a 2π circle divided into 8 quadrants. If multiple rays from the same cluster fall within the same quadrant, they are considered orderly and likely represent a moving trajectory rather than a stationary cluster. Conversely, if the rays are distributed across different quadrants, they are considered chaotic and more likely to indicate a cluster or activity. Examples of hypothetical consecutive points 1 through 7 with low and high entropy are shown in [@fig-parameter_4; @richesTransformingGPSPoints2022].
-
-![DBSCAN-TE: Entropy constraint with (a) low and (b) high entropy.](parameter_4.png){#fig-parameter_4 width="5.5in"}
-
-These four parameters for the DBSCAN-TE algorithm were previously optimized and applied to the LBS data to determine the activity locations for each userID-activity day [@macfarlaneClassifyingLocationPoints2024]. Although the DBSCAN-TE algorithm was only used on high-scoring userID-activity days, it did not produce results for all of them. Out of the 4,405 userID-activity days, 3,845 yielded results after the algorithm was implemented. 
-
-After identifying all the activity locations, we totaled them to calculate the number of activities for each userID-activity day. @fig-numAct shows the distribution of the number of activities for the 3,845 userID-activity days. The average number of activities engaged in each day was 2.65 activities.
+Once all activity locations were identified, we calculated the total number of activities for each userID-activity day. The distribution of the number of activities for the 3,845 userID-activity days is shown in @fig-numAct, with an average of 2.65 activities engaged in each day.
 
 ```{r figure numAct, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: fig-numAct
@@ -132,57 +114,11 @@ ggplot(raw_trips, aes(x = numTrips)) +
     scale_x_continuous(breaks = seq(min(raw_trips$numTrips, na.rm = TRUE), max(raw_trips$numTrips, na.rm = TRUE), by = 2))
 ```
 
-As many participants participated in the study over multiple months, the DBSCAN-TE algorithm identified activities across various regions of the United States. Since all of the participants reside in Utah County, Utah, the majority of the activities are clustered within Utah County. To visually represent the distribution of activities, @fig-actLocs illustrates all identified activities within this geographical area. Notably, a significant concentration of activity points emerges in Provo, close to BYU campus, a pattern consistent with expectations since the study was conducted by the BYU CAPS office.
+In addition to calculating the total number of activities for each userID-activity day, we identified activities that occurred at four specific location types: parks, grocery stores, libraries, and social recreation sites. Using OpenStreetMap data, we created GeoJSON shapefiles for these locations in Utah County and overlaid them with the spatial geometry of activities to determine the number of activities at each specific location type.
 
-```{r figure actLocations, message=FALSE, echo=FALSE, warning=FALSE}
-#| label: fig-actLocs
-#| fig-cap: "Activity locations for all userID-activity days in Utah County."
+To enhance dataset completeness, we executed an imputation procedure to address missing activity data on certain days, which could result from data collection gaps or quality issues. This process aimed to better align the activity data with completed mental health surveys. Using rolling averages, we estimated missing activity data over various time windows (seven, 14, and 30 days) to capture activity trends. This imputation was applied to total activities and separately for distinct activity types (e.g., parks, grocery stores, libraries, social recreation locations) to account for variations in activity patterns.
 
-# Load the required libraries
-library(ggspatial)
-library(sf)
-library(osmdata)
-
-# Load the data
-tar_load(parksSf)
-tar_load(activity_types)
-
-# Calculate the bounding box of the parks sf object
-parks_bbox <- st_bbox(parksSf)
-
-# Process activity locations
-activity_locations <- activity_types %>%
-  select(algorithm) %>%
-  unnest(cols = c(algorithm)) %>%
-  st_as_sf() %>% 
-  select(geometry) %>% 
-  st_crop(parks_bbox)
-  
-points <- as.data.frame(activity_locations) 
-points$lon <- unlist(map(points$geometry, 1)) 
-points$lat <- unlist(map(points$geometry, 2)) 
-
-# Bounding box coordinates
-xmin <- parks_bbox["xmin"]
-xmax <- parks_bbox["xmax"]
-ymin <- parks_bbox["ymin"]
-ymax <- parks_bbox["ymax"]
-
-# Plot with background map and density contours, constrained to the bounding box
-ggplot() + 
-  annotation_map_tile("cartolight") + 
-  geom_sf(data = activity_locations, color = "black", alpha = 0.5) +
-  # geom_density2d_filled(data = points, aes(x = lon, y = lat), bins = 10) +
-  # geom_density_2d(data = points, aes(x = lon, y = lat), bins = 10) +
-  # coord_sf(xlim = c(xmin, xmax), ylim = c(ymin, ymax), expand = FALSE) +
-  theme_void()
-```
-
-In addition to determining the total number of activities for each userID-activity day, we also determined the number of activities that took place at four specific location types. To do this, we used OpenStreetMap data to create GeoJSON shapefiles for the locations of parks, grocery stores, libraries, and social recreation sites in Utah County. Then, we overlaid the spatial geometry of the activities with the GeoJSON shapefiles to determine the number of activities that occurred at the specific locations types.
-
-After determining the total number of activities and their respective types, an imputation procedure was executed to enhance dataset completeness. This process aimed to address missing activity data on certain days, whether due to data collection absence or data quality issues, ensuring better alignment with completed mental health surveys. Using rolling averages, missing activity data was estimated for specific timeframes over varying time windows (seven, 14, and 30 days) to capture activity trends. The imputation process was applied to total activities and separately for distinct activity types (e.g., parks, grocery stores, libraries, social recreation locations) to accommodate potential variations in activity patterns across contexts.
-
-After applying the rolling averages, we found that there were 5,673 userID-activity days for the seven-day rolling average, 6,252 userID-activity days for the 14-day rolling average, and 7,130 userID-activity days for the 30-day rolling average.
+After applying the rolling averages, we identified 5,673 userID-activity days for the seven-day rolling average, 6,252 for the 14-day rolling average, and 7,130 for the 30-day rolling average.
 
 @fig-numActsev show the distribution of activities for the seven-day rolling average, as an example.
 
@@ -206,25 +142,7 @@ By calculating rolling averages and imputing missing activity data, the imputati
 
 ## Additional Travel Parameters
 
-In addition to analyzing the number of activities and their locations, we analyzed other parameters to describe the travel patterns of individuals. These parameters were included because while the accuracy of the DBSCAN-TE algorithm in identifying activities is 91.5% accurate, it is not 100% accurate [@richesTransformingGPSPoints2022]. We noticed some inaccuracy when we examined some of the raw LBS data. Instances appeared where activities seemed apparent but went undetected by the algorithm. These discrepancies prompted a deeper investigation into additional parameters that might shed light on daily travel patterns.
-
-The additional parameters we introduced were the convex hull area and total distance traveled. The convex hull is the shape formed by connecting the outermost points of the LBS points in such a way that the resulting polygon is convex, meaning that any line segment connecting two points within the shapes lies entirely within the shape itself. By calculating the area enclosed by the convex hull, we gained a measure of the geographic footprint of the recorded LBS data, independent of the location of activities. This value is reported in square kilometers. @fig-convex_hull_area illustrates the convex hull of a set of hypothetical LBS points.
-
-::: {#fig-travel_params layout="[[-5,40,-10,40,-5]]"}
-![Convex hull area](convex_hull_area.png){#fig-convex_hull_area}
-
-![Total distance traveled](distance_travelled.png){#fig-distance_travelled}
-
-Additional travel parameters.
-:::
-
-We also evaluated the total distance traveled by each individual on each activity day. To determine the total distance traveled, we computed the length of the polyline, representing the trajectory of movement between consecutive LBS points, during a participant's day. This value is reported in meters. @fig-distance_travelled illustrates the total distance traveled of a set of hypothetical LBS points.
-
-Overall, our analysis more than merely quantified the number of activities and their locations as we introduced two additional parameters, the convex hull area and total distance traveled, to contribute to a comprehensive characterization of travel patterns.
-
-## Completed Processing of the LBS Data
-
-With the data carefully prepared, processed into distinct activity categories and locations, and supplemented with additional parameters, we laid a foundation for exploring the relationship between travel behavior and mental well-being. These comprehensive insights including parameters like convex hull area and total distance traveled, now allow us to explore how individual travel patterns intertwine with responses to mental health surveys. By scrutinizing the interplay between travel behavior and activity engagement alongside mental health outcomes, our analysis looks to find nuanced connections that can inform and foster holistic well-being for individuals in different groups.
+In addition to analyzing the number of activities and their locations, we analyzed other parameters to describe the travel patterns of individuals. These parameters were included because while the accuracy of the DBSCAN-TE algorithm in identifying activities is 91.5% accurate, it is not 100% accurate [@richesTransformingGPSPoints2022]. We noticed some inaccuracy when we examined some of the raw LBS data. Instances appeared where activities seemed apparent but went undetected by the algorithm. These discrepancies prompted a deeper investigation into additional parameters that might shed light on daily travel patterns. However, after analyzing these parameters, we concluded that the DBSCAN-TE algorithm yielded sufficiently robust results, and the additional parameters did not provide any significant new insights.
 
 ## Statistical Modeling
 
