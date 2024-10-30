@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-99.9.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="keywords" content="travel behavior, mental health, motivation, suicidality, activity types, DBSCAN-TE">
+
+<title>3&nbsp; Methodology – Exploring the Link Between Travel Behavior and Mental Health</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./04_results.html" rel="next">
+<link href="./02_litreview.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03_methods.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Methodology</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Exploring the Link Between Travel Behavior and Mental Health</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_litreview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Literature Review</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_methods.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Methodology</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_results.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Results and Discussions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_conclusions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_limitations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Limitations and Future Recommendations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./acknowledgments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acknowledgments</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#study-data" id="toc-study-data" class="nav-link active" data-scroll-target="#study-data"><span class="header-section-number">3.1</span> Study Data</a></li>
+  <li><a href="#cleaning-the-data" id="toc-cleaning-the-data" class="nav-link" data-scroll-target="#cleaning-the-data"><span class="header-section-number">3.2</span> Cleaning the Data</a></li>
+  <li><a href="#processing-the-data" id="toc-processing-the-data" class="nav-link" data-scroll-target="#processing-the-data"><span class="header-section-number">3.3</span> Processing the Data</a></li>
+  <li><a href="#additional-travel-parameters" id="toc-additional-travel-parameters" class="nav-link" data-scroll-target="#additional-travel-parameters"><span class="header-section-number">3.4</span> Additional Travel Parameters</a></li>
+  <li><a href="#statistical-modeling" id="toc-statistical-modeling" class="nav-link" data-scroll-target="#statistical-modeling"><span class="header-section-number">3.5</span> Statistical Modeling</a>
+  <ul class="collapse">
+  <li><a href="#ordinary-least-squares" id="toc-ordinary-least-squares" class="nav-link" data-scroll-target="#ordinary-least-squares"><span class="header-section-number">3.5.1</span> Ordinary Least Squares</a></li>
+  <li><a href="#fixed-effects" id="toc-fixed-effects" class="nav-link" data-scroll-target="#fixed-effects"><span class="header-section-number">3.5.2</span> Fixed Effects</a></li>
+  <li><a href="#random-effects" id="toc-random-effects" class="nav-link" data-scroll-target="#random-effects"><span class="header-section-number">3.5.3</span> Random Effects</a></li>
+  <li><a href="#autocorrelation-and-heteroskedasticity" id="toc-autocorrelation-and-heteroskedasticity" class="nav-link" data-scroll-target="#autocorrelation-and-heteroskedasticity"><span class="header-section-number">3.5.4</span> Autocorrelation and Heteroskedasticity</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Methodology</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+<div>
+  <div class="keywords">
+    <div class="block-title">Keywords</div>
+    <p>travel behavior, mental health, motivation, suicidality, activity types, DBSCAN-TE</p>
+  </div>
+</div>
+
+</header>
+
+
+<p>To explore the relationship between travel behavior and mental health, the data was cleaned, processed, and analyzed. This involved assessing data quality, ensuring integrity, and using the DBSCAN-TE algorithm to identify activities. Various statistical models were then applied to examine the connection between travel behavior and mental health. This section outlines the research methods used to study the correlation between travel behavior and mental health in young adults with suicidal ideation.</p>
+<section id="study-data" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="study-data"><span class="header-section-number">3.1</span> Study Data</h2>
+<p>This research analyzed a unique dataset of 88 young adults in Utah County who expressed suicidal ideation in therapy, as part of a study conducted by Brigham Young University’s (BYU) Counseling and Psychology Services (CAPS). Participants were divided into four groups based on psychological evaluation: autism, social anxiety, control, or no group. The no-group participants initially believed they belonged to the autism or social anxiety groups, but after evaluation, they were reclassified and combined with the control group. The study included 28 individuals in the social anxiety group, 29 in the autism group, and 31 in the control group. Descriptive statistics such as age, IQ, sex, and race are provided in <a href="#tbl-descriptivestats" class="quarto-xref">Table&nbsp;<span>3.1</span></a>. The average participant was 23.8 years old, with an average IQ of 120.8, and the autism group had the highest average age and IQ. The sample included 65 individuals assigned female at birth and 23 assigned male at birth, with a similar gender distribution across the groups. Most participants were White, but Hispanic or Latino and Asian individuals were also represented.</p>
+<div class="cell">
+<div id="tbl-descriptivestats" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-descriptivestats-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3.1: Descriptive Statistics by Group: Age, IQ Score, Sex, and Race
+</figcaption>
+<div aria-describedby="tbl-descriptivestats-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table do-not-create-environment cell caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Control (N=31)
+</div></th>
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Autism (N=29)
+</div></th>
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Social Anxiety (N=28)
+</div></th>
+</tr>
+<tr class="odd">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Mean</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Std. Dev.</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Mean</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Std. Dev.</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Mean</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Std. Dev.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Age</td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">22.8</td>
+<td style="text-align: center;">2.7</td>
+<td style="text-align: center;">25.9</td>
+<td style="text-align: center;">4.9</td>
+<td style="text-align: center;">22.8</td>
+<td style="text-align: center;">2.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; box-shadow: 0px 1.5px;">IQ</td>
+<td style="text-align: left; box-shadow: 0px 1.5px;"></td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">120.2</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">12.0</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">122.6</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">14.1</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">119.7</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">11.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Pct.</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Pct.</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Pct.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sex</td>
+<td style="text-align: left;">Female</td>
+<td style="text-align: center;">23</td>
+<td style="text-align: center;">74.2</td>
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">69.0</td>
+<td style="text-align: center;">22</td>
+<td style="text-align: center;">78.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Male</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">25.8</td>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">31.0</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">21.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Race</td>
+<td style="text-align: left;">White</td>
+<td style="text-align: center;">25</td>
+<td style="text-align: center;">80.6</td>
+<td style="text-align: center;">26</td>
+<td style="text-align: center;">89.7</td>
+<td style="text-align: center;">27</td>
+<td style="text-align: center;">96.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Asian</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.0</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">6.9</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Hispanic or Latino</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">19.4</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">3.4</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">3.6</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Participants installed an app on their phones that collected cellular LBS data, with some providing data for one month and others up to a year. There was a one-month gap when no LBS data was collected. In addition to LBS data, the app prompted participants to complete mental health surveys in the mornings and evenings, asking questions like, “Have you felt stressed since your last survey?” “How would you gauge your motivation?” and “Have you thought about killing yourself in the past 12 hours?” Participants were monetarily incentivized to complete the surveys.</p>
+<p>By integrating LBS data and survey responses, we can analyze the interaction between travel behavior and mental health, especially in relation to the three groups. Before proceeding with the analysis, we cleaned and processed the data.</p>
+</section>
+<section id="cleaning-the-data" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="cleaning-the-data"><span class="header-section-number">3.2</span> Cleaning the Data</h2>
+<p>The raw LBS data included each participant’s ID (userID), timestamp (date and time), and location coordinates (latitude and longitude). The first step in data cleaning was to prepare the raw LBS data for further analysis by determining the activity day, applying a scoring algorithm, and refining the dataset.</p>
+<p>To capture daily travel patterns more accurately, we shifted the traditional 24-hour period (typically ending at 11:59 PM) to span from 3:00 AM to 2:59 AM. This adjustment ensured that any data points between 12:00 AM and 2:59 AM were classified as part of the previous day’s travel activities. The data from this adjusted 24-hour window became the “activity day.” Since the evening mental health survey closed at 3:00 AM, any surveys taken between 12:00 AM and 3:00 AM were linked to the preceding activity day, aligning travel and mental health data accordingly.</p>
+<p>After establishing activity days and categorizing data points, we evaluated the quality and completeness of the LBS data for each combination of userID and activity day. In total, there were 12,051 userID-activity days with varying data quality. To assess this, the data was grouped by userID, activity day, and hour of the day, and a scoring algorithm was applied. This algorithm identified userID-activity days that have a high score, indicating a sufficient quantity and distribution of LBS data points. The scoring mechanism is based on two factors: the hour of the day and the number of LBS points recorded in that hour. For hours between 8:00 AM and 11:59 PM—when significant activity was more likely—a score of 3 was assigned, while for all other hours, a score of 1 was assigned. This aspect of the scoring algorithm is described in <a href="#eq-hourly-score" class="quarto-xref">Equation&nbsp;<span>3.1</span></a> where <span class="math inline">\(H_t\)</span> is the hourly score and <span class="math inline">\(t\)</span> is the hour of the day <span id="eq-hourly-score"><span class="math display">\[
+H_t = \begin{cases}
+3 &amp; \text{if } 8 \leq t \leq 23 \\
+1 &amp; \text{otherwise}
+\end{cases}
+\tag{3.1}\]</span></span></p>
+<p>The algorithm also adjusted the overall score based on the number of LBS points recorded within each hour, categorizing each hour into tiers and assigning corresponding scores. The tiers were defined as follows: hours with fewer than 500 points received a score of 0; hours with 500 to 1500 points received a score of 1; hours with 1500 to 2500 points received a score of 2; and hours with over 2500 points received a score of 3. This aspect of the scoring algorithm is described in <a href="#eq-lbs-score" class="quarto-xref">Equation&nbsp;<span>3.2</span></a> where <span class="math inline">\(P_t\)</span> is the hourly LBS score and where <span class="math inline">\(LBS_t\)</span> is the number of LBS points in that hour <span id="eq-lbs-score"><span class="math display">\[
+P_t =
+\begin{cases}
+0 &amp; \text{if } \text{LBS}_t &lt; 500 \\
+1 &amp; \text{if } 500 \leq \text{LBS}_t &lt; 1500 \\
+2 &amp; \text{if } 1500 \leq \text{LBS}_t &lt; 2500 \\
+3 &amp; \text{if } \text{LBS}_t \geq 2500
+\end{cases}
+\tag{3.2}\]</span></span></p>
+<p>To determine the combined score for each hour, the score based on the hour of the day and the score based on the number of LBS points were multiplied together. <a href="#eq-combined-score" class="quarto-xref">Equation&nbsp;<span>3.3</span></a> describes this step and <span class="math inline">\(S_t\)</span> is the combined score for the given hour <span id="eq-combined-score"><span class="math display">\[
+S_t = H_t \times P_t
+\tag{3.3}\]</span></span></p>
+<p>Then to determine the final score of the activity day, the scores for each hour of the day were summed to determine the total daily score for the activity day. <a href="#eq-total-score" class="quarto-xref">Equation&nbsp;<span>3.4</span></a> shows this step in the calculation and <span class="math inline">\(S_{\text{day}}\)</span> is the total daily score. The <span class="math inline">\(S_{\text{day}}\)</span> is for the activity day which is from 3:00 AM to 2:59 AM, as previously described <span id="eq-total-score"><span class="math display">\[
+S_{\text{day}} = \sum_{t=3}^{2} S_t
+\tag{3.4}\]</span></span></p>
+<p>The scoring algorithm assigned a maximum possible score of 168 points for an activity day. By summing the daily scores and selecting high-scoring days, the algorithm provided a comprehensive assessment of the quality of LBS points for each userID-activity day combination. A “high scoring” day was defined as having a score of 95 points or more, ensuring that only sufficiently complete and accurate data was retained for further analysis of participants’ trip patterns.</p>
+<p><a href="#fig-allScoredDays" class="quarto-xref">Figure&nbsp;<span>3.1</span></a> shows the distribution of daily scores across all userID-activity days, with an average total daily score of around 70 points, just below the midpoint of the possible score range of 84 points. Notably, 2,965 of the 12,051 userID-activity days had a total score of 0, indicating sporadic and incomplete data collection. The effectiveness of the scoring algorithm in identifying low-quality data highlights its value for data sorting and quality assessment. After applying the 95-point threshold, 4,405 out of 12,051 userID-activity days were retained, meaning approximately 37% had LBS data of sufficient quality for analysis.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-allScoredDays" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-allScoredDays-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03_methods_files/figure-html/fig-allScoredDays-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-allScoredDays-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.1: Distribution of scores for all userID-activity days.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>To illustrate the quality of LBS data, we plotted the number of LBS points for four random userID-activity days by hour, as shown in <a href="#fig-exampScoredDays" class="quarto-xref">Figure&nbsp;<span>3.2</span></a>. This visualization, combined with the scores from the algorithm, provides valuable insights into data quality assessment. These randomly selected days showcase the spectrum of data quality within our LBS dataset.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-exampScoredDays" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-exampScoredDays-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03_methods_files/figure-html/fig-exampScoredDays-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-exampScoredDays-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.2: Examples of daily LBS data for differently scored userID-activity days.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>After determining the activity days and identifying high-scoring userID-activity days, we streamlined the LBS data by reducing redundancy. The data collection application recorded an LBS data point every second, so we extracted a random sample of 6 LBS points per minute for each high-scoring userID-activity day. This sampling approach was consistent with the optimization used in the DBSCAN-TE algorithm, described in the following section <span class="citation" data-cites="macfarlaneClassifyingLocationPoints2024">(<a href="references.html#ref-macfarlaneClassifyingLocationPoints2024" role="doc-biblioref">Macfarlane et al., 2024</a>)</span>.</p>
+<p>The data cleaning process involved essential steps to ensure dataset quality and integrity. We shifted the 24-hour period to 3:00 AM to 2:59 AM, capturing daily travel more accurately, particularly for activities occurring after midnight. This adjustment aligned with the evening mental health survey closing at 3:00 AM, ensuring consistency in activity day association. We then implemented a scoring algorithm to evaluate the quality and completeness of the LBS data for each userID-activity day combination. High-scoring days, defined as those with scores of 95 points or more, were retained for analysis, leading to a 63% reduction in userID-activity days. These measures refined the dataset, preparing it for subsequent analysis of individual travel behavior and its relationship with mental health outcomes.</p>
+</section>
+<section id="processing-the-data" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="processing-the-data"><span class="header-section-number">3.3</span> Processing the Data</h2>
+<p>After preparing the data, we identified 4,405 userID-activity days with sufficient information to implement the DBSCAN-TE algorithm for determining activity locations. This algorithm classifies daily activities by grouping closely packed points into clusters and labeling those clusters as activity locations. The DBSCAN-TE algorithm uses four parameters, which were optimized and applied to the LBS data to identify activity locations for each userID-activity day <span class="citation" data-cites="macfarlaneClassifyingLocationPoints2024 richesTransformingGPSPoints2022">(<a href="references.html#ref-macfarlaneClassifyingLocationPoints2024" role="doc-biblioref">Macfarlane et al., 2024</a>; <a href="references.html#ref-richesTransformingGPSPoints2022" role="doc-biblioref">Riches, 2022</a>)</span>. Although it was only applied to high-scoring userID-activity days, results were produced for 3,845 out of the 4,405 days.</p>
+<p>Once all activity locations were identified, we calculated the total number of activities for each userID-activity day. The distribution of the number of activities for the 3,845 userID-activity days is shown in <a href="#fig-numAct" class="quarto-xref">Figure&nbsp;<span>3.3</span></a>, with an average of 2.65 activities engaged in each day.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-numAct" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-numAct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03_methods_files/figure-html/fig-numAct-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-numAct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.3: Distribution of activities per day for all userID-activity days.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In addition to calculating the total number of activities for each userID-activity day, we identified activities that occurred at four specific location types: parks, grocery stores, libraries, and social recreation sites. Using OpenStreetMap data, we created GeoJSON shapefiles for these locations in Utah County and overlaid them with the spatial geometry of activities to determine the number of activities at each specific location type.</p>
+<p>To enhance dataset completeness, we executed an imputation procedure to address missing activity data on certain days, which could result from data collection gaps or quality issues. This process aimed to better align the activity data with completed mental health surveys. Using rolling averages, we estimated missing activity data over various time windows (seven, 14, and 30 days) to capture activity trends. This imputation was applied to total activities and separately for distinct activity types (e.g., parks, grocery stores, libraries, social recreation locations) to account for variations in activity patterns.</p>
+<p>After applying the rolling averages, we identified 5,673 userID-activity days for the seven-day rolling average, 6,252 for the 14-day rolling average, and 7,130 for the 30-day rolling average.</p>
+<p><a href="#fig-numActsev" class="quarto-xref">Figure&nbsp;<span>3.4</span></a> show the distribution of activities for the seven-day rolling average, as an example.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-numActsev" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-numActsev-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03_methods_files/figure-html/fig-numActsev-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-numActsev-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.4: Distribution of seven-day rolling average number of activities for all userID-activity days.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>By calculating rolling averages and imputing missing activity data, the imputation algorithm enhanced the dataset’s completeness and reliability, thereby facilitating more robust analyses of activity patterns and their associations with mental health outcomes.</p>
+</section>
+<section id="additional-travel-parameters" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="additional-travel-parameters"><span class="header-section-number">3.4</span> Additional Travel Parameters</h2>
+<p>In addition to analyzing the number of activities and their locations, we analyzed other parameters to describe the travel patterns of individuals. These parameters were included because while the accuracy of the DBSCAN-TE algorithm in identifying activities is 91.5% accurate, it is not 100% accurate <span class="citation" data-cites="richesTransformingGPSPoints2022">(<a href="references.html#ref-richesTransformingGPSPoints2022" role="doc-biblioref">Riches, 2022</a>)</span>. We noticed some inaccuracy when we examined some of the raw LBS data. Instances appeared where activities seemed apparent but went undetected by the algorithm. These discrepancies prompted a deeper investigation into additional parameters that might shed light on daily travel patterns. However, after analyzing these parameters, we concluded that the DBSCAN-TE algorithm yielded sufficiently robust results, and the additional parameters did not provide any significant new insights.</p>
+</section>
+<section id="statistical-modeling" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="statistical-modeling"><span class="header-section-number">3.5</span> Statistical Modeling</h2>
+<p>We combined semantic activities, travel pattern parameters, and survey responses to create statistical models that explore the relationship between mental health and travel behavior. Using motivation as an indicator of overall mental health and well-being, we analyzed how various factors influenced motivation, as represented in <a href="#eq-motivation" class="quarto-xref">Equation&nbsp;<span>3.5</span></a> <span id="eq-motivation"><span class="math display">\[
+\text{Motivation}_{it} \; \tilde{} \; \beta (\vec{X}_{it})
+\tag{3.5}\]</span></span></p>
+<p>We examined a range of models using various variables related to the individuals and their travel behavior. These variables are outlined in <a href="#eq-variables" class="quarto-xref">Equation&nbsp;<span>3.6</span></a> <span id="eq-variables"><span class="math display">\[
+X =
+\begin{cases}
+\text{individual descriptors}_i \\
+\text{number of activities}_{it} \\
+\text{avg. number of activities}_{i(t-t_7)} \\
+\text{activity locations}_{it} \\
+\end{cases}
+\tag{3.6}\]</span></span></p>
+<p>For our analysis, we analyzed an ordinary least squares (OLS) model, fixed effects (FE) model, and random effects (RE) model to determine which was the best fit for our data <span class="citation" data-cites="wooldridgeIntroductoryEconometricsModern2009">(<a href="references.html#ref-wooldridgeIntroductoryEconometricsModern2009" role="doc-biblioref">Wooldridge, 2009</a>)</span>. For all three models, the motivation, as reported in the evening surveys on a scale from 0-100, served as the dependent variable. Participants used a drag bar to indicate their motivation on the evening survey, with prompts provided: “0-19 None at all or little motivation”, “20-39 Enough motivation to get by”, “40-59 Typical motivation”, “60-79 Plenty of motivation”, and “80-100 Unusually high motivation feeling hyper or even agitated at times”. The level of motivation was used as a measure for overall well-being. Additionally, the seven-day rolling average number of activities, as described previously, served as the independent variable for the models. In addition to the model analysis, we accounted for the potential for heteroskedasticity and autocorrelation in the selected models.</p>
+<section id="ordinary-least-squares" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="ordinary-least-squares"><span class="header-section-number">3.5.1</span> Ordinary Least Squares</h3>
+<p>Daily motivation levels were considered as a function of the seven-day rolling average number of activities described in the previous sections. Using these parameters, a linear regression model was estimated by OLS. <a href="#eq-ols" class="quarto-xref">Equation&nbsp;<span>3.7</span></a> shows the base OLS equation where <span class="math inline">\(\alpha_{i}\)</span> represents the fixed effects in the model, or the time invariant variables <span id="eq-ols"><span class="math display">\[
+\text{Motivation} = \alpha_{i} + \beta (\text{sev-day avg. no. of acts.}_{it}) + \mu_{it}
+\tag{3.7}\]</span></span> For linear regressions, it is assumed that the error terms are independently and identically distributed (IID) with a normal distribution of mean 0. The estimates resulting from this model may be inconsistent due to unobserved individual differences (violating the IID assumption). For example, all individuals have a different baseline or typical level of motivation. We want to account for changes in motivation by individual to see how their motivation deviates from its baseline. There are two common econometric techniques, known as FE and RE, that attempt to account for these baseline measures, which are discussed in the following sections.</p>
+</section>
+<section id="fixed-effects" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2" class="anchored" data-anchor-id="fixed-effects"><span class="header-section-number">3.5.2</span> Fixed Effects</h3>
+<p>The FE model, also called the within transformation, demeans the data by participant and looks at each participant’s levels of motivation and seven-day rolling average number of activities individually. This results in having different intercepts for each participant. <a href="#eq-fe" class="quarto-xref">Equation&nbsp;<span>3.8</span></a> shows the base equation for the FE model <span id="eq-fe"><span class="math display">\[
+y_{it} - \bar{y}_i = \beta ( x_{it} - \bar{x}_i ) + \mu_{it} -\bar{\mu}_i
+\tag{3.8}\]</span></span> Since <span class="math inline">\(\alpha_i\)</span> from the OLS model is fixed overtime, these unobserved effects disappear in the FE model. In this case, the time constant characteristics are the demographic characteristics of each participant. These variables are absorbed by the intercept as they are unique to each participant.</p>
+<p>The FE model is consistent but less efficient because it results in losing degrees of freedom to estimate individual intercepts for each participant. This results in larger standard errors for the estimates which can make it more difficult to recognize significance.</p>
+</section>
+<section id="random-effects" class="level3" data-number="3.5.3">
+<h3 data-number="3.5.3" class="anchored" data-anchor-id="random-effects"><span class="header-section-number">3.5.3</span> Random Effects</h3>
+<p>The RE model semi-demeans the data by participant. Based on a mean for the entire group, a mean is determined with a set standard deviation to represent the data of the entire group. The RE model assumes that <span class="math inline">\(\alpha_i\)</span>, the unobserved effect, is uncorrelated with the seven-day rolling average number of activities. <span class="math inline">\(\lambda\)</span> represents a “transformation that eliminates serial correlation in the errors” <span class="citation" data-cites="wooldridgeIntroductoryEconometricsModern2009">(<a href="references.html#ref-wooldridgeIntroductoryEconometricsModern2009" role="doc-biblioref">Wooldridge, 2009</a>, pg. 490)</span>. <a href="#eq-re" class="quarto-xref">Equation&nbsp;<span>3.9</span></a> shows the base equation for the RE model <span id="eq-re"><span class="math display">\[
+y_{it}-\lambda\bar{y}_i = \beta_0(1-\lambda)+\beta_1 ( x_{it1}-\lambda\bar{x}_{i1})+...+\beta_k (x_{itk}-\lambda\bar{x}_{ik})+(\nu_{it}-\lambda\bar{\nu}_i)
+\tag{3.9}\]</span></span></p>
+<p><br>
+The RE model is appropriate to use if it is believed that the difference in motivation has an influence on the seven-day rolling average number of activities. It is possible that other variables that influence the seven-day rolling average number of activities are not included which can lead to bias in the model. Unlike the FE model, the RE model is more efficient because degrees of freedom are not lost to more estimates, but the results can be biased.</p>
+</section>
+<section id="autocorrelation-and-heteroskedasticity" class="level3" data-number="3.5.4">
+<h3 data-number="3.5.4" class="anchored" data-anchor-id="autocorrelation-and-heteroskedasticity"><span class="header-section-number">3.5.4</span> Autocorrelation and Heteroskedasticity</h3>
+<p>When analyzing how motivation changes over time for individual people, autocorrelation and heteroskedasticity can arise as statistical challenges. Autocorrelation occurs when observations in a time series are correlated with preceding or succeeding observations, violating the assumption of independence between observations. In the context of studying individual motivation over time, autocorrelation can manifest as a person’s motivation level at one point in time being influenced by their motivation level at previous time points. This can lead to biased estimates and inflated significance levels in regression analyses. Heteroskedasticity refers to the unequal variance of errors across observations in a dataset. In the case of studying motivation over time, heteroskedasticity may arise if the variability in motivation levels differs between individuals or varies systematically over time. This violates the assumption of homoscedasticity, where the variance of the errors remains constant across observations.</p>
+<p>Autocorrelation and heteroskedasticity can lead to biased parameter estimates or incorrect inference in statistical models. To address these issues, robust measures for standard errors are used. Specifically in our case, Heteroskedasticity and Autocorrelation Consistent (HAC) standard errors can be employed. HAC robust standard errors are particularly useful when dealing with time series or panel data where observations may be correlated across time periods. HAC estimators adjust for heteroskedasticity by allowing the variance of the errors to vary across observations. However, they also account for autocorrelation by incorporating a weighting scheme that considers the correlation structure of the data over time. This weighting scheme assigns higher weights to more recent observations and lower weights to distant observations, reflecting the diminishing influence of past observations on current ones.</p>
+<p>By adjusting for both heteroskedasticity and autocorrelation, HAC robust standard errors provide more accurate estimates of the standard errors of regression coefficients, ensuring valid statistical inference in the presence of correlated and heteroskedastic data.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
+<div id="ref-macfarlaneClassifyingLocationPoints2024" class="csl-entry" role="listitem">
+Macfarlane, G. S., Riches, G., Youngs, E. K., &amp; Nielsen, J. A. (2024). Classifying location points as daily activities using simultaneously optimized <span>DBSCAN-TE</span> parameters. <em>Findings</em>. <a href="https://doi.org/10.32866/001c.116197">https://doi.org/10.32866/001c.116197</a>
+</div>
+<div id="ref-richesTransformingGPSPoints2022" class="csl-entry" role="listitem">
+Riches, G. (2022). <em>Transforming <span>GPS</span> points to daily activities using simultaneously optimized <span>DBSCAN-TE</span> parameters</em>. MS Thesis, Brigham Young University.
+</div>
+<div id="ref-wooldridgeIntroductoryEconometricsModern2009" class="csl-entry" role="listitem">
+Wooldridge, J. (2009). <em>Introductory <span>Econometrics</span>: <span>A Modern Appraoch</span></em> (4th ed.). South-Western Cengage Learning. Mason, Ohio.
+</div>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./02_litreview.html" class="pagination-link" aria-label="Literature Review">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Literature Review</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./04_results.html" class="pagination-link" aria-label="Results and Discussions">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Results and Discussions</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
