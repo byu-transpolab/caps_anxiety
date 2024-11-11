@@ -159,7 +159,7 @@ suic <- model_data %>%
   group_by(prescribed_group) %>% 
   rename("Suicidal Ideation" = suicidal_ideation_q31_even)
 
-datasummary_balance(~prescribed_group, data = suic, coef_map = cm_group, dinm=FALSE, align = "llcccccc", output = "tinytable") 
+datasummary_balance(~prescribed_group, data = suic, coef_map = cm_group, dinm=FALSE, align = "llcccccc", output = "kableExtra") 
 ```
 
 In the control group, participants reported no suicidal ideation on 66.4% of days and acknowledged suicidal thoughts on 2.1% of days. In the autism group, 51.6% of days were reported as ideation-free, while 4.9% of days involved suicidal ideation. The social anxiety group showed a different pattern, with no ideation reported on only 38.9% of days and ideation present on 15.6% of days. Some respondents across all groups chose not to answer, indicating the sensitive nature of the question.
@@ -191,7 +191,8 @@ modelsummary(models_olsfere, gof_map = gm, coef_map = cm,
               vcov = function(x) vcovHC(x, cluster = "time"),
               estimate = c("{estimate}{stars}"),
               statistic = c("({statistic})"),
-              notes = list("Robust t-statistics in parentheses. + p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001")
+              notes = list("Robust t-statistics in parentheses. + p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001"),
+              output = "kableExtra"
    )
 ```
 
@@ -216,7 +217,8 @@ tar_load(fe_model)
 modelsummary(fe_model, gof_map = gm, coef_map = cm,
              estimate = c("{estimate} ({statistic}){stars}"),
              statistic = NULL,
-             notes = list("t-statistics in parentheses. + p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001")
+             notes = list("t-statistics in parentheses. + p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001"),
+             output = "kableExtra"
              )
 ```
 
@@ -419,7 +421,7 @@ modelsummary(analysis$model %>% set_names(str_c("Group: ", analysis$prescribed_g
              estimate = c("{estimate}{stars}"),
              statistic = c("({statistic})"),
              notes = list("Robust t-statistics in parentheses. + p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001"),
-             output = "tinytable")
+             output = "kableExtra")
 ```
 
 The FE models for the autism, social anxiety, and control groups show distinct relationships between suicidal intensity and motivation levels. In the autism group, the coefficient for suicidal intensity is -0.095, indicating a marginally significant negative relationship, suggesting that higher suicidal intensity may slightly reduce motivation, though the evidence is weak. In contrast, the social anxiety group shows a coefficient of -0.160, with a statistically significant negative relationship, meaning higher suicidal intensity is strongly linked to decreased motivation. Similarly, the control group’s coefficient is -0.361, with a significant negative relationship, showing that increased suicidal intensity is associated with notably lower motivation levels.
@@ -452,8 +454,7 @@ modelsummary(locations$model %>% set_names(str_c("Group: ", locations$prescribed
              estimate = c("{estimate}{stars}"),
              statistic = c("({statistic})"),
              notes = list("Robust t-statistics in parentheses. + p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001"),
-             output = "tinytable") |>
-  tinytable::theme_tt("resize", direction = "down")
+             output = "kableExtra")
 ```
 
 In examining park activities, statistically significant results were observed solely for the control group. A positive correlation emerged, indicating that each additional park activity within a seven-day period corresponded with a 3.017-point increase in motivation score. This suggests that frequent park visits over a week are linked to heightened motivation levels among individuals in the control group. Conversely, the analysis did not unveil any significant correlation between park visits and motivation levels for the autism and social anxiety groups. This implies that park activities within the examined time frames do not notably affect motivation levels for these groups.
@@ -480,8 +481,7 @@ modelsummary(locations$model %>% set_names(str_c("Group: ", locations$prescribed
              estimate = c("{estimate}{stars}"),
              statistic = c("({statistic})"),
              notes = list("Robust t-statistics in parentheses. + p < 0.1, * p < 0.05, ** p < 0.01, *** p < 0.001"),
-             output = "tinytable") |>
-  tinytable::theme_tt("resize", direction = "down")
+             output = "kableExtra")
 ```
 
 The examination of grocery store visits unveiled intriguing trends across the different groups. Notably, a statistically significant negative correlation was found for the autism group, indicating a decrease in motivation by 2.725 points with each additional grocery store activity (p \< 0.001). Similarly, the control group exhibited a slight negative correlation (p \< 0.1), with each additional daily extra grocery store visit reducing motivation by 2.690 points. Conversely, no statistical significance was observed for the social anxiety group. These findings underscore a nuanced connection between grocery store visits and motivation, with notable negative impacts identified in the autism group, while no significant associations were evident in the control and social anxiety groups.
