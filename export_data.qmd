@@ -1,0 +1,121 @@
+# Data Export for other Researchers
+
+::: callout-warning
+The data in this folder is protected by IRB. If you are not authorized to work on this project, you should not have been given access to this folder. If you are not an approved researcher on this project, contact Jared Nielsen to receive clearance.
+:::
+
+---
+format: commonmark
+---
+
+This folder consolidates datasets created by Emily Youngs and her colleagues from CAPS surveys and metric wire activity location data. This document describes what these datasets consist of. Researchers using this data should cite Emily's MS Thesis,
+
+> Youngs, E.K. (2024). *Exploring the Link between Travel Behavior and Mental Health.* MS Thesis, Brigham Young University Department of Civil and Construction Engineering.
+
+This data also uses algorithms described in Gillian Riches' MS Thesis. For this, you should cite a paper derived from this thesis,
+
+> Macfarlane, G.S., Riches, G., Youngs, E.K., and Nielsen, J.A. (2024). “Classifying Location Points as Daily Activities Using Simultaneously Optimized DBSCAN-TE Parameters.” *Findings*, April. <https://doi.org/10.32866/001c.116197>.
+
+## Source Code
+
+The source code that creates this data is available on GitHub at <https://github.com/byu-transpolab/caps_anxiety> . The repository uses the `targets` R package. Running the following code in the home folder will recreate these data objects, provided the researcher has the appropriate data in the correct folder. The source data is available from Jared Nielsen and is protected by IRB.
+
+```{r, eval = FALSE}
+library(targets)
+tar_make()
+```
+
+These data are also protected by IRB and should only be accessed by approved researchers on the appropriate protocol.
+
+```{r init}
+library(targets)
+library(tidyverse)
+library(haven)
+library(sf) #
+box_folder <- "/Users/gregmacfarlane/Library/CloudStorage/Box-Box/Macfarlane/research_data/caps_processed"
+```
+
+## Final table
+
+The table that we used to estimate the models in the study includes the answers to the survey joined with the high-level mobility statistics for each day. This is saved in the folder as `final_table.rds`
+
+```{r model-table}
+tar_load(final_table)
+final_table
+
+# unique userId
+length(unique(final_table$userId))
+write_rds(final_table, file.path(box_folder, "final_table.rds"))
+write_sav(final_table, file.path(box_folder, "final_table.sav"))
+```
+
+We have quite a number of observation-days, with a high average days per user.
+
+```{r user-days}
+# days per userId
+n_days <- final_table |> group_by(userId) |>
+  summarize(
+      n = n(), # how many days have data?
+      n_activity = sum(!is.na(numTrips)) # how many of those days have activities?
+  ) |> 
+  arrange(-n)
+
+# days of any data per user id
+ggplot(n_days, aes(x = n)) + geom_histogram() + 
+  xlab("Days per user ID") + theme_bw()
+```
+
+Unfortunately, we have many fewer user-days with location data, and many users provided almost no location data.
+
+```{r activity-days}
+# days of any data per user id
+ggplot(n_days, aes(x = n_activity)) + geom_histogram() + 
+  xlab("Days with activities per user ID") + theme_bw()
+```
+
+## Activity data
+
+The data that we actually developed is stored in a table stored in the folder called `activity_types.rds`
+
+```{r}
+tar_load(activity_types)
+activity_types
+
+write_rds(activity_types, file.path(box_folder, "activity_types.rds"))
+```
+
+This data deserves more explanation.
+
+-   `userId` the user id attached to the metricwire location data and in the CAPS survey datat
+
+-   `activityDay` the date on which the activities occurred. We transformed the data so that activities occurring between midnight and 3 AM were associated with the previous date. That is, GPS coordinates recorded at 1 AM on June 13, 2020 were assigned to the `2020-06-12` date in `activityDay`
+
+-   `algorithm` includes a simple features spatial dataframe containing the results of the DBSCAN-TE geospatial processing algorithm. More detail on this is below.
+
+-   `area` is the area (in square meters) of the convex hull created by all of the user's location points (i.e., before the algorithm decided which points were activities).
+
+-   `length` is the length (in meters) of the line connecting all of the user's location points (i.e., before the algorithm decided which points were activities).
+
+-   `numTrips` is the number of activity points identified in the `algorithm` output.
+
+-   `park`, `grocery`, `library`, and `social_rec` are the number of activities located within the boundary of parks, grocery stores, libraries, and other social / recreational activity points. These points were determined by scraping OpenStreetMap for restaurants, cinemas, and other related land uses. The code used to generate this dataset is [on GitHub](https://github.com/byu-transpolab/caps_anxiety/blob/main/R/Social_Rec_to_GEOJSON.R).
+
+The `algorithm` column is a list-column, meaning that each cell in that column is itself a data table which is a simple features spatial data frame. To use this data, you will need to have the `sf` library loaded.
+
+```{r}
+activity_types$algorithm[1]
+```
+
+This data table has several features as well.
+
+-   `cluster` an id field created inside the algorithm code.
+
+-   `start` the start date and time of the activity
+
+-   `end` the end date and time of the activity. I don't know how much faith I put in this.
+
+-   `elapsed` the number of elapsed seconds between the start and end of the activity
+
+-   `entr` the measured entropy of the activity; this is a measure of how orderly the points in the activity are. Points with low entropy are disqualified as activity clusters inside the algorithm.
+
+-   `geometry` A simple features geometry column giving the centroid of the activity cluster as an X,Y coordinate. The CRS of this data frame is in UTM zone 12N, meaning that the X-Y coordinate is the number of meters from a given reference point appropriate to Utah. These are NOT latitude/longitude points, but the dataset could be transformed to be in lat-long.
