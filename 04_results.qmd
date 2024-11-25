@@ -85,23 +85,7 @@ datasummary_balance(~prescribed_group, data = acts, dinm=FALSE, align = "lcccccc
 
 Individuals in the control group engaged in an average of 3.0 activities, while the autism group averaged 2.1, and the social anxiety group averaged 2.6 activities. Standard deviations for the groups ranged from 2.3 to 2.7. A seven-day rolling average of activities showed similar trends but with slightly lower variability.
 
-An ANOVA test revealed significant differences in the mean number of activities between the groups, with an F value of 32.97 and a p-value less than 0.001, indicating that the variation across groups was statistically significant. @fig-ANOVAActs displays the mean activities and 95% confidence intervals for group differences.
-
-```{r figure ANOVAActs, message=FALSE, echo=FALSE, warning=FALSE}
-#| label: fig-ANOVAActs
-#| fig-cap: "Mean number of activities by group."
-
-actsANOVA <- model_data %>% 
-  filter(!is.na(numTrips)) %>%
-  mutate(prescribed_group = as.factor(prescribed_group)) %>% 
-  rename(Group = prescribed_group)
-
-ggplot(actsANOVA, aes(x = Group, y = numTrips)) +
-  stat_summary(fun = mean, geom = "point", color = "black") +
-  stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.2) +
-  labs(x = "Group", y = "Number of Activities") +
-  theme_bw()
-```
+An ANOVA test revealed significant differences in the mean number of activities between the groups, with an F value of 32.97 and a p-value less than 0.001, indicating that the variation across groups was statistically significant.
 
 After finding significant differences in activity levels among the three groups, a Tukey's Honest Significant Difference (HSD) test identified specific group differences. Individuals in the autism group participated in significantly fewer activities than the control group, with a mean difference of -0.896 (p \< 0.001), and compared to the social anxiety group, with a mean difference of -0.375 (p \< 0.001). Similarly, the social anxiety group engaged in fewer activities than the control group, with a mean difference of -0.521 (p \< 0.001).
 
@@ -109,26 +93,7 @@ These results show significant differences in activity engagement across groups,
 
 ## Motivation by Group
 
-We observed notable differences in well-being among the groups. Based on existing literature, we expected that individuals in the autism and social anxiety groups would report lower well-being compared to the control group. Using motivation as an indicator of well-being, we analyzed motivation levels from the evening survey, rated on a 1-100 scale. @tbl-groupMotiv presents the mean and standard deviation of motivation for each group.
-
-```{r table groupMotiv, message=FALSE, echo=FALSE, warning=FALSE}
-#| label: tbl-groupMotiv
-#| tbl-cap: "Motivation Levels by Group"
-
-tar_load(model_data)
-
-motiv <- model_data %>% 
-  filter(!is.na(numTrips)) %>%
-  select(prescribed_group, motivation) %>% 
-  group_by(prescribed_group) %>% 
-  mutate("Motivation" = motivation)
-
-motiv_tbl <- motiv %>% 
-  select(prescribed_group, "Motivation")
-
-datasummary_balance(~prescribed_group, data = motiv_tbl, dinm=FALSE, align = "lcccccc", output = "kableExtra")
-
-```
+We observed notable differences in well-being among the groups. Based on existing literature, we expected that individuals in the autism and social anxiety groups would report lower well-being compared to the control group. Using motivation as an indicator of well-being, we analyzed motivation levels from the evening survey, rated on a 1-100 scale.
 
 The findings revealed differences in motivation across the groups. The control group had the highest mean motivation score of 47.7, with the lowest variability (standard deviation of 14.2), falling slightly below the middle range of the "typical motivation" category. The autism group had the lowest mean score of 34.0, with the highest variability (standard deviation of 19.4), falling in the "enough motivation to get by" category. The social anxiety group had a mean score of 40.3, falling between the other two groups and on the lowest end of the "typical motivation" category. An ANOVA test confirmed significant differences in motivation levels among the groups, with an F value of 362 and a p-value less than 0.001, indicating that these differences are statistically significant.
 
@@ -138,29 +103,7 @@ These results highlight significant differences in motivation levels, with the c
 
 ## Suicidal Ideation by Group
 
-The morning and evening surveys included different questions pertaining to suicidal ideation. The dataset presents an insightful glimpse into the prevalence of suicidal ideation within the groups, shedding light on potential differences in mental health concerns among them. We examined responses to the question "Have you thought about killing yourself in the past 12 hours or since you last took a survey?" across the three groups, where responses were "Yes," "No," or "No Response." The responses to this question are summarized by group in @tbl-groupSuicide.
-
-```{r table groupSuicide, message=FALSE, echo=FALSE, warning=FALSE}
-#| label: tbl-groupSuicide
-#| tbl-cap: "Suicidal Ideation by Group"
-
-tar_load(model_data)
-
-suic <- model_data %>% 
-  filter(!is.na(numTrips)) %>%
-  select(prescribed_group, suicidal_ideation_q31_even) %>%
-  mutate(suicidal_ideation_q31_even = case_when(
-    suicidal_ideation_q31_even == TRUE ~ "Yes",
-    suicidal_ideation_q31_even == FALSE ~ "No",
-    is.na(suicidal_ideation_q31_even) ~ "No Response",
-    TRUE ~ as.character(suicidal_ideation_q31_even)
-  )) %>%
-  mutate(suicidal_ideation_q31_even = factor(suicidal_ideation_q31_even, levels = c("Yes", "No", "No Response"))) %>%
-  group_by(prescribed_group) %>% 
-  rename("Suicidal Ideation" = suicidal_ideation_q31_even)
-
-datasummary_balance(~prescribed_group, data = suic, coef_map = cm_group, dinm=FALSE, align = "llcccccc", output = "kableExtra") 
-```
+The morning and evening surveys included different questions pertaining to suicidal ideation. The dataset presents an insightful glimpse into the prevalence of suicidal ideation within the groups, shedding light on potential differences in mental health concerns among them. We examined responses to the question "Have you thought about killing yourself in the past 12 hours or since you last took a survey?" across the three groups, where responses were "Yes," "No," or "No Response."
 
 In the control group, participants reported no suicidal ideation on 66.4% of days and acknowledged suicidal thoughts on 2.1% of days. In the autism group, 51.6% of days were reported as ideation-free, while 4.9% of days involved suicidal ideation. The social anxiety group showed a different pattern, with no ideation reported on only 38.9% of days and ideation present on 15.6% of days. Some respondents across all groups chose not to answer, indicating the sensitive nature of the question.
 
@@ -345,27 +288,6 @@ ggplot() +
   theme(legend.position = "right") +
   scale_x_continuous(breaks = seq(min(data_f$numTrips, na.rm = TRUE), max(data_f$numTrips, na.rm = TRUE), by = 2)) +
   scale_y_continuous(breaks = seq(min(data_f$motivation, na.rm = TRUE), max(data_f$motivation, na.rm = TRUE), by = 20))
-```
-
-```{r}
-# ## CONTROL GROUP
-# control <- model_data %>% 
-#   filter(prescribed_group == "Control")
-# fixed_control <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = control, model = "within")
-# 
-# ## AUTISM GROUP
-# autism <- model_data %>% 
-#   filter(prescribed_group == "Autism")
-# fixed_autism <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = autism, model = "within")
-# 
-# # SOCIAL ANXIETY GROUP
-# social_anxiety <- model_data %>% 
-#   filter(prescribed_group == "Social Anxiety")
-# fixed_social_anxiety <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = social_anxiety, model = "within")
-# 
-# plot(fixed_control)
-# plot(fixed_autism)
-# plot(fixed_social_anxiety)
 ```
 
 Since the FE models require both an evening survey response for motivation and the number of activities determined by the DBSCAN-TE algorithm, some data were lost. This reduced the sample size from 31 to 23 in the control group, from 29 to 17 in the autism group, and from 28 to 22 in the social anxiety group. The FE models need enough data points for each participant to ensure effective analysis, which explains the reduction in participants. After visualizing the relationships, we proceeded with running the FE models for each group. The results from these models are presented in @tbl-groupFEAnaly.
