@@ -57,41 +57,27 @@ book:
     - acknowledgments.qmd
     - references.qmd
   abstract: |
-    This study explores the link between travel behavior and mental 
-    health, focusing on young adults with suicidal ideation. By examining daily 
-    activities and movement patterns, the research explores travel-related mental 
-    health strategies for individuals. The goal is to inform more personalized 
-    mental health strategies to improve quality of life.
-    
-    Using location-based services (LBS) data collected over time, the study performs 
-    a longitudinal analysis of travel patterns and mental well-being across autism, 
-    social anxiety, and control groups. Statistical models were used to assess the 
-    relationship between suicidality, motivation levels, and travel behavior, as 
-    well as activity engagement at different location types. The study used the 
-    DBSCAN-TE (density-based spatial clustering of applications with noise, time, 
-    and entropy) algorithm to identify activities from LBS data, with additional 
-    efforts made to address issues with data quality and missing activity information.
-    
-    The findings revealed significant differences in activity engagement and motivation 
-    levels among the groups. The control group participated in more activities and 
+    The mental health of young adults is an important social consideration,
+    given increasing rates of isolation, depression, anxiety, suicide, and other 
+    ills. But the effect of daily travel on mental health 
+    --- or the effect of mental health on daily travel --- is not well understood.
+    In this research, we explore the relationship between mental health and 
+    observed trip-making behavior in a longitudinal dataset of young adults. 
+    The participants in this study all expressed suicidal ideation in
+    professional treatment setting and have an accompanying psychiatric diagnosis for social
+    anxiety disorder, autism spectrum disorder, or are in a designated control group.
+    Participants volunteered to use a mobile device application that surveyed them twice
+    a day for several months on their reported mood while also tracking their
+    physical location via location-based services. 
+    We find significant differences in activity engagement and motivation 
+    levels among the groups: The control group participated in more activities and 
     reported higher motivation compared to the autism and social anxiety groups. 
-    Increased activity engagement did not consistently raise motivation levels.
-    However, for those in the control group, more activities in parks lead to a 
+    Increased activity engagement did not consistently raise motivation levels; however,
+    for those in the control group, more activities in parks lead to a 
     statistically significant increase in motivation and for those in the autism 
     group, more activities to grocery stores lead to a statistically significant 
-    decrease in motivation. The research highlights the complex interplay between 
-    travel behavior, activity engagement, and mental health outcomes, emphasizing 
-    the need for tailored interventions based on individual needs.
-    
-    Limitations include sparse data due to participants disabling phones or app 
-    malfunctions, and a lack of detailed activity duration information. All in all, 
-    this research sheds light on the complex relationship between travel behavior 
-    and mental health among young adults with suicidal ideation. By understanding 
-    how travel patterns impact motivation levels and mental well-being, tailored 
-    interventions can be developed to support individuals grappling with mental 
-    health challenges. Future research should enhance data collection methods to 
-    improve reliability and provide more robust insights into the relationship 
-    between travel behavior and mental health.
+    decrease in motivation. 
+
 
 keywords:
   - travel behavior
@@ -143,5 +129,4 @@ format:
     
 toc-depth: 3.0
     
-editor: visual
 

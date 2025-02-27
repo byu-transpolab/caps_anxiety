@@ -24,3 +24,9 @@ data/caps_data/
 Term Project Proposal.Rmd
 Term-Project-Proposal.html
 rosm.cache/
+
+*.aux
+*.log
+*.fdb_latexmk
+*.fls
+*.synctex.gz
