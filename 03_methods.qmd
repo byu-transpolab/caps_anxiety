@@ -1,4 +1,4 @@
-# Methodology
+# Methodology {#sec-methods}
 
 ```{r setup1, file = "R/chapter_start.R", include = FALSE, cache = FALSE}
 

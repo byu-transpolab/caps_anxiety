@@ -1,4 +1,4 @@
-# Literature Review
+# Literature Review {#sec-litreview}
 
 In the United States, the prevalence of mental illnesses among adults, aged 18 or older, rose from 19.1% in 2018 to 22.8% in 2021 [@mackettMentalHealthTravel2021; @MentalHealthNumbers2023]. Mental health and well-being are influenced by various factors, including social and environmental elements as well as travel behavior [@barryAddressingDeterminantsPositive2009; @delboscExploringRelativeInfluences2011].
 

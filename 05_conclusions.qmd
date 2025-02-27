@@ -1,4 +1,4 @@
-# Conclusions
+# Conclusions {#sec-conclude}
 
 This study has provided valuable insights into the complex relationship between travel behavior and mental health among young adults with suicidal ideation. By analyzing LBS data and conducting statistical modeling, we uncovered significant differences in activity engagement, motivation levels, and suicidal ideation across different neurological or physiological groups.
 
