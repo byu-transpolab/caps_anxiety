@@ -246,7 +246,7 @@ health \sep motivation \sep suicidality \sep activity types \sep
     
 \bookmarksetup{startatroot}
 
-\section{Introduction}\label{introduction}
+\section{Introduction}\label{sec-intro}
 
 Mental health is a critical global issue that profoundly impacts
 individuals' emotional, psychological, and social well-being (Barry,
@@ -259,49 +259,54 @@ behaviors, the allocation of time and individuals' travel patterns are
 particularly intriguing, as they are intricately linked to mental
 well-being (Friman et al., 2017; Mackett, 2021).
 
-Many different elements of this relationship between mental health and
-travel activity patterns have been explored previously. Many have found
-that spending time in green spaces can enhance mental well-being and
-alleviate stress, anxiety, and depressive symptoms (Pelgrims et al.,
-2021; Pouso et al., 2021; Rautio et al., 2018; White et al., 2021).
-Conversely, (Loades et al., 2020) found that social isolation and
-loneliness --- or the lack of travel and activity --- negatively impacts
-mental health, leading to increased symptoms of anxiety, depression, and
-post-traumatic stress disorder. Additionally, research has shown that
-increased travel can improve well-being and reduce social exclusion,
-positively affecting mental health (Stanley et al., 2011). In terms of
-travel satisfaction, studies have demonstrated a positive correlation
-between travel satisfaction and both social and mental health (Syahputri
+Previous research has explored many elements of the relationship between
+mental health and travel activity behavior patterns. This previous
+research has largely focused on the positive mental health effects of
+time in green space (Pelgrims et al., 2021; Pouso et al., 2021; Rautio
+et al., 2018; White et al., 2021), as well as the deleterious effect of
+isolation (Loades et al., 2020; Stanley et al., 2011). Other studies
+have considered the negative effects of travel satisfaction (Syahputri
 et al., 2022). Notably, (Lan et al., 2022) began to explore the
 relationship between travel behavior and mental health using mobile
 phone-based sensing to investigate daily activities, environmental
-exposures, and anxiety symptoms. Despite the existing literature,
-significant gaps remain in our understanding of how different travel
-behaviors and patterns specifically affect mental health across various
-populations. While some studies have examined the well-being of
-individuals with autism and social anxiety, comprehensive analyses that
-consider the nuances of travel behavior in relation to mental health
-outcomes are still lacking. This gap underscores the necessity for
-further investigation into how travel patterns influence mental health,
-particularly among those with different neurological or psychological
-typology such as autism and social anxiety.
+exposures, and anxiety symptoms.
+
+Despite the existing literature, significant gaps remain in our
+understanding of how different travel behaviors and patterns
+specifically affect mental health across various populations. While some
+studies have examined the well-being of individuals with autism and
+social anxiety, comprehensive analyses that consider the nuances of
+travel behavior in relation to mental health outcomes are still lacking.
+This gap underscores the necessity for further investigation into how
+travel patterns influence mental health, particularly among those with
+different neurological or psychological typology such as autism and
+social anxiety.
 
 In this research, we investigate the longitudinal mental health of a
 sample of college students, incorporating trip-making behavior from
 their mobile device location data. This allows us to track how often and
 where participants travel, providing a clearer picture of their daily
-activities and social interactions. By analyzing this data alongside
-survey responses about their mental health, we aim to identify patterns
-that link travel behavior to mental well-being. Our goal is to
-understand how different travel habits may affect mental health,
-particularly for autistic individuals or those with social anxiety.
-Ultimately, we hope our findings can help develop practical strategies
-and interventions that support students in improving their mental health
-through better travel and activity engagement.
+activities and social interactions. We pair this data with twice-daily
+survey responses concerning their mental health to identify patterns
+that link travel behavior to mental well-being. The longitudinal design
+also allows us to consider the order of effect: does increasing
+out-of-home activity frequency lead to an increase in mood, or
+vice-versa?
+
+The following sections of the paper provide a
+\href{@sec-litreview}{literature review} exploring the existing
+discussion around travel behavior and mental health. A
+\href{@sec-methods}{methodology} section describes our data assembly and
+curation process as well as the econometric framework we employ,
+followed by a \href{@sec-results}{results} section presenting and
+discussing the econometric findings. A final
+\href{@sec-conclude}{concluding} section emphasizes the contribution of
+this research in the context of its limitations and the need for future
+research.
 
 \bookmarksetup{startatroot}
 
-\section{Literature Review}\label{literature-review}
+\section{Literature Review}\label{sec-litreview}
 
 In the United States, the prevalence of mental illnesses among adults,
 aged 18 or older, rose from 19.1\% in 2018 to 22.8\% in 2021 (Mackett,
@@ -404,7 +409,7 @@ and the directionality evaluated.
 
 \bookmarksetup{startatroot}
 
-\section{Methodology}\label{methodology}
+\section{Methodology}\label{sec-methods}
 
 To evaluate longitudinal and bi-directional relationships between mental
 health and travel-activity while controlling for baseline conditions, we
@@ -416,19 +421,26 @@ analysis, and the econometric tools we employ in the analysis.
 
 \subsection{Study Data}\label{study-data}
 
-This research analyzed a unique dataset of 88 young adults in Utah
-County who expressed suicidal ideation in therapy, as part of a study
-conducted by Brigham Young University's (BYU) Counseling and Psychology
-Services (CAPS) program. Participants were divided into three groups
-based on a professional psychological evaluation: autism, social
-anxiety, or control. The study included 28 individuals in the social
-anxiety group, 29 in the autism group, and 31 in the control group.
+This research analyzed a unique dataset of 88 young adults who expressed
+suicidal ideation in therapy and subsequently enrolled in the study
+through the Brigham Young University (BYU) Counseling and Psychology
+Services (CAPS) program. The enrollment process identified age and sex
+at birth from medical records. The particpants self-reported their race,
+sex at birth and preferred gender identity. This final value did not
+affect our analysis for the limited number of students whose gender
+identity did not match their sex at birth, and we discarded it from
+further evaluation. A psychological evaluation measured each
+participant's intelligence quotient (IQ) and classified the participants
+into one of three neurotypology groups: those with autism spectrum
+disorder, those with social anxiety, or a final control group.
 Table~\ref{tbl-descriptivestats} gives a statistical description of the
-sample organized by neurotypology.
+sample organized by neurotypology; The study included 28 individuals in
+the social anxiety group, 29 in the autism group, and 31 in the control
+group.
 
 Individuals with autism spectrum disorder (ASD) and those with social
 anxiety exhibit distinct travel behaviors that impact their daily lives
-and mental health. We use the term, ``autistic'', as recommended by many
+and mental health. We use the term ``autistic'' as recommended by many
 self-advocates we know who prefer the identify-first label ``autistic''
 over person-first terminology ``individual with autism spectrum disorder
 (or condition)'' (Kenny et al., 2016). Autistic individuals often face
@@ -445,12 +457,6 @@ overall well-being (Leichsenring \& Leweke, 2017; Öztürk \& Mutlu, 2010;
 Ratering et al., 2024; Ye et al., 2021). Both groups demonstrate unique
 travel patterns that highlight the need for tailored support and
 inclusive transportation solutions to enhance their overall well-being.
-
-Age and intelligence quotient (IQ) were measured for all participants,
-and the participants self-reported their race, sex at birth and
-preferred gender identity. This latter value did not appear significant
-in our analysis for the limited number of students whose gender identity
-did not match their sex at birth, and we discarded it from evaluation.
 
 \begin{table}
 
@@ -498,7 +504,7 @@ interaction between travel behavior and mental health, especially in
 relation to the three groups. Before proceeding with the analysis, we
 cleaned and processed the data.
 
-\subsection{Cleaning the Data}\label{cleaning-the-data}
+\subsection{Data Curation}\label{data-curation}
 
 The raw LBS data included each participant's ID (userID), timestamp
 (date and time), and location coordinates (latitude and longitude). The
@@ -1338,7 +1344,7 @@ well-being.
 
 \bookmarksetup{startatroot}
 
-\section{Conclusions}\label{conclusions}
+\section{Conclusions}\label{sec-conclude}
 
 This study has provided valuable insights into the complex relationship
 between travel behavior and mental health among young adults with
