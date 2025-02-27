@@ -4,15 +4,52 @@
 
 ```
 
-To evaluate longitudinal and bi-directional relationships between mental health and travel-activity while controlling for baseline conditions, we develop and analyze a unique dataset derived from a longitudinal study of mental health for a sample of university students, paired with mobile device location data for those students. This section describes the origin of the data, how we processed the data and prepared it for analysis, and the econometric tools we employ in the analysis.
+To evaluate longitudinal and bi-directional relationships between mental health
+and travel-activity while controlling for baseline conditions, we develop and
+analyze a unique dataset derived from a longitudinal study of mental health for
+a sample of university students, paired with mobile device location data for
+those students. This section describes the origin of the data, how we processed
+the data and prepared it for analysis, and the econometric tools we employ in
+the analysis.
 
 ## Study Data
 
-This research analyzed a unique dataset of 88 young adults in Utah County who expressed suicidal ideation in therapy, as part of a study conducted by Brigham Young University’s (BYU) Counseling and Psychology Services (CAPS) program. Participants were divided into three groups based on a professional psychological evaluation: autism, social anxiety, or control. The study included 28 individuals in the social anxiety group, 29 in the autism group, and 31 in the control group. @tbl-descriptivestats gives a statistical description of the sample organized by neurotypology.
+This research analyzed a unique dataset of 88 young adults who
+expressed suicidal ideation in therapy and subsequently enrolled in the study
+through  Brigham Young University’s (BYU) Counseling and Psychology Services (CAPS) program.
+The enrollment process identified age and sex at birth from medical records.
+The particpants self-reported their race, sex at birth and preferred gender
+identity. This final value did not affect our analysis for the limited number of
+students whose gender identity did not match their sex at birth, and we
+discarded it from further evaluation.
+A psychological evaluation measured each participant's intelligence quotient (IQ)
+and classified the participants into one of three neurotypology groups:
+those with autism spectrum disorder, those with social anxiety, or a final control group. 
+@tbl-descriptivestats gives a statistical description of the
+sample organized by neurotypology; The study included
+28 individuals in the social anxiety group, 29 in the autism group, and 31 in
+the control group. 
 
-Individuals with autism spectrum disorder (ASD) and those with social anxiety exhibit distinct travel behaviors that impact their daily lives and mental health. We use the term, “autistic”, as recommended by many self-advocates we know who prefer the identify-first label “autistic” over person-first terminology “individual with autism spectrum disorder (or condition)” [@kennyWhichTermsShould2016]. Autistic individuals often face challenges in social communication and may rely on others for transportation, leading to missed opportunities and feelings of isolation. Research indicates that they engage in fewer activities, which correlates with lower well-being [@baileyRelationshipSocialExperience2020; @ridgwaySubjectiveWellbeingAutistic; @dekaTravelPatternsNeeds2016; @lubinTransportationIssuesAdults2016]. Similarly, individuals with social anxiety experience significant fear of judgment, resulting in increased social isolation and mobility limitations. They may avoid certain locations or travel only with familiar companions, which can further reduce their activity engagement and decrease their overall well-being [@leichsenringSocialAnxietyDisorder2017; @ozturkRelationshipAttachmentStyle2010; @yeSocialAnxietySubjective2021; @rateringMovingAnxietyDisorder2024]. Both groups demonstrate unique travel patterns that highlight the need for tailored support and inclusive transportation solutions to enhance their overall well-being.
+Individuals with autism spectrum disorder (ASD) and those with social anxiety
+exhibit distinct travel behaviors that impact their daily lives and mental
+health. We use the term “autistic” as recommended by many self-advocates we
+know who prefer the identify-first label “autistic” over person-first
+terminology “individual with autism spectrum disorder (or condition)”
+[@kennyWhichTermsShould2016]. Autistic individuals often face challenges in
+social communication and may rely on others for transportation, leading to
+missed opportunities and feelings of isolation. Research indicates that they
+engage in fewer activities, which correlates with lower well-being
+[@baileyRelationshipSocialExperience2020; @ridgwaySubjectiveWellbeingAutistic;
+@dekaTravelPatternsNeeds2016; @lubinTransportationIssuesAdults2016]. Similarly,
+individuals with social anxiety experience significant fear of judgment,
+resulting in increased social isolation and mobility limitations. They may avoid
+certain locations or travel only with familiar companions, which can further
+reduce their activity engagement and decrease their overall well-being
+[@leichsenringSocialAnxietyDisorder2017; @ozturkRelationshipAttachmentStyle2010;
+@yeSocialAnxietySubjective2021; @rateringMovingAnxietyDisorder2024]. Both groups
+demonstrate unique travel patterns that highlight the need for tailored support
+and inclusive transportation solutions to enhance their overall well-being.
 
-Age and intelligence quotient (IQ) were measured for all participants, and the participants self-reported their race, sex at birth and preferred gender identity. This latter value did not appear significant in our analysis for the limited number of students whose gender identity did not match their sex at birth, and we discarded it from evaluation.
 
 ```{r table descripstats, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: tbl-descriptivestats
@@ -25,23 +62,76 @@ datasummary_balance(~Group, descrip_stats, dinm=FALSE, align = "llcccccc",
   kable_styling(latex_options="scale_down")
 ```
 
-Participants installed an app on their phones that collected cellular LBS data, with some providing data for one month and others up to a year. There was a one-month gap when no LBS data was collected. In addition to LBS data, the app prompted participants to complete mental health surveys in the mornings and evenings, asking questions like, "Have you felt stressed since your last survey?" "How would you gauge your motivation?" and "Have you thought about killing yourself in the past 12 hours?" Participants were monetarily incentivized to complete the surveys.
+Participants installed an app on their phones that collected cellular LBS data,
+with some providing data for one month and others up to a year. There was a
+one-month gap when no LBS data was collected. In addition to LBS data, the app
+prompted participants to complete mental health surveys in the mornings and
+evenings, asking questions like, "Have you felt stressed since your last
+survey?" "How would you gauge your motivation?" and "Have you thought about
+killing yourself in the past 12 hours?" Participants were monetarily
+incentivized to complete the surveys.
 
-By integrating LBS data and survey responses, we can analyze the interaction between travel behavior and mental health, especially in relation to the three groups. Before proceeding with the analysis, we cleaned and processed the data.
+By integrating LBS data and survey responses, we can analyze the interaction
+between travel behavior and mental health, especially in relation to the three
+groups. Before proceeding with the analysis, we cleaned and processed the data.
 
-## Cleaning the Data
+## Data Curation
 
-The raw LBS data included each participant's ID (userID), timestamp (date and time), and location coordinates (latitude and longitude). The first step in data cleaning was to prepare the raw LBS data for further analysis by determining the activity day, applying a scoring algorithm, and refining the dataset.
+The raw LBS data included each participant's ID (userID), timestamp (date and
+time), and location coordinates (latitude and longitude). The first step in data
+cleaning was to prepare the raw LBS data for further analysis by determining the
+activity day, applying a scoring algorithm, and refining the dataset.
 
-To capture daily travel patterns more accurately, we shifted the traditional 24-hour period (typically ending at 11:59 PM) to span from 3:00 AM to 2:59 AM. This adjustment ensured that any data points between 12:00 AM and 2:59 AM were classified as part of the previous day’s travel activities. The data from this adjusted 24-hour window became the "activity day." Since the evening mental health survey closed at 3:00 AM, any surveys taken between 12:00 AM and 3:00 AM were linked to the preceding activity day, aligning travel and mental health data accordingly.
+To capture daily travel patterns more accurately, we shifted the traditional
+24-hour period (typically ending at 11:59 PM) to span from 3:00 AM to 2:59 AM.
+This adjustment ensured that any data points between 12:00 AM and 2:59 AM were
+classified as part of the previous day’s travel activities. The data from this
+adjusted 24-hour window became the "activity day." Since the evening mental
+health survey closed at 3:00 AM, any surveys taken between 12:00 AM and 3:00 AM
+were linked to the preceding activity day, aligning travel and mental health
+data accordingly.
 
-After establishing activity days and categorizing data points, we evaluated the quality and completeness of the LBS data for each combination of userID and activity day. In total, there were 12,051 userID-activity days with varying data quality. We implemented a scoring algorithm that categorized data by userID, activity day, and hour, allowing us to identify high-quality LBS data. The algorithm assigned scores based on the time of day and the number of LBS points recorded, with higher scores given to hours of significant activity and greater LBS point counts. By combining these scores, we calculated a total daily score for each userID-activity day, with a maximum possible score of 168 points. Days scoring 95 points or more were deemed "high scoring," ensuring that only data with sufficient completeness and accuracy was included for further analysis of participants' travel patterns.
+After establishing activity days and categorizing data points, we evaluated the
+quality and completeness of the LBS data for each combination of userID and
+activity day. In total, there were 12,051 userID-activity days with varying data
+quality. We implemented a scoring algorithm that categorized data by userID,
+activity day, and hour, allowing us to identify high-quality LBS data. The
+algorithm assigned scores based on the time of day and the number of LBS points
+recorded, with higher scores given to hours of significant activity and greater
+LBS point counts. By combining these scores, we calculated a total daily score
+for each userID-activity day, with a maximum possible score of 168 points. Days
+scoring 95 points or more were deemed "high scoring," ensuring that only data
+with sufficient completeness and accuracy was included for further analysis of
+participants' travel patterns.
 
-The average total daily score was around 70 points, just below the midpoint of the possible score range of 84 points. Notably, 2,965 of the 12,051 userID-activity days had a total score of 0, indicating sporadic and incomplete data collection. The effectiveness of the scoring algorithm in identifying low-quality data highlights its value for data sorting and quality assessment. After applying the 95-point threshold, 4,405 out of 12,051 userID-activity days were retained, meaning approximately 37% had LBS data of sufficient quality for analysis.
+The average total daily score was around 70 points, just below the midpoint of
+the possible score range of 84 points. Notably, 2,965 of the 12,051
+userID-activity days had a total score of 0, indicating sporadic and incomplete
+data collection. The effectiveness of the scoring algorithm in identifying
+low-quality data highlights its value for data sorting and quality assessment.
+After applying the 95-point threshold, 4,405 out of 12,051 userID-activity days
+were retained, meaning approximately 37% had LBS data of sufficient quality for
+analysis.
 
-After determining the activity days and identifying high-scoring userID-activity days, we streamlined the LBS data by reducing redundancy. The data collection application recorded an LBS data point every second, so we extracted a random sample of 6 LBS points per minute for each high-scoring userID-activity day. This sampling approach was consistent with the optimization used in the DBSCAN-TE algorithm, described in the following section [@macfarlaneClassifyingLocationPoints2024].
+After determining the activity days and identifying high-scoring userID-activity
+days, we streamlined the LBS data by reducing redundancy. The data collection
+application recorded an LBS data point every second, so we extracted a random
+sample of 6 LBS points per minute for each high-scoring userID-activity day.
+This sampling approach was consistent with the optimization used in the
+DBSCAN-TE algorithm, described in the following section
+[@macfarlaneClassifyingLocationPoints2024].
 
-The data cleaning process involved essential steps to ensure dataset quality and integrity. We shifted the 24-hour period to 3:00 AM to 2:59 AM, capturing daily travel more accurately, particularly for activities occurring after midnight. This adjustment aligned with the evening mental health survey closing at 3:00 AM, ensuring consistency in activity day association. We then implemented a scoring algorithm to evaluate the quality and completeness of the LBS data for each userID-activity day combination. High-scoring days, defined as those with scores of 95 points or more, were retained for analysis, leading to a 63% reduction in userID-activity days. These measures refined the dataset, preparing it for subsequent analysis of individual travel behavior and its relationship with mental health outcomes.
+The data cleaning process involved essential steps to ensure dataset quality and
+integrity. We shifted the 24-hour period to 3:00 AM to 2:59 AM, capturing daily
+travel more accurately, particularly for activities occurring after midnight.
+This adjustment aligned with the evening mental health survey closing at 3:00
+AM, ensuring consistency in activity day association. We then implemented a
+scoring algorithm to evaluate the quality and completeness of the LBS data for
+each userID-activity day combination. High-scoring days, defined as those with
+scores of 95 points or more, were retained for analysis, leading to a 63%
+reduction in userID-activity days. These measures refined the dataset, preparing
+it for subsequent analysis of individual travel behavior and its relationship
+with mental health outcomes.
 
 ## Processing the Data
 
@@ -61,11 +151,13 @@ In addition to analyzing the number of activities and their locations, we analyz
 
 ## Statistical Modeling
 
-We combined semantic activities, travel pattern parameters, and survey responses to create statistical models that explore the relationship between mental health and travel behavior. Using motivation as an indicator of overall mental health and well-being, we analyzed how various factors influenced motivation, as represented in @eq-motivation $$
+We combined semantic activities, travel pattern parameters, and survey responses to create statistical models that explore the relationship between mental health and travel behavior. Using motivation as an indicator of overall mental health and well-being, we analyzed how various factors influenced motivation, as represented in @eq-motivation 
+$$
 \text{Motivation}_{it} \; \tilde{} \; \beta (\vec{X}_{it})
 $$ {#eq-motivation}
 
-We examined a range of models using various variables related to the individuals and their travel behavior. These variables are outlined in @eq-variables $$
+We examined a range of models using various variables related to the individuals and their travel behavior. These variables are outlined in @eq-variables 
+$$
 X = 
 \begin{cases} 
 \text{individual descriptors}_i \\
