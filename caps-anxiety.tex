@@ -115,6 +115,20 @@
 % These are extra latex packages that the document depends on
 % 
 \usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
 \makeatletter
 \@ifpackageloaded{bookmark}{}{\usepackage{bookmark}}
 \makeatother
@@ -308,104 +322,156 @@ research.
 
 \section{Literature Review}\label{sec-litreview}
 
-In the United States, the prevalence of mental illnesses among adults,
-aged 18 or older, rose from 19.1\% in 2018 to 22.8\% in 2021 (Mackett,
-2021; {``Mental {Health By} the {Numbers},''} 2023). Mental health and
-well-being are influenced by various factors, including social and
-environmental elements as well as travel behavior (Barry, 2009; Delbosc
-\& Currie, 2011).
+Mental health and well-being are influenced by various factors,
+including social elements, environmental elements, and travel behavior
+(Barry, 2009; Delbosc \& Currie, 2011). Specifically, the relationship
+between travel behavior and mental health is complex and even
+incorporates social and environmental aspects. Various aspects of the
+relationship between mental health and travel behavior have been studied
+individually, including the negative effects of restricted mobility, the
+mixed impact of access to different amenities, the psychological burden
+of travel itself, and the specific travel behaviors of individuals with
+autism spectrum disorder (ASD) and social anxiety. Understanding these
+intricate connections is essential to understanding how travel patterns
+and behaviors influence mental health.
 
-Social isolation and loneliness are critical determinants of mental
-health, with substantial evidence linking them to increased rates of
-anxiety, depression, and other mental health disorders {[}(Loades et
-al., 2020). The ability to travel and engage with others plays a vital
-role in mitigating these feelings. During significant periods of
-isolation, such as the COVID-19 lockdowns, the lack of social
-interactions highlighted the importance of mobility in maintaining
-mental well-being. Studies have indicated that social support networks
-and access to transportation are essential for fostering connections and
-enhancing overall mental health (Delbosc \& Currie, 2011; Stanley et
-al., 2011).
+Restricted travel and limited social interaction can negatively impact
+mental health, contributing to increased feelings of isolation, anxiety,
+and depression. Social isolation and loneliness are critical
+determinants of mental health, with substantial evidence linking them to
+increased rates of anxiety, depression, and other mental health
+disorders (Loades et al., 2020). The ability to travel and engage with
+others plays a vital role in mitigating these feelings. During
+significant periods of isolation, such as the COVID-19 lockdowns, the
+lack of social interactions highlighted the importance of mobility in
+maintaining mental well-being (Pouso et al., 2021). Studies have
+indicated that social support networks and access to transportation are
+essential for fostering connections and enhancing overall mental health
+(Delbosc \& Currie, 2011; Stanley et al., 2011). Moreover, the impact of
+social deprivation and loneliness on mental health remains a nuanced
+challenge, as individuals may experience loneliness even in crowded
+environments (Orben et al., 2020). Overall, maintaining mobility and
+social connections is essential for mental well-being, as the ability to
+travel can help reduce feelings of isolation, though its impact depends
+on the environments and interactions individuals encounter.
 
-The relationship between the built and natural environments and mental
-health is multifaceted, with various activity locations playing roles in
-influencing well-being. Green and blue spaces, for instance, have been
-shown to alleviate stress, anxiety, and depression, enhancing mood and
-bolstering cognitive function thus making them vital for enhancing
-mental health and overall well-being (Pelgrims et al., 2021; Pouso et
-al., 2021; Rautio et al., 2018; White et al., 2021). Similarly,
-libraries serve as essential community resources that not only provide
-access to information and educational materials but also foster a
-comforting atmosphere and therapeutic landscape that is welcoming,
-calming, empowering, and overall conducive to well-being (Brewster,
-2014; Elia, 2019).
+While mobility plays a crucial role in reducing social isolation and
+supporting mental well-being, the specific environments people access
+through travel can have varying effects on their mental health. The
+relationship between the built and natural environments and mental
+health is multifaceted, with some amenities supporting mental health
+whereas other worsening mental health. Green and blue spaces, for
+instance, have been shown to alleviate stress, anxiety, and depression,
+enhancing mood and bolstering cognitive function thus making them vital
+for enhancing mental health and overall well-being (Pelgrims et al.,
+2021; Pouso et al., 2021; Rautio et al., 2018; White et al., 2021).
+Similarly, libraries serve as essential community resources that not
+only provide access to information and educational materials but also
+foster a comforting atmosphere and therapeutic landscape that is
+welcoming, calming, empowering, and overall conducive to well-being
+(Brewster, 2014; Elia, 2019). On the other hand, grocery stores and
+social recreation spaces, such as restaurants and theaters, present a
+more complex picture. Grocery shopping can induce stress due to factors
+like time pressure and crowd density, which can negatively impact
+shopping satisfaction as well as overall mental well-being (Aylott \&
+Mitchell, 1998; Nilsson et al., 2017). In contrast, social recreation
+spaces offer opportunities for socialization and relaxation, which can
+enhance well-being by eliciting positive emotions and fostering
+long-term stress-coping mechanisms (Takiguchi et al., 2022). Researchers
+found a positive link between leisure satisfaction and well-being over
+time (Kuykendall et al., 2015). However, the quality of social
+interactions in these environments is crucial; supportive interactions
+can lead to higher quality of life, while negative interactions can
+diminish well-being (Yanos et al., 2001). This highlights the intricate
+interaction between built and natural environments and mental
+well-being, suggesting that visits to various amenities can either
+bolster or hinder overall mental health, depending on the nature of the
+interactions experienced. Understanding how different environments
+influence mental health underscores the importance of not only promoting
+mobility but also ensuring access to spaces that foster well-being while
+minimizing exposure to those that may contribute to stress and anxiety.
 
-On the other hand, grocery stores and social recreation spaces, such as
-restaurants and theaters, present a more complex picture. Grocery
-shopping can induce stress due to factors like time pressure and crowd
-density, which can negatively impact shopping satisfaction as well as
-overall mental well-being (Aylott \& Mitchell, 1998; Nilsson et al.,
-2017). In contrast, social recreation spaces offer opportunities for
-socialization and relaxation, which can enhance well-being by eliciting
-positive emotions and fostering long-term stress-coping mechanisms
-(Takiguchi et al., 2022) Researchers found a positive link between
-leisure satisfaction and well-being over time (Kuykendall et al.,
-2015){]}. However, the quality of social interactions in these
-environments is crucial; supportive interactions can lead to higher
-quality of life, while negative interactions can diminish well-being
-(Yanos et al., 2001).
+Beyond the destinations people visit and the amenities they acccess, the
+experience of travel itself plays a crucial role in shaping mental
+well-being, with factors such as travel satisfaction, commuting stress,
+and mobility patterns influencing overall mental health outcomes.
+Studies show that travel satisfaction significantly impacts social and
+mental health. For instance, a study by (Syahputri et al., 2022) found
+that individuals who reported higher travel satisfaction also
+experienced better mental health outcomes. However, while working or
+studying from home can enhance travel satisfaction, excessive time spent
+on obligatory activities may limit social interactions, negatively
+affecting mental health. Encouraging travel, even amid significant
+commitments, can foster better social connections and mental well-being
+(Syahputri et al., 2022). Additionally, regular commuters often report
+lower life satisfaction compared to those who work from home, yet
+general travel experiences are associated with improved mood and overall
+life satisfaction. These insights underscore the importance of
+integrating travel into daily routines as a strategy to enhance mental
+health and well-being, emphasizing that positive travel experiences can
+lead to significant improvements in emotional health and quality of life
+(Friman et al., 2017). Since travel itself affects mental health, it is
+crucial to consider how travel experiences differ for individuals with
+specific cognitive or mental difference, such as those with ASD and
+social anxiety, who may face unique barriers to mobility and social
+engagement.
 
-Moreover, the impact of social deprivation and loneliness on mental
-health remains a challenge, as individuals may experience loneliness
-even in crowded environments (Orben et al., 2020). This highlights the
-intricate interaction between activities in built and natural
-environments and mental well-being, suggesting that visits to these
-locations can either bolster or hinder overall mental health, depending
-on the nature of the interactions experienced.
+Individuals with ASD and those with social anxiety exhibit distinct
+travel behaviors that impact their daily lives and mental health. We use
+the term ``autistic'' as recommended by many self-advocates we know who
+prefer the identify-first label ``autistic'' over person-first
+terminology ``individual with autism spectrum disorder (or condition)''
+(Kenny et al., 2016). Autistic individuals often face challenges in
+social communication and may rely on others for transportation, leading
+to missed opportunities and feelings of isolation. Research indicates
+that they engage in fewer activities, which correlates with lower
+well-being (Bailey et al., 2020; Deka et al., 2016; Lubin \& Feeley,
+2016; Ridgway et al., 2024). Similarly, individuals with social anxiety
+experience significant fear of judgment, resulting in increased social
+isolation and mobility limitations. They may avoid certain locations or
+travel only with familiar companions, which can further reduce their
+activity engagement and decrease their overall well-being (Leichsenring
+\& Leweke, 2017; Öztürk \& Mutlu, 2010; Ratering et al., 2024; Ye et
+al., 2021). These distinct travel behaviors and patterns underscore how
+the unique mobility challenges faced by autistic individuals and those
+with social anxiety can significantly impact their mental health.
 
-Research indicates a connection between travel behavior and mental
-well-being, with studies showing that travel satisfaction significantly
-impacts social and mental health. For instance, a study by (Syahputri et
-al., 2022) found that individuals who reported higher travel
-satisfaction also experienced better mental health outcomes. However,
-while working or studying from home can enhance travel satisfaction,
-excessive time spent on obligatory activities may limit social
-interactions, negatively affecting mental health. Encouraging travel,
-even amidst significant commitments, can foster better social
-connections and mental well-being (Syahputri et al., 2022).
-Additionally, regular commuters often report lower life satisfaction
-compared to those who work from home, yet general travel experiences are
-associated with improved mood and overall life satisfaction. These
-insights underscore the importance of integrating travel into daily
-routines as a strategy to enhance mental health and well-being,
-emphasizing that positive travel experiences can lead to significant
-improvements in emotional health and quality of life (Friman et al.,
-2017).
+A recent research by (Lan et al., 2022) exemplifies efforts to connect
+travel behavior, environmental factors, and mental health outcomes by
+exploring the relationship between daily activities, environmental
+exposures, and anxiety symptoms by using mobile phone-based sensing. By
+tracking spatial movements through GPS and accelerometers, the study
+found that time spent in areas with high air pollution and noise was
+linked to increased anxiety, while exposure to green spaces correlated
+with lower anxiety levels. This research, while valuable in providing
+insights into how the environment impacts mental health, was limited by
+its short duration---only tracking trips over a 7-day period.
+Additionally, it relied on self-reported recollection of trips and
+locations, rather than direct observation, which may have introduced
+biases or inaccuracies in the data. Nonetheless, this study represents
+an important step toward connecting various aspects of travel behavior
+and mental health, highlighting the need for more comprehensive and
+nuanced research to understand the full impact of travel on mental
+well-being.
 
-Recent research by (Lan et al., 2022) used mobile phone-based sensing to
-explore the relationship between daily activities, environmental
-exposures, and anxiety symptoms. By tracking spatial movements through
-GPS and accelerometers, the study found that time spent in areas with
-high air pollution and noise was linked to increased anxiety, while
-exposure to green spaces correlated with lower anxiety levels. This
-research may have been been limited, however, by only including trips
-over a 7-day period. It also relied on a self-reported recollection of
-trips and trip location rather than an observation of where the trips or
-activities were located.
-
-In spite of the numerous studies linking observed travel patterns to
-elements of mental health, numerous questions remain unanswered. Of
-particular importance are two that we hope to address in this research.
-First, existing studies often fail to control for preexisting or
-baseline mental health and its impacts on travel behavior; do people
-with neurotypologies or stressors predisposing them to heightened
-anxiety or depression \textbf{make fewer trips} than others, thus
-reversing the causality in the observed relationships? Second,
-regardless of neurotypology or mental health baseline, previous studies
-have failed to address the direction of causality in a compelling way.
-What is needed is a long-term observation of mental health indicators
-alongside travel and activity data on which baselines can be measured
-and the directionality evaluated.
+Despite the growing body of research on how travel behavior,
+environmental factors, and mobility impact mental health, there remains
+a gap in understanding how these elements interact and impact
+individuals with specific mental health challenges, such as those with
+ASD and social anxiety. Of particular importance are two that we hope to
+address in this research. First, existing studies often fail to control
+for preexisting or baseline mental health and its impacts on travel
+behavior; do people with neurotypologies or stressors predisposing them
+to heightened anxiety or depression \textbf{make fewer trips} than
+others, thus reversing the causality in the observed relationships?
+Second, regardless of neurotypology or mental health baseline, previous
+studies have failed to address the direction of causality in a
+compelling way. What is needed is a long-term observation of mental
+health indicators alongside travel and activity data on which baselines
+can be measured and the directionality evaluated. By connecting these
+factors, we can begin to understand the diverse needs of individuals
+with unique cognitive and mental health challenges and develop more
+effective strategies to support their well-being.
 
 \bookmarksetup{startatroot}
 
@@ -438,26 +504,6 @@ sample organized by neurotypology; The study included 28 individuals in
 the social anxiety group, 29 in the autism group, and 31 in the control
 group.
 
-Individuals with autism spectrum disorder (ASD) and those with social
-anxiety exhibit distinct travel behaviors that impact their daily lives
-and mental health. We use the term ``autistic'' as recommended by many
-self-advocates we know who prefer the identify-first label ``autistic''
-over person-first terminology ``individual with autism spectrum disorder
-(or condition)'' (Kenny et al., 2016). Autistic individuals often face
-challenges in social communication and may rely on others for
-transportation, leading to missed opportunities and feelings of
-isolation. Research indicates that they engage in fewer activities,
-which correlates with lower well-being (Bailey et al., 2020; Deka et
-al., 2016; Lubin \& Feeley, 2016; Ridgway et al., 2024). Similarly,
-individuals with social anxiety experience significant fear of judgment,
-resulting in increased social isolation and mobility limitations. They
-may avoid certain locations or travel only with familiar companions,
-which can further reduce their activity engagement and decrease their
-overall well-being (Leichsenring \& Leweke, 2017; Öztürk \& Mutlu, 2010;
-Ratering et al., 2024; Ye et al., 2021). Both groups demonstrate unique
-travel patterns that highlight the need for tailored support and
-inclusive transportation solutions to enhance their overall well-being.
-
 \begin{table}
 
 \caption{\label{tbl-descriptivestats}Descriptive Statistics by Group:
@@ -465,17 +511,17 @@ Age, IQ Score, Sex, and Race}
 
 \centering{
 
-\centering
-\resizebox{\linewidth}{!}{
+\centering\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \begin{tabular}[t]{llcccccc}
 \toprule
 \multicolumn{2}{c}{ } & \multicolumn{2}{c}{Control (N=31)} & \multicolumn{2}{c}{Autism (N=29)} & \multicolumn{2}{c}{Social Anxiety (N=28)} \\
 \cmidrule(l{3pt}r{3pt}){3-4} \cmidrule(l{3pt}r{3pt}){5-6} \cmidrule(l{3pt}r{3pt}){7-8}
-  &    & Mean & Std. Dev. & Mean & Std. Dev. & Mean & Std. Dev.\\
+  &    & Control (N=31)||||Mean & Control (N=31)||||Std. Dev. & Autism (N=29)||||Mean & Autism (N=29)||||Std. Dev. & Social Anxiety (N=28)||||Mean & Social Anxiety (N=28)||||Std. Dev.\\
 \midrule
 Age &  & 22.8 & 2.7 & 25.9 & 4.9 & 22.8 & 2.3\\
 IQ &  & 120.2 & 12.0 & 122.6 & 14.1 & 119.7 & 11.4\\
-\midrule
+\midrule\\
  &  & N & Pct. & N & Pct. & N & Pct.\\
 Sex & Female & 23 & 74.2 & 20 & 69.0 & 22 & 78.6\\
  & Male & 8 & 25.8 & 9 & 31.0 & 6 & 21.4\\
@@ -771,21 +817,37 @@ presence of correlated and heteroskedastic data.
 
 \section{Results and Discussions}\label{results-and-discussions}
 
-Analyzing travel behavior and mental well-being requires a comprehensive
-examination of the individual's group. It is important to look at
-various factors related to how these groups travel and how their travel
-affects their well-being. Understanding the number and type of
-activities they engage in, motivational levels, and propensity towards
-suicidal ideation provides valuable insights for this analysis.
+Participants in this study belong to one of three groups: individuals
+with a psychiatric diagnosis of social anxiety disorder, individuals
+diagnosed with autism spectrum disorder (ASD), or individuals in a
+designated control group. Analyzing travel behavior and mental
+well-being in this study requires a nuanced understanding of each
+participant group, including how their travel patterns differ and how
+these patterns influence their overall well-being. We aim to understand
+differences in the number of activities each group engages in,
+differences in motivation levels across groups, and the types of
+activities that impact motivation for the three group, in order to
+better understand the relationship between travel behavior and mental
+well-being.
 
 \subsection{Activity Engagement by
 Group}\label{activity-engagement-by-group}
 
-This analysis examined the activity engagement patterns of the three
-groups: control, autism, and social anxiety. We analyzed the total
-number of activities and the seven-day rolling average number of
-activities for individuals in these groups. The descriptive statistics
-in Table~\ref{tbl-groupActs} describe these results for each group.
+Examining the number of activities engaged in by each group is important
+because it offers insight into overall mobility, levels of social
+participation, and engagement with the environment, which are all
+closely tied to mental well-being. Reduced activity levels may reflect
+barriers to access, lower motivation, or avoidance behaviors commonly
+associated with mental health conditions such as ASD and social anxiety.
+By understanding how activity frequency varies between groups, we can
+begin to identify patterns that highlight how different populations
+experience and navigate the world around them, which in turn helps
+clarify how travel behavior influences mental health outcomes.
+
+We analyzed the total number of activities and the seven-day rolling
+average number of activities for individuals comprising the three
+different groups. The descriptive statistics in
+Table~\ref{tbl-groupActs} describe these results for each group.
 
 \begin{table}
 
@@ -793,13 +855,13 @@ in Table~\ref{tbl-groupActs} describe these results for each group.
 
 \centering{
 
-\centering
-\resizebox{\linewidth}{!}{
+\centering\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \begin{tabular}[t]{lcccccc}
 \toprule
 \multicolumn{1}{c}{ } & \multicolumn{2}{c}{Control (N=1706)} & \multicolumn{2}{c}{Autism (N=804)} & \multicolumn{2}{c}{Social Anxiety (N=1893)} \\
 \cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5} \cmidrule(l{3pt}r{3pt}){6-7}
-  & Mean & Std. Dev. & Mean & Std. Dev. & Mean & Std. Dev.\\
+  & Control (N=1706)||||Mean & Control (N=1706)||||Std. Dev. & Autism (N=804)||||Mean & Autism (N=804)||||Std. Dev. & Social Anxiety (N=1893)||||Mean & Social Anxiety (N=1893)||||Std. Dev.\\
 \midrule
 No. of Activities & 3.0 & 2.7 & 2.1 & 2.3 & 2.6 & 2.7\\
 Sev-Day No. of Acts. & 3.0 & 1.7 & 2.0 & 1.4 & 2.6 & 1.7\\
@@ -810,112 +872,72 @@ Sev-Day No. of Acts. & 3.0 & 1.7 & 2.0 & 1.4 & 2.6 & 1.7\\
 
 \end{table}%
 
+The data reveal clear differences in activity level across groups.
 Individuals in the control group engaged in an average of 3.0
-activities, while the autism group averaged 2.1, and the social anxiety
-group averaged 2.6 activities. Standard deviations for the groups ranged
-from 2.3 to 2.7. A seven-day rolling average of activities showed
-similar trends but with slightly lower variability.
-
-An ANOVA test revealed significant differences in the mean number of
-activities between the groups, with an F value of 32.97 and a p-value
-less than 0.001, indicating that the variation across groups was
-statistically significant.
-
-After finding significant differences in activity levels among the three
-groups, a Tukey's Honest Significant Difference (HSD) test identified
-specific group differences. Individuals in the autism group participated
-in significantly fewer activities than the control group, with a mean
-difference of -0.896 (p \textless{} 0.001), and compared to the social
-anxiety group, with a mean difference of -0.375 (p \textless{} 0.001).
-Similarly, the social anxiety group engaged in fewer activities than the
-control group, with a mean difference of -0.521 (p \textless{} 0.001).
-
-These results show significant differences in activity engagement across
-groups, with individuals with autism and social anxiety participating
-less than those in the control group. This underscores the importance of
-considering group differences when analyzing activity patterns and
-mental health outcomes.
+activities, compared to 2.6 for the social anxiety group and 2.1 for the
+autism group. The seven-day rolling average number of activities showed
+similar trends but with slightly lower variability. These patterns
+suggest that autistic individuals or those with social anxiety may face
+greater barriers to engaging in activities or have lower motivation
+compared to those in the control group. This underscores the importance
+of considering group differences when analyzing activity patterns and
+mental health outcomes and by examining these group differences, we can
+better understand how travel behavior intersects with mental well-being.
 
 \subsection{Motivation by Group}\label{motivation-by-group}
 
-We observed notable differences in well-being among the groups. Based on
-existing literature, we expected that individuals in the autism and
-social anxiety groups would report lower well-being compared to the
-control group. Using motivation as an indicator of well-being, we
-analyzed motivation levels from the evening survey, rated on a 1-100
-scale.
+Motivation, as a proxy for overall well-being, reflects individuals'
+energy, engagement, and readiness to participate in daily trips and
+activities as motivation plays a role in both initiating and sustaining
+participation in activities. Based on existing literature, we expected
+that individuals in the autism and social anxiety groups would report
+lower levels of motivation, or well-being, compared to the control
+group. Investigating differences in motivation levels across groups is
+essential for understanding how internal psychological factors influence
+travel behavior and activity engagement. Lower motivation levels may
+indicate underlying challenges that may be more common among autistic
+individuals and those with social anxiety. By comparing motivation
+levels across groups, we can gain deeper insights into how mental health
+conditions affect an individual's drive to engage with their
+surroundings, ultimately shedding light on the complex relationship
+between mental well-being and mobility patterns.
 
-The findings revealed differences in motivation across the groups. The
-control group had the highest mean motivation score of 47.7, with the
-lowest variability (standard deviation of 14.2), falling slightly below
-the middle range of the ``typical motivation'' category. The autism
-group had the lowest mean score of 34.0, with the highest variability
-(standard deviation of 19.4), falling in the ``enough motivation to get
-by'' category. The social anxiety group had a mean score of 40.3,
-falling between the other two groups and on the lowest end of the
-``typical motivation'' category. An ANOVA test confirmed significant
-differences in motivation levels among the groups, with an F value of
-362 and a p-value less than 0.001, indicating that these differences are
-statistically significant.
-
-After confirming significant differences in motivation levels among the
-three groups, a Tukey's HSD test was conducted to identify specific
-group differences. The autism group had a significantly lower mean
-motivation level than the control group, with a difference of -9.99
-points. The social anxiety group also had a significantly lower
-motivation level compared to the control group, with a difference of
--7.74 points. When comparing the autism and social anxiety groups, the
-social anxiety group had a significantly higher motivation level by 2.25
-points. All differences had p-values less than 0.001.
+Using motivation as an indicator of well-being, we analyzed motivation
+levels from the evening survey, rated on a 1-100 scale. We observed
+notable differences in motivation levels across the groups. The control
+group had the highest mean motivation score of 47.7, falling slightly
+below the middle range of the ``typical motivation'' category. The
+autism group had the lowest mean score of 34.0, falling in the ``enough
+motivation to get by'' category. The social anxiety group had a mean
+score of 40.3, falling between the other two groups and on the lowest
+end of the ``typical motivation'' category.
 
 These results highlight significant differences in motivation levels,
 with the control group showing higher motivation than both the autism
 and social anxiety groups, and the social anxiety group showing higher
-motivation than the autism group. This pattern underscores the impact
-that the group has on an individual's motivation.
+motivation than the autism group. These findings align with expectations
+based on existing literature and highlight the nuanced ways in which
+mental health conditions can affect day-to-day well-being. Understanding
+these disparities is crucial for interpreting how individuals engage
+with their environments and how travel behavior may either support or
+hinder well-being across different populations.
 
-\subsection{Suicidal Ideation by
-Group}\label{suicidal-ideation-by-group}
+\subsection{Building and Evaluating
+Models}\label{building-and-evaluating-models}
 
-The morning and evening surveys included different questions pertaining
-to suicidal ideation. The dataset presents an insightful glimpse into
-the prevalence of suicidal ideation within the groups, shedding light on
-potential differences in mental health concerns among them. We examined
-responses to the question ``Have you thought about killing yourself in
-the past 12 hours or since you last took a survey?'' across the three
-groups, where responses were ``Yes,'' ``No,'' or ``No Response.''
-
-In the control group, participants reported no suicidal ideation on
-66.4\% of days and acknowledged suicidal thoughts on 2.1\% of days. In
-the autism group, 51.6\% of days were reported as ideation-free, while
-4.9\% of days involved suicidal ideation. The social anxiety group
-showed a different pattern, with no ideation reported on only 38.9\% of
-days and ideation present on 15.6\% of days. Some respondents across all
-groups chose not to answer, indicating the sensitive nature of the
-question.
-
-A contingency table was constructed to organize the responses (``Yes,''
-``No,'' or ``No Response'') by group, and a chi-square test of
-independence was performed. The test yielded a chi-square statistic of
-388.06 with 4 degrees of freedom, and a p-value less than 0.001,
-indicating a significant association between group and suicidal ideation
-responses. This suggests that grouptypology influences the likelihood of
-reporting suicidal ideation, highlighting differences in how individuals
-from each group experience suicidal thoughts.
-
-\subsection{Model Comparison and
-Evaluation}\label{model-comparison-and-evaluation}
-
-As discussed previously, we ran three different models to analyze the
-effect of the seven-day rolling average number of activities on
-motivation levels. We ran the OLS, FE, and RE models with robust
-standard errors and t-statistics due to the potential for
-autocorrelation and heteroskedasticity. The results of these three
-models are shown in Table~\ref{tbl-olsfere}.
+To explore the effect of number of activities individuals participated
+in on motivation levels, we ran ordinary least squares (OLS), fixed
+effects (FE), and random effects (RE) models, originally not taking into
+account the group associations, to determine the most appropriate model
+approach going forward. Robust standard errors and t-statistics were
+used to account for potential autocorrelation and heteroskedasticity in
+the panel data. The results of these three models are shown in
+Table~\ref{tbl-olsfere}.
 
 \begin{table}
 
-\caption{\label{tbl-olsfere}OLS, FE, and RE Models}
+\caption{\label{tbl-olsfere}OLS, FE, and RE Models (Y-value: motivation
+level)}
 
 \centering{
 
@@ -931,46 +953,47 @@ No. of Obs. & 4,211 & 4,211 & 4,211\\
 AIC & 35,969.8 & 34,519.76 & 34,596.1\\
 R² & 0.021 & 0.001 & 0.047\\
 \bottomrule
-\multicolumn{4}{l}{\rule{0pt}{1em}Robust t-statistics in parentheses. + p \$<\$ 0.1, * p \$<\$ 0.05, ** p \$<\$ 0.01, *** p \$<\$ 0.001}\\
+\multicolumn{4}{l}{\rule{0pt}{1em}Robust t-statistics in parentheses. + p $<$ 0.1, * p $<$ 0.05, ** p $<$ 0.01, *** p $<$ 0.001}\\
 \end{tabular}
 
 }
 
 \end{table}%
 
-We used the Hausman test to compare the RE and FE models. The test
-checks whether the RE model estimates are consistent and efficient
-compared to the FE estimates. The null hypothesis assumes RE estimates
-are consistent and efficient, while the alternative supports the FE
-model. With a p-value of 0.0013 (less than 0.05), we reject the null
-hypothesis, indicating that the RE model is inconsistent. Therefore, the
-FE model is more appropriate and was used for the remainder of the
-analysis.
+To determine the most appropriate modeling approach, we used the Hausman
+test to compare the RE and FE models. The Hausman test evaluates whether
+RE estimates are consistent and efficient relative to FE estimates. The
+null hypothesis assumes that the RE model is appropriate, while the
+alternative favors the FE model. With a p-value of 0.0013, well below
+the 0.05 threshold, we reject the null hypothesis, indicating that the
+RE model is inconsistent. As a result, we selected the FE model for the
+remainder of the analysis.
 
-\subsection{Effect of Demographic Factors on
+\subsubsection{Effect of Demographic Factors on
 Motivation}\label{effect-of-demographic-factors-on-motivation}
 
-Given the Hausman test results, we used the FE model for analyzing
-activity patterns and mental health data. A limitation of the FE model
-is its inability to account for time-constant variables. To address
-this, we performed a linear regression to assess how demographic factors
-(e.g., sex, age, IQ score, and group) are associated with the intercepts
-from the FE model. This linear regression is described generally in
+Given the results of the Hausman test, we proceeded with the FE model to
+analyze the activity pattern and mental health data. While the FE model
+effectively controls for individual-specific unobserved heterogeneity, a
+key limitation is its inability to estimate the effects of time-constant
+or time-invariant variables. To address this gap, we conducted a linear
+regression using the intercepts from the FE model as the dependent
+variable. This linear regression is described generally in
 Equation~\ref{eq-linreg}
 
 \begin{equation}\phantomsection\label{eq-linreg}{
 \bar{y}_{i} \; \tilde{} \; \beta (\vec{X}_{it})
 }\end{equation}
 
-This allows us to understand how the baseline levels of motivation
-differ across groups. The sex, age, IQ score, and group were the
-independent variables, and the FE intercept values for each userID
-served as the dependent variable. The results from this model are shown
-in Table~\ref{tbl-fedemolm}.
+This allowed us to examine how demographic characteristics, such as sex,
+age, IQ score, and group association, are associated with baseline
+motivation levels across individuals. The results from this model are
+shown in Table~\ref{tbl-fedemolm}.
 
 \begin{table}
 
-\caption{\label{tbl-fedemolm}Fixed Effects and Demographics Regression}
+\caption{\label{tbl-fedemolm}Fixed Effects and Demographics Regression
+(Y-value: motivation level)}
 
 \centering{
 
@@ -990,112 +1013,66 @@ Log. Liklihood & -222.022\\
 AIC & 458.044\\
 R² & 0.264\\
 \bottomrule
-\multicolumn{2}{l}{\rule{0pt}{1em}t-statistics in parentheses. + p \$<\$ 0.1, * p \$<\$ 0.05, ** p \$<\$ 0.01, *** p \$<\$ 0.001}\\
+\multicolumn{2}{l}{\rule{0pt}{1em}t-statistics in parentheses. + p $<$ 0.1, * p $<$ 0.05, ** p $<$ 0.01, *** p $<$ 0.001}\\
 \end{tabular}
 
 }
 
 \end{table}%
 
-The analysis revealed significant findings regarding motivation levels.
-Being female was associated with a decrease of 6.351 points in
-motivation compared to males, with a statistically significant p-value
-less than 0.05. Age and IQ score did not show significant associations.
-In contrast, individuals with autism had a substantial decrease in
-motivation of 10.247 points compared to the control group, while those
-with social anxiety experienced an 8.544 point decrease, both with
-p-values less than 0.01. These results indicate that sex and group
-status significantly influence motivation levels, while age and IQ score
-have limited impact. The model explained approximately 26.4\% of the
-variance in motivation, suggesting that other factors may also
-contribute. Overall, these findings highlight the importance of
-considering individual differences, particularly sex and group status,
-in examining motivation, with a focus on group typology for further
-exploration.
+The linear regression analysis revealed several significant associations
+related to motivation levels. Female participants, on average, had
+motivation scores 6.351 points lower than their male counterparts. Age
+and IQ score were not significantly associated with motivation. However,
+group association showed strong effects: autistic individuals scored
+10.247 points lower in motivation compared to the control group, while
+those with social anxiety showed an 8.544-point decrease. These findings
+suggest that sex and group status are important factors influencing
+baseline motivation levels, whereas age and IQ play a more limited role.
+The model accounted for approximately 26.4\% of the variance in
+motivation, indicating that additional variables may also contribute to
+motivation differences. Overall, these results underscore the importance
+of accounting for individual differences, particularly sex and group
+association, when examining motivation, with a focus on group typology
+for further exploration.
 
-\subsection{Models by Group}\label{models-by-group}
+\subsubsection{Need to Account for Group and Individual
+Differences}\label{need-to-account-for-group-and-individual-differences}
 
-After identifying statistical differences in mean motivation, number of
-activities, and suicidal tendencies across the three groups, we opted to
-model each group separately. This approach aims to capture the unique
-characteristics and behaviors within each group, potentially revealing
-more nuanced relationships between variables and outcomes. Given the
-need for a FE model to account for individual differences, this method
-ensures that both observed and unobserved participant characteristics
-are considered in the analysis. Moving forward, we will employ FE models
-for each group, allowing us to explore factors influencing motivation
-while accounting for the distinct attributes of each subgroup.
+To accurately examine the relationship between travel behavior and
+mental well-being, it is important to account for differences both
+between and within groups. Given the statistically significant
+differences in average number of activities and motivation levels across
+the three groups, it was essential to model each group separately. This
+approach allows us to better account for the unique behavioral patterns,
+needs, and challenges associated with each group, particularly those
+stemming from differences in mental health conditions. Additionally,
+using FE models enables us to control for unobserved individual-level
+factors that may influence motivation, ensuring that variations within
+each person over time are properly considered. By analyzing each group
+independently and leveraging individual-level FE, we can more accurately
+explore the relationship between travel behavior and well-being while
+recognizing the distinct experiences and baselines of participants
+within each subgroup.
 
-\subsubsection{Motivation and Number of
-Activities}\label{motivation-and-number-of-activities}
-
-To visualize the need to look at each group separately and each
-individually separately, we plotted the number of activities and levels
-of motivation for all individuals within each group.
-Figure~\ref{fig-Analy} shows the relationship between motivation and the
-number of activities by group before taking into account the FE.
-
-\begin{figure}[H]
-
-\centering{
-
-\includegraphics{04_results_files/figure-pdf/fig-Analy-1.pdf}
-
-}
-
-\caption{\label{fig-Analy}Motivation vs.~number of activities for all
-three groups.}
-
-\end{figure}%
-
-This analysis revealed that, without accounting for FE, there is no
-significant relationship between the number of activities and motivation
-in the control group. However, for the autism group, a steep slope
-indicates that as the number of activities increases, so does
-motivation. The social anxiety group also shows a positive slope, though
-less pronounced, suggesting a correlation between increased activities
-and higher motivation levels. These findings contradict existing
-literature, which support that motivation in the autism and social
-anxiety groups should not necessarily rise with more activities,
-underscoring the importance of using the FE model.
-
-Figure~\ref{fig-FEAnaly} presents plots illustrating the influence of
-activities on motivation. The dashed pooling line represents the
-intercept and slope if all data were analyzed together, while the solid
-lines show individual lines of best fit for each participant. This means
-each individual has a different intercept, but all share the same slope.
-
-\begin{figure}[H]
-
-\centering{
-
-\includegraphics{04_results_files/figure-pdf/fig-FEAnaly-1.pdf}
-
-}
-
-\caption{\label{fig-FEAnaly}FE model for motivation vs.~number of
-activities for all participants.}
-
-\end{figure}%
-
-While modeling each participant individually is crucial for accounting
-for varying baseline levels of motivation, we found that applying a FE
-model to each group---control, autism, and social anxiety---was also
-important for understanding the true relationship between the number of
-activities and motivation, as each group may have different baseline
-levels.
-
+To visualize the need account for difference both between and within
+groups, we plotted the number of activities and motivation levels, on a
+given activity-day, for all individuals within each group.
 Figure~\ref{fig-groupFE} presents the results of the FE models for all
-three groups. These models predict motivation based on the number of
-activities while considering both individual and group baseline
-differences. This approach allows for a more accurate assessment of the
-impact of activities on motivation within each distinct group. The plots
-illustrate unique patterns for each group, emphasizing the value of
-tailored analyses. Notably, the autism and social anxiety groups show
-steeper slopes when all data are pooled together; however, when
-individuals are analyzed separately, the slopes for each group are much
-less steep. These results align more closely with expectations from
-existing literature.
+three groups illustrating the relationship between motivation and the
+number of activities by group. The ``within'' lines represent FE model
+estimates that account for individual differences, modeling how changes
+in activity levels relate to motivation \emph{within each person} over
+time given their baseline motivation levels. The ``pooling'' lines, by
+contrast, depict OLS estimates, modeling the relationship without
+accounting for individual variation. The divergence between the within
+and pooling lines highlights the importance of accounting for individual
+differences within each group when examining behavior and mental health
+outcomes. Notably, the autism and social anxiety groups show steeper
+slopes when all data are pooled together; however, when individuals are
+analyzed separately, the slopes for each group are much less steep.
+These results align more closely with expectations from existing
+literature.
 
 \begin{figure}[H]
 
@@ -1116,9 +1093,16 @@ algorithm, some data were lost. This reduced the sample size from 31 to
 23 in the control group, from 29 to 17 in the autism group, and from 28
 to 22 in the social anxiety group. The FE models need enough data points
 for each participant to ensure effective analysis, which explains the
-reduction in participants. After visualizing the relationships, we
-proceeded with running the FE models for each group. The results from
-these models are presented in Table~\ref{tbl-groupFEAnaly}.
+reduction in participants.
+
+\subsubsection{Fixed Effects Models for Motivation and Number of
+Activities}\label{fixed-effects-models-for-motivation-and-number-of-activities}
+
+After visualizing the relationships, we proceeded and constructed FE
+models separately for each group to better understand how motivation
+levels relate to the number of activities engaged in for distinct groups
+of individuals. The results from these models are presented in
+Table~\ref{tbl-groupFEAnaly}.
 
 \begin{table}
 
@@ -1139,108 +1123,67 @@ No. of Obs. & 1,167 & 451 & 1,033\\
 AIC & 9,177.454 & 3,597.049 & 8,797.231\\
 R² & 0.003 & 0.003 & 0.004\\
 \bottomrule
-\multicolumn{4}{l}{\rule{0pt}{1em}Robust t-statistics in parentheses. + p \$<\$ 0.1, * p \$<\$ 0.05, ** p \$<\$ 0.01, *** p \$<\$ 0.001}\\
+\multicolumn{4}{l}{\rule{0pt}{1em}Robust t-statistics in parentheses. + p $<$ 0.1, * p $<$ 0.05, ** p $<$ 0.01, *** p $<$ 0.001}\\
 \end{tabular}
 
 }
 
 \end{table}%
 
-The FE models for the control, autism, and social anxiety groups
-revealed different relationships between the number of activities and
-motivation. For the control group, the coefficient was 0.259, suggesting
-a marginally positive but not strongly significant relationship. In the
-autism group, the coefficient was 0.361, also indicating a positive but
-statistically insignificant relationship between activities and
-motivation. However, the social anxiety group had a coefficient of
-0.483, showing a statistically significant positive relationship. This
-suggests that increasing activities is notably linked to higher
-motivation for individuals with social anxiety.
+The results revealed varying relationships across the control, autism,
+and social anxiety groups. In the control group, the coefficient was
+0.259, suggesting a weakly positive but not strongly significant
+association between the number of activities and motivation. For the
+autism group, the coefficient was 0.361, also positive but not
+significant, indicating that increased activity may have limited direct
+impact on motivation in this group. In contrast, the social anxiety
+group exhibited a coefficient of 0.483, which was statistically
+significant. This suggests a meaningful positive relationship: as
+activity levels increase, motivation also increases among individuals
+with social anxiety.
 
-These findings underscore the importance of recognizing individual
-differences across groups. The significant positive relationship in the
-social anxiety group suggests that increasing activities could be
-particularly effective in enhancing motivation for this population. In
-contrast, the control and autism groups did not show strong evidence of
-this relationship, indicating that other factors might play a more
-critical role in influencing motivation for these groups.
-
-\subsubsection{Motivation and Suicidal
-Ideation}\label{motivation-and-suicidal-ideation}
-
-The prevalence of suicidal ideation across the groups underscores the
-complex interplay between mental health and activity engagement. The
-literature suggests that suicidal behavior is negatively associated with
-overall well-being (Fonseca-Pedrero et al., 2022; Fumero et al., 2021).
-Since we connected motivation to well-being, a similar association is
-drawn between suicidal tendency and motivation.
-
-Based on similar conclusions from the motivation and number of
-activities analysis, we continued to perform the analysis by group.
-Table~\ref{tbl-groupFESuic} shows the FE models for the impact of
-suicidal intensity, which was scored from 1-100, on level of motivation,
-which was also scored from 1-100, for individuals by group.
-
-\begin{table}
-
-\caption{\label{tbl-groupFESuic}FE Models: Motivation and Suicidal
-Intensity by Group}
-
-\centering{
-
-\centering
-\begin{tabular}[t]{lccc}
-\toprule
-  & Group: Autism & Group: Social Anxiety & Group: Control\\
-\midrule
-Suicidal Intesity & -0.095+ & -0.160*** & -0.361**\\
- & (-1.927) & (-5.518) & (-3.293)\\
-\midrule
-No. of Obs. & 484 & 822 & 66\\
-AIC & 3,942.104 & 6,934.607 & 568.685\\
-R² & 0.012 & 0.04 & 0.113\\
-\bottomrule
-\multicolumn{4}{l}{\rule{0pt}{1em}Robust t-statistics in parentheses. + p \$<\$ 0.1, * p \$<\$ 0.05, ** p \$<\$ 0.01, *** p \$<\$ 0.001}\\
-\end{tabular}
-
-}
-
-\end{table}%
-
-The FE models for the autism, social anxiety, and control groups show
-distinct relationships between suicidal intensity and motivation levels.
-In the autism group, the coefficient for suicidal intensity is -0.095,
-indicating a marginally significant negative relationship, suggesting
-that higher suicidal intensity may slightly reduce motivation, though
-the evidence is weak. In contrast, the social anxiety group shows a
-coefficient of -0.160, with a statistically significant negative
-relationship, meaning higher suicidal intensity is strongly linked to
-decreased motivation. Similarly, the control group's coefficient is
--0.361, with a significant negative relationship, showing that increased
-suicidal intensity is associated with notably lower motivation levels.
-
-These findings emphasize the need to consider the impact of suicidal
-intensity on motivation within each group. While the relationship is
-negative across all groups, the varying strength and significance
-highlight the necessity for tailored interventions to address
-motivational challenges in each population.
+These findings emphasize the value of modeling by group and accounting
+for individual differences. While engaging in more activities appears to
+significantly benefit motivation levels for those with social anxiety,
+similar effects were not observed in the control or autism groups. This
+may indicate that other factors might play a more critical role in
+influencing motivation levels for the control and autism group.
 
 \subsection{Activity Types}\label{activity-types}
 
-We examined how the number of activities at different locations---such
-as parks, grocery stores, libraries, and social recreation
-spaces---impacts motivation across each group. The analysis factored in
-activity counts determined by the DBSCAN-TE algorithm, along with
-seven-day and 14-day moving averages. While all activity locations and
-measurements were included, only a few yielded statistically significant
-results. Notably, significant findings emerged for the seven-day average
-park activities and daily grocery store activities, highlighting their
-potential influence on individual motivation levels.
+To deepen our understanding of how activity engagement influences
+motivation, we next explored whether the \emph{type} of location visited
+played a role. Specifically, we examined how the number of activities at
+certain location categories---such as parks, grocery stores, and
+libraries---impacted motivation levels. The analysis incorporated
+activity counts derived from the DBSCAN-TE algorithm, as well as
+seven-day and 14-day moving averages to capture short- and medium-term
+behavioral trends.
 
-\subsubsection{Activities at Parks}\label{activities-at-parks}
+While all location types and time windows were considered, only a few
+yielded statistically significant results. These findings highlight the
+importance of considering both the quantity and context of activities
+when analyzing travel behavior and mental well-being.
 
+\subsubsection{Activities at Parks and Grocery
+Stores}\label{activities-at-parks-and-grocery-stores}
+
+Building on the general relationship between activity levels and
+motivation, we further investigated how specific types of activities at
+different locations influence motivation within each group.
+
+When examining park-related activities, statistically significant
+results were found exclusively for the control group.
 Table~\ref{tbl-groupFEParks} presents the FE models for the seven-day
 rolling average number of activities at parks for the three groups.
+Specifically, each additional park activity within a seven-day period
+was associated with a 3.017-point increase in motivation level. This
+suggests that more frequent park visits are linked to heightened
+motivation among individuals without a psychiatric diagnosis. However,
+no significant relationship was observed between park visits and
+motivation for individuals in the autism or social anxiety groups,
+indicating that park activities during the observed time frame may not
+meaningfully influence motivation for these populations.
 
 \begin{table}
 
@@ -1261,29 +1204,25 @@ No. of Obs. & 1,840 & 774 & 1,597\\
 AIC & 14,509.34 & 6,215.856 & 13,615.11\\
 R² & 0.002 & 0.001 & 0\\
 \bottomrule
-\multicolumn{4}{l}{\rule{0pt}{1em}Robust t-statistics in parentheses. + p \$<\$ 0.1, * p \$<\$ 0.05, ** p \$<\$ 0.01, *** p \$<\$ 0.001}\\
+\multicolumn{4}{l}{\rule{0pt}{1em}Robust t-statistics in parentheses. + p $<$ 0.1, * p $<$ 0.05, ** p $<$ 0.01, *** p $<$ 0.001}\\
 \end{tabular}
 
 }
 
 \end{table}%
 
-In examining park activities, statistically significant results were
-observed solely for the control group. A positive correlation emerged,
-indicating that each additional park activity within a seven-day period
-corresponded with a 3.017-point increase in motivation score. This
-suggests that frequent park visits over a week are linked to heightened
-motivation levels among individuals in the control group. Conversely,
-the analysis did not unveil any significant correlation between park
-visits and motivation levels for the autism and social anxiety groups.
-This implies that park activities within the examined time frames do not
-notably affect motivation levels for these groups.
-
-\subsubsection{Activities at Grocery
-Stores}\label{activities-at-grocery-stores}
-
-Table~\ref{tbl-groupFEGrocery} presents the FE models for the number of
-activities at grocery stores for the three groups.
+In contrast, grocery store visits revealed more complex patterns across
+the groups. Table~\ref{tbl-groupFEGrocery} presents the FE models for
+the number of activities at grocery stores for the three groups. For the
+autism group, a statistically significant negative correlation emerged:
+each additional grocery store activity was associated with a 2.725-point
+decrease in motivation. A similar, though less significant, effect was
+found for the control group, with each additional daily grocery store
+activity linked to a 2.690-point drop in motivation. The social anxiety
+group, however, did not show any statistically significant associations.
+These results suggest that grocery store visits, particularly for
+autistic individuals, may be associated with increased stress or lower
+well-being, thus reducing motivation.
 
 \begin{table}
 
@@ -1304,261 +1243,135 @@ No. of Obs. & 1,167 & 451 & 1,033\\
 AIC & 9,178.666 & 3,598.227 & 8,801.453\\
 R² & 0.002 & 0.001 & 0\\
 \bottomrule
-\multicolumn{4}{l}{\rule{0pt}{1em}Robust t-statistics in parentheses. + p \$<\$ 0.1, * p \$<\$ 0.05, ** p \$<\$ 0.01, *** p \$<\$ 0.001}\\
+\multicolumn{4}{l}{\rule{0pt}{1em}Robust t-statistics in parentheses. + p $<$ 0.1, * p $<$ 0.05, ** p $<$ 0.01, *** p $<$ 0.001}\\
 \end{tabular}
 
 }
 
 \end{table}%
 
-The examination of grocery store visits unveiled intriguing trends
-across the different groups. Notably, a statistically significant
-negative correlation was found for the autism group, indicating a
-decrease in motivation by 2.725 points with each additional grocery
-store activity (p \textless{} 0.001). Similarly, the control group
-exhibited a slight negative correlation (p \textless{} 0.1), with each
-additional daily extra grocery store visit reducing motivation by 2.690
-points. Conversely, no statistical significance was observed for the
-social anxiety group. These findings underscore a nuanced connection
-between grocery store visits and motivation, with notable negative
-impacts identified in the autism group, while no significant
-associations were evident in the control and social anxiety groups.
-
 \subsubsection{Activity Impact on
 Motivation}\label{activity-impact-on-motivation}
 
-These findings are important because they reveal how activities impact
-mental well-being differently for individuals with autism, social
-anxiety, and those without these conditions. For the control group, the
-positive correlation with seven-day average park visits suggests outdoor
-activities benefit overall well-being. Conversely, the negative
-correlation with grocery store visits for the autism group highlights
-the stress linked to routine tasks like grocery shopping. Understanding
-these differences is key to designing tailored interventions. For
-example, promoting park visits could boost well-being in the general
-population, while reducing stress in grocery environments could aid
-autistic individuals. The lack of significant results for specific
-locations in the social anxiety group suggests that overall activity
-levels, rather than specific locations, may be more crucial to their
-well-being.
+These findings highlight the importance of considering not only how much
+individuals engage in activities, but also where those activities take
+place. The varying effects of activity location on motivation across
+groups underscore the need for location-specific and group-sensitive
+strategies when evaluating the impact of travel behavior on mental
+well-being. For the control group, the positive correlation between park
+visits and motivation suggests that outdoor environments may play a
+beneficial role in supporting overall well-being. In contrast, the
+negative relationship between grocery store visits and motivation in the
+autism group points to the potential stress associated with routine,
+often overstimulating environments.
 
-\bookmarksetup{startatroot}
-
-\section{Conclusions}\label{sec-conclude}
-
-This study has provided valuable insights into the complex relationship
-between travel behavior and mental health among young adults with
-suicidal ideation. By analyzing LBS data and conducting statistical
-modeling, we uncovered significant differences in activity engagement,
-motivation levels, and suicidal ideation across different neurological
-or physiological groups.
-
-\subsection{Overall Implications}\label{overall-implications}
-
-In this study, we explored the distinct differences in activity
-engagement, motivation levels, and suicidal tendencies among individuals
-in autism, social anxiety, and control groups to better understand the
-unique challenges these populations face.
-
-The study revealed that autistic individuals and individuals with social
-anxiety engage in fewer activities compared to the control group,
-indicating unique challenges in their daily routines and social
-interactions. It also showed that motivation levels are lower in both
-the autism and social anxiety groups compared to the control group,
-highlighting the significant impact these conditions have on personal
-drive. Specifically, the control group exhibited the highest motivation
-levels, followed by the autism group, with the social anxiety group
-having the lowest. Additionally, a correlation was found between
-increased suicidal intensity and decreased motivation across all groups,
-with the social anxiety group reporting the highest frequency of
-suicidal thoughts.
-
-We also identified a minimal positive relationship between the number of
-activities and motivation, suggesting that simply increasing activity
-engagement is not enough to significantly enhance motivation. Moreover,
-a negative relationship between travel distance and motivation was
-observed, indicating that longer travel distances slightly decrease
-motivation, though the effect is relatively minor. Ultimately, adjusting
-either of these aspects of travel would not be a sufficient strategy for
-significantly boosting motivation for individuals.
-
-Overall, these findings highlight significant differences in activity
-engagement, motivation levels, and suicidality among individuals with
-autism, social anxiety, and the control group. They underscore the need
-for tailored approaches to address the unique challenges faced by each
-group.
-
-\subsection{Group Specific
-Implications}\label{group-specific-implications}
-
-Different types of activities had varying effects on motivation levels
-across the groups studied. For individuals with social anxiety, a
-positive relationship was observed between the number of activities
-engaged in and their motivation levels, indicating that increased
-activity participation could enhance their well-being. Conversely, for
-autistic individuals, there was a negative correlation between grocery
-store visits and motivation levels, suggesting that grocery store
-environments may present stressors that adversely affect their
-well-being. These findings are important as they provide insight into
-the distinct challenges faced by individuals with social anxiety and
-autism. Additionally, the strong positive correlation between seven-day
-average park visits and motivation levels in the control group
-highlights the beneficial impact of outdoor green-space activities on
-well-being.
-
-In summary, each group benefits differently from various activities,
-underscoring the importance of personalized approaches to improving
-well-being tailored to the specific needs and preferences of individuals
-in each group.
-
-\subsection{Significance}\label{significance}
-
-In this research, we explored the critical link between travel behavior
-and mental health, focusing on young adults with suicidal ideation. By
-analyzing daily activities and movement patterns, the study highlights
-the importance of considering these factors in mental health
-interventions. The contributions of this work bridge the gap between
-travel behavior and mental health research, emphasizing the need for
-personalized approaches that take into account the unique challenges
-faced by individuals with autism and social anxiety.
-
-The study reveals that individuals with autism and social anxiety engage
-in fewer activities and have lower motivation levels compared to the
-control group, underscoring the significant impact of these conditions
-on daily life. Additionally, the correlation between suicidal ideation
-and decreased motivation across all groups highlights critical areas for
-intervention and prevention.
-
-The practical implications of these findings are significant. By
-understanding how travel behavior influences motivation levels and
-well-being, mental health practitioners can develop targeted strategies
-to support individuals struggling with mental health challenges. For
-example, interventions can be tailored to address specific needs related
-to travel patterns, such as mitigating stressors in grocery store
-environments for autistic individuals or encouraging activity engagement
-for those with social anxiety.
-
-Overall, this research underscores the importance of considering travel
-behavior as a key factor in promoting mental well-being. It offers a
-roadmap for future studies to explore this intersection further,
-ultimately aiming to enhance the quality of life for individuals by
-informing more personalized and effective mental health strategies.
+These group-specific patterns are important because they reveal how
+everyday activities can influence mental well-being differently
+depending on individual needs and diagnoses. For example, promoting park
+visits may be particularly effective in enhancing well-being among the
+general population, while interventions aimed at reducing sensory stress
+in grocery store environments could support better outcomes for autistic
+individuals. Notably, for individuals with social anxiety, the strong
+positive relationship between activity levels and motivation suggests
+that simply encouraging more engagement in daily activities, regardless
+of location, may be especially beneficial. While specific settings may
+not significantly impact motivation in this group, the act of
+participating in activities itself appears to support mental well-being.
+Together, these findings highlight the importance of tailoring mental
+health interventions to both the type of activity and the specific needs
+of different groups.
 
 \bookmarksetup{startatroot}
 
 \section{Limitations and Future
 Recommendations}\label{limitations-and-future-recommendations}
 
-There are some important limitations and future considerations following
-the analysis of the BYU CAPS data. These limitations are due to
-potential issues with data collection, lack of activities duration from
-the DBSCAN-TE algorithm, and the inability to confirm activity
-engagement for the participants.
+This study has several important limitations that affect the accuracy
+and completeness of the data. First, the quality and consistency of data
+collection varied across participants. Since participants were enrolled
+for different lengths of time and their phones were not always on or
+properly recording, some of the LBS data was sparse or missing. As a
+result, a some data had to be excluded, and the DBSCAN-TE algorithm may
+not have consistently or accurately identified all activities. Although
+we used methods like rolling averages and imputation to address gaps,
+decreasing the inconsistencies in data collection could improve the
+precision of our findings.
 
-\subsection{Data Collection}\label{data-collection}
+Second, while we could identify \emph{where} participants went, we
+lacked data on \emph{how long} they spent at each location. For example,
+a visit to a park was recorded, but we couldn't tell whether the
+participant stayed for several hours or just passed through. This limits
+our ability to assess the relationship between time spent in certain
+environments and mental well-being. Because the algorithm detects
+activities based on stationary data, short or passive visits may not
+reflect meaningful engagement with a location.
 
-The primary limitation of this study pertains to the quality of the data
-of the participants. Since participants participated for varying lengths
-of time and their phones were not always on to collect LBS data, the
-data was sometimes sparse. Even though a substantial amount of data had
-to be discarded due to poor quality, influenced by factors such as
-participants turning off their phones or the app failing to record data
-accurately, we did our best to accurately account for the well-being and
-activity patterns of the individuals. The inconsistency in data
-collection may have made it difficult for the DBSCAN-TE algorithm to
-perfectly identify activities. While it performed with 91.5\% accuracy,
-some of the activity days that were manually checked appeared to be
-missing identified activities. Additionally, since the userID-activity
-days needed corresponding mental health data and activity data, we tried
-to account for the gaps by imputing the number of activities for a
-seven-day rolling average number of activities and by calculating the
-convex hull area and the distance traveled.
+Finally, the DBSCAN-TE algorithm, while useful, cannot fully confirm the
+exact nature of participants' activities. It's possible that some
+activities were misclassified or missed altogether. Without direct input
+from participants, such as activity diaries, we cannot be certain which
+specific activities took place.
 
-To address these limitations in future studies, improving data quality
-would be paramount. Strategies could include implementing measures to
-encourage consistent phone usage among participants or enhancing the
-app's reliability in recording data accurately. Additionally,
-incorporating redundancy measures within the data collection process,
-such as cross-referencing data from multiple sources or employing
-complementary data collection methods, could help mitigate the impact of
-sporadic data collection. Moreover, refining the DBSCAN-TE algorithm to
-improve accuracy in identifying activities, potentially through machine
-learning techniques or incorporating additional contextual information,
-could enhance the reliability of activity data. By prioritizing efforts
-to enhance data quality and implementing more robust data collection and
-processing procedures, future studies can better capture and analyze
-individuals' mental health and activity patterns, thereby yielding
-additional findings.
+To address these limitations, future studies should focus on improving
+data quality and collection consistency, perhaps by encouraging regular
+phone use and ensuring the tracking app functions reliably. Capturing
+the duration of time spent at activity locations and supplementing LBS
+data with participant-reported activity diaries could also improve the
+accuracy and depth of analysis. These additions would help researchers
+gain a more comprehensive understanding of how different types of
+activities, and the time spent doing them, relate to mental well-being.
 
-\subsection{Activity Duration}\label{activity-duration}
+\bookmarksetup{startatroot}
 
-The study also lacks detailed information on the duration of
-participants' activities. While the dataset indicates that certain
-activities occurred, it does not specify how long participants spent
-engaging in these activities. For example, we know whether participants
-visited parks, but not the duration of their stay at the park. This
-limitation means we cannot accurately assess the impact of time spent in
-specific environments on mental well-being. Additionally, since the
-algorithm determined activities based on relatively stationary LBS data,
-we did not account for instances where participants might have merely
-passed through green-spaces or parks without spending significant time
-there. This omission further complicates our understanding of the
-relationship between activities and mental health. These limitations
-highlight the challenges in using mobile-based data collection for
-mental health research.
+\section{Conclusions}\label{sec-conclude}
 
-Future studies could focus on improving the accuracy of
-location-tracking algorithms, ensuring consistent data collection, and
-capturing detailed activity duration to provide a more comprehensive
-understanding of the interaction between travel behavior and mental
+This research explored the critical link between travel behavior and
+mental health, focusing on young adults with suicidal ideation. By
+analyzing daily activities and movement patterns, we identified
+significant differences in activity engagement and motivation levels
+across three groups: autistic individuals, individuals with social
+anxiety, and a control group. The findings underscore the distinct
+challenges faced by each group and the importance of considering these
+factors in mental health interventions.
+
+We found that individuals in the control group participated in more
+activities and reported higher motivation on average, while autistic
+individuals and those with social anxiety engaged in fewer activities
+and had lower motivation levels. We also found that the relationship
+between activity participation and motivation is not uniform across
+groups. A small positive relationship existed between the total number
+of activities and motivation levels overall. However, only individuals
+with social anxiety showed a statistically significant increase in
+motivation with more activity engagement. This suggests that increasing
+the number of activities may be particularly beneficial for enhancing
+well-being in individuals with social anxiety.
+
+Activity location also played a critical role in shaping motivation.
+Park visits over a seven-day period were associated with a significant
+increase in motivation for the control group, suggesting that outdoor
+green spaces may promote mental well-being in the general population.
+Conversely, for autistic individuals, grocery store visits were
+significantly linked to decreased motivation, indicating that these
+environments may be sources of stress or discomfort. These
+location-specific trends highlight the importance of not just how much
+individuals participate in activities, but where these activities take
+place.
+
+The practical implications of these findings are profound. Understanding
+how travel behavior influences motivation and mental health can guide
+mental health practitioners in developing targeted strategies. For
+example, interventions could focus on mitigating the stressors of
+grocery store environments for autistic individuals or promoting greater
+activity engagement for individuals with social anxiety to enhance their
 well-being.
 
-\subsection{Activity Diaries}\label{activity-diaries}
-
-One other potential limitation of our study is the inability to confirm
-which specific activities individuals participated in throughout the
-day. While we have identified activities using the DBSCAN-TE algorithm,
-there is a possibility that certain activities were not accurately
-identified by the algorithm, leading to their omission from our
-analysis. This lack of precision could potentially result in some
-activities going undetected, thereby limiting the comprehensiveness of
-our activity analysis.
-
-To address this limitation in future research, integrating activity
-diaries into survey methodology could prove beneficial. By incorporating
-activity diaries, participants would have the opportunity to provide
-detailed accounts of their daily activities, including specific
-locations where these activities took place. This additional information
-could enhance the completeness and accuracy of our activity analysis, as
-it would provide valuable insights into the types and locations of
-activities individuals engage in throughout the day.
-
-\subsection{Overall Recommendations}\label{overall-recommendations}
-
-To build on the findings of this study and address its limitations,
-future research should prioritize the following:
-
-\begin{itemize}
-\item
-  Enhance Data Collection Methods: Consider using multiple data sources
-  or complementary methods to ensure comprehensive data capture. Invest
-  in refining activity identification algorithms and explore advanced
-  machine learning techniques to improve accuracy and reduce gaps in
-  activity data.
-\item
-  Capture Detailed Activity Duration: Focus on capturing both activity
-  types and durations by implementing time-tracking features to better
-  understand the impact of activities on mental well-being.
-\item
-  Implement Participant Activity Diaries: Integrate activity diaries to
-  confirm activity engagement and duration. Enhance the completeness and
-  accuracy of daily activity engagement.
-\end{itemize}
-
-By addressing these recommendations, future studies can improve the
-quality of data, enhance the accuracy of activity analysis, and provide
-a more comprehensive understanding of the interplay between activity
-patterns and mental health.
+Overall, this research bridges the gap between travel behavior and
+mental health, highlighting the importance of personalized approaches to
+mental health care. By considering travel behavior as a key factor in
+promoting well-being, we provide a roadmap for future research that can
+further explore this intersection, ultimately aiming to enhance the
+quality of life for individuals by informing more personalized and
+effective mental health strategies.
 
 \bookmarksetup{startatroot}
 
@@ -1622,25 +1435,11 @@ Elia, H. (2019). Public libraries supporting health and wellness: {A}
 literature review. \emph{School of Information Student Research
 Journal}, \emph{9}(2). \url{https://doi.org/10.31979/2575-2499.090207}
 
-\bibitem[\citeproctext]{ref-fonseca-pedreroRiskProtectiveFactors2022}
-Fonseca-Pedrero, E., Al-Halabí, S., Pérez-Albéniz, A., \& Debbané, M.
-(2022). Risk and protective factors in adolescent suicidal behaviour:
-{A} network analysis. \emph{International Journal of Environmental
-Research and Public Health}, \emph{19}(3), 1784.
-\url{https://doi.org/10.3390/ijerph19031784}
-
 \bibitem[\citeproctext]{ref-frimanHowDoesTravel2017}
 Friman, M., Gärling, T., Ettema, D., \& Olsson, L. E. (2017). How does
 travel affect emotional well-being and life satisfaction?
 \emph{Transportation Research Part A: Policy and Practice}, \emph{106},
 170--180. \url{https://doi.org/10.1016/j.tra.2017.09.024}
-
-\bibitem[\citeproctext]{ref-fumeroAdolescentsBipolarExperiences2021}
-Fumero, A., Marrero, R. J., Pérez-Albéniz, A., \& Fonseca-Pedrero, E.
-(2021). Adolescents' bipolar experiences and suicide risk: {Well-being}
-and mental health difficulties as mediators. \emph{International Journal
-of Environmental Research and Public Health}, \emph{18}(6), 3024.
-\url{https://doi.org/10.3390/ijerph18063024}
 
 \bibitem[\citeproctext]{ref-hoisingtonTenQuestionsConcerning2019}
 Hoisington, A. J., Stearns-Yoder, K. A., Schuldt, S. J., Beemer, C. J.,
@@ -1698,9 +1497,6 @@ Mackett, R. L. (2021). Mental health and travel behaviour. \emph{Journal
 of Transport \& Health}, \emph{22}, 101143.
 \url{https://doi.org/10.1016/j.jth.2021.101143}
 
-\bibitem[\citeproctext]{ref-MentalHealthNumbers2023}
-Mental {Health By} the {Numbers}. (2023). In \emph{NAMI}.
-
 \bibitem[\citeproctext]{ref-nilssonEffectsTimePressure2017}
 Nilsson, E., Gärling, T., \& Marell, A. (2017). Effects of time
 pressure, type of shopping, and store attributes on consumers'
@@ -1748,7 +1544,7 @@ systematic review. \emph{International Journal of Social Psychiatry},
 
 \bibitem[\citeproctext]{ref-richesTransformingGPSPoints2022}
 Riches, G. (2022). \emph{Transforming {GPS} points to daily activities
-using simultaneously optimized {DBSCAN-TE} parameters}. MS Thesis,
+using simultaneously optimized {DBSCAN-TE} parameters} {[}PhD thesis{]}.
 Brigham Young University.
 
 \bibitem[\citeproctext]{ref-ridgwaySubjectiveWellbeingAutistic}
@@ -1788,7 +1584,7 @@ mental health across 18 countries. \emph{Scientific Reports},
 
 \bibitem[\citeproctext]{ref-wooldridgeIntroductoryEconometricsModern2009}
 Wooldridge, J. (2009). \emph{Introductory {Econometrics}: {A Modern
-Appraoch}} (4th ed.). South-Western Cengage Learning. Mason, Ohio.
+Appraoch}} (4th ed.). South-Western Cengage Learning.
 
 \bibitem[\citeproctext]{ref-yanosNegativeSupportiveSocial2001}
 Yanos, P. T., Rosenfield, S., \& Horwitz, A. V. (2001). Negative and

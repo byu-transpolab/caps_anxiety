@@ -52,8 +52,8 @@ book:
     - 02_litreview.qmd
     - 03_methods.qmd
     - 04_results.qmd
-    - 05_conclusions.qmd
     - 06_limitations.qmd
+    - 05_conclusions.qmd
     - acknowledgments.qmd
     - references.qmd
   abstract: |
