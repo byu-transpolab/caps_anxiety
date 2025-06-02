@@ -109,17 +109,18 @@ acknowledgments: |
   Jared Nielsen, and Mikle South.
 
 bibliography: groupreferences.bib
-cite-method: citeproc
-csl: apa.csl
 
 format:
   html:
     theme: cosmo
+    cite-method: citeproc
+    csl: apa.csl
   elsevier-pdf:
     journal: 
       name: Travel Behaviour and Society
       formatting: review
       model: 3p
+      cite-style: authoryear
     keep-tex: true
     highlight-style: arrow
     top-level-division: section
