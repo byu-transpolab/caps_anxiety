@@ -6,8 +6,7 @@ Understanding the complexities of mental health is essential, particularly as it
 Among these behaviors, the allocation of time and individuals’ travel patterns are particularly intriguing, as they are intricately linked to mental well-being [@frimanHowDoesTravel2017; @mackettMentalHealthTravel2021].
 
 Previous research has explored many elements of the relationship between mental health and travel activity behavior patterns.
-This previous research has largely focused on the positive mental health effects of time in green space [@pousoContactBluegreenSpaces2021; @whiteAssociationsGreenBlue2021; @pelgrimsAssociationUrbanEnvironment2021; @rautioLivingEnvironmentIts2018], as well as the deleterious effect of isolation [@loadesRapidSystematicReview2020; @stanleyMobilitySocialExclusion2011].
-Other studies have considered the negative effects of travel satisfaction [@syahputriEffectTravelSatisfaction2022].
+This previous research has largely focused on the positive mental health effects of time in green space [@pousoContactBluegreenSpaces2021; @whiteAssociationsGreenBlue2021; @pelgrimsAssociationUrbanEnvironment2021; @rautioLivingEnvironmentIts2018], as well as the deleterious effect of isolation [@loadesRapidSystematicReview2020; @stanleyMobilitySocialExclusion2011], or the negative effects of travel dissatisfaction [@syahputriEffectTravelSatisfaction2022].
 Notably, @lanDailySpacetimeActivities2022 began to explore the relationship between travel behavior and mental health using mobile phone-based sensing to investigate daily activities, environmental exposures, and anxiety symptoms.
 
 Despite the existing literature, significant gaps remain in our understanding of how different travel behaviors and patterns specifically affect mental health across various populations.
@@ -17,8 +16,7 @@ This gap underscores the necessity for further investigation into how travel pat
 In this research, we investigate the longitudinal mental health of a sample of college students, incorporating trip-making behavior from their mobile device location data.
 This allows us to track how often and where participants travel, providing a clearer picture of their daily activities and social interactions.
 We pair this data with twice-daily survey responses concerning their mental health to identify patterns that link travel behavior to mental well-being.
-The longitudinal design also allows us to consider the order of effect: does increasing out-of-home activity frequency lead to an increase in mood, or vice-versa?
 
-The following sections of the paper provide a [literature review](@sec-litreview) exploring the existing discussion around travel behavior and mental health.
-A [methodology](@sec-methods) section describes our data assembly and curation process as well as the econometric framework we employ, followed by a [results](@sec-results) section presenting and discussing the econometric findings.
-A final [concluding](@sec-conclude) section emphasizes the contribution of this research in the context of its limitations and the need for future research.
+The following section of the paper provides a [literature review](@sec-litreview) exploring the existing discussion around travel behavior and mental health.
+A subsequent [methodology](@sec-methods) section describes our data assembly and curation process as well as the econometric framework we employ, followed by a [results](@sec-results) section presenting and discussing the econometric findings.
+After discussing data and methodological [limitations](@sec-limitations), a final [concluding](@sec-conclude) section emphasizes the contribution of this research to a growing understanding of mental health and daily activities.
