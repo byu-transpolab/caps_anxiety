@@ -57,26 +57,28 @@ book:
     - acknowledgments.qmd
     - references.qmd
   abstract: |
-    The mental health of young adults is an important social consideration,
-    given increasing rates of isolation, depression, anxiety, suicide, and other 
-    ills. But the effect of daily travel on mental health 
-    --- or the effect of mental health on daily travel --- is not well understood.
+    The effect of daily travel on mental health is not well understood,
+    despite the potential role of travel in isolation, 
+    anxiety, exhaustive depression, and other mental heath issues among young
+    adults and the general poopulation.
     In this research, we explore the relationship between mental health and 
     observed trip-making behavior in a longitudinal dataset of young adults. 
     The participants in this study all expressed suicidal ideation in
-    professional treatment setting and have an accompanying psychiatric diagnosis for social
-    anxiety disorder, autism spectrum disorder, or are in a designated control group.
-    Participants volunteered to use a mobile device application that surveyed them twice
-    a day for several months on their reported mood while also tracking their
-    physical location via location-based services. 
+    professional treatment settings and have an accompanying psychiatric diagnosis 
+    for social
+    anxiety disorder, autism, or are in a designated control group.
+    Participant volunteers completed twice daily surveys for several months reporting 
+    overall mood and motivation levels, while tracking physical location via
+    location-based services. 
     We find significant differences in activity engagement and motivation 
-    levels among the groups: The control group participated in more activities and 
+    levels among the three groups: The control group participated in more activities and 
     reported higher motivation compared to the autism and social anxiety groups. 
     Increased activity engagement did not consistently raise motivation levels; however,
     for those in the control group, more activities in parks lead to a 
     statistically significant increase in motivation and for those in the autism 
     group, more activities to grocery stores lead to a statistically significant 
-    decrease in motivation. 
+    decrease in motivation. Future research should explore the directionality of these
+    effects as well as the potential for increasing sample sizes and data depth.
 
 
 keywords:
