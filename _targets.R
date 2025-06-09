@@ -148,34 +148,7 @@ list(
   tar_target(haus_result, hausman(fe, re)),
   
   # Create the Fixed Effects Linear Model
-  tar_target(fe_model, fe_analysis(fe, demo_ids)),
-  
-  
-  
-  # Estimate the Fixed Effects Model for the sev_day_avg
-  tar_target(fe_sevdayavg_mod, fe_sevdayavg(model_data)),
-  
-  # Estimate the Fixed Effects Model for numTrips
-  tar_target(fe_numTrips_mod, fe_numTrips(model_data)),
-  
-  # Estimate the Fixed Effects Model for log(numTrips)
-  tar_target(fe_numTrips_log, fe_numTrips_log(model_data)),
-  
-  # Estimate the Fixed Effects Model for numTrips^2
-  tar_target(fe_numTrips_squared, fe_numTrips_squared(model_data)),
-
-  # Estimate the Fixed Effects Model for the area
-  tar_target(fe_area_mod, fe_area(model_data)),
-  
-  # Estimate the Fixed Effects Model for the length
-  tar_target(fe_length_mod, fe_length(model_data)),
-  
-  # Estimate the Fixed Effects Model for the log(length)
-  tar_target(fe_length_log, fe_length_log(model_data)),
-  
-  # Estimate the Fixed Effects Model for the length^2
-  tar_target(fe_length_squared, fe_length_squared(model_data)),
-
+  tar_target(fe_model, fe_analysis(fe$leadin, demo_ids)),
   
   
   

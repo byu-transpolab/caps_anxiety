@@ -29,8 +29,10 @@ prep_models <- function(data) {
 #' @return An object of class "lm" representing the fitted OLS regression model.
 
 ols_model <- function(model_data) {
-  ols <- plm(motivation ~ sev_day_avg, data = model_data, model = "pooling")
-  return(ols)
+  follow <- plm(sev_day_follow ~ motivation, data = model_data, model = "pooling")
+  leadin <- plm(motivation ~ sev_day_leadin, data = model_data, model = "pooling")
+
+  return(list("follow" = follow,  "leadin" = leadin))
 }
 
 
@@ -43,8 +45,15 @@ ols_model <- function(model_data) {
 #' @return A fixed effects model object.
 
 fixed_effects <- function(model_data) {
-  fixed <- plm(motivation ~ sev_day_avg, index = c("userId", "activityDay"), data = model_data, model = "within")
-  return(fixed)
+  follow <- plm(sev_day_follow ~ motivation, index = c("userId", "activityDay"), data = model_data, model = "within")
+  leadin <- plm(motivation ~ sev_day_leadin, index = c("userId", "activityDay"), data = model_data, model = "within")
+
+
+  area <- plm(motivation ~ area, index = c("userId", "activityDay"), data = model_data, model = "within")
+  length <- plm(motivation ~ length, index = c("userId", "activityDay"), data = model_data, model = "within")
+
+
+  return(list("follow" = follow,  "leadin" = leadin, "area" = area, "length" = length))
 }
 
 
@@ -57,8 +66,10 @@ fixed_effects <- function(model_data) {
 #' @return A random effects model object.
 
 random_effects <- function(model_data) {
-  random <- plm(motivation ~ sev_day_avg, index = c("userId", "activityDay"), data = model_data, model = "random") 
-  return(random)
+  follow <- plm(sev_day_follow ~ motivation, index = c("userId", "activityDay"), data = model_data, model = "random")
+  leadin <- plm(motivation ~ sev_day_leadin, index = c("userId", "activityDay"), data = model_data, model = "random")
+
+  return(list("follow" = follow,  "leadin" = leadin))
 }
 
 
@@ -73,20 +84,24 @@ random_effects <- function(model_data) {
 #' @return A p-value indicating the significance of the Hausman test.
 
 hausman <- function(fixed, random) {
-  phtest(fixed,random)
+  leadin <- phtest(fixed$leadin, random$leadin)
+  follow <- phtest(fixed$follow, random$follow)
+
+  list("leadin" = leadin, "follow" = follow)
 }
 
 
 #' Fixed Effects Analysis
 #'
-#' This function conducts analysis using fixed effects models.
+#' This estimates a linear regression model on the 
+#' fixed effects values. This is used to examine the relationship between the 
+#' intercepts from the fixed effects model and demographic variables.
 #'
 #' @param fe A fixed effects model object.
 #' @param demo A data frame containing demographic information.
 #'
 #' @return A summary of the linear regression model examining the relationship 
 #' between the intercepts from the fixed effects model and demographic variables.
-
 fe_analysis <- function(fe, demo) {
   fixef <- data.frame(userId = names(fixef(fe)), intercept = fixef(fe)) %>% 
     as_tibble()
@@ -101,129 +116,6 @@ fe_analysis <- function(fe, demo) {
 }
 
 
-#' Estimate Fixed Effects Model ~ for the sev_day_avg
-#'
-#' This function estimates a fixed effects model using the provided model data.
-#'
-#' @param model_data A data frame containing the data for modeling.
-#'
-#' @return A fixed effects model object.
-
-fe_sevdayavg <- function(model_data) {
-  fixed <- plm(motivation ~ sev_day_avg, index = c("userId", "activityDay"), data = model_data, model = "within")
-  return(fixed)
-}
 
 
-#' Estimate Fixed Effects Model ~ for the numTrips
-#'
-#' This function estimates a fixed effects model using the provided model data.
-#'
-#' @param model_data A data frame containing the data for modeling.
-#'
-#' @return A fixed effects model object.
-
-fe_numTrips <- function(model_data) {
-  fixed <- plm(motivation ~ numTrips, index = c("userId", "activityDay"), data = model_data, model = "within")
-  return(fixed)
-}
-
-
-#' Estimate Fixed Effects Model ~ for the log(numTrips)
-#'
-#' This function estimates a fixed effects model using the provided model data.
-#'
-#' @param model_data A data frame containing the data for modeling.
-#'
-#' @return A fixed effects model object.
-
-fe_numTrips_log <- function(model_data) {
-  fixed <- plm(motivation ~ log(numTrips + 0.1), index = c("userId", "activityDay"), data = model_data, model = "within")
-  return(fixed)
-}
-
-
-#' Estimate Fixed Effects Model ~ for the numTrips^2
-#'
-#' This function estimates a fixed effects model using the provided model data.
-#'
-#' @param model_data A data frame containing the data for modeling.
-#'
-#' @return A fixed effects model object.
-
-fe_numTrips_squared <- function(model_data) {
-  model_data$numTrips <- as.numeric(model_data$numTrips)
-  
-  model_data_squ <- model_data %>%
-    mutate(numTrips_squared = numTrips^2) %>%
-    filter(!is.na(numTrips_squared))
-  
-  fixed <- plm(motivation ~ I(numTrips^2) + numTrips, index = c("userId", "activityDay"), data = model_data, model = "within")
-  return(fixed)
-}
-
-
-#' Estimate Fixed Effects Model ~ for area
-#'
-#' This function estimates a fixed effects model using the provided model data.
-#'
-#' @param model_data A data frame containing the data for modeling.
-#'
-#' @return A fixed effects model object.
-
-fe_area <- function(model_data) {
-  fixed <- plm(motivation ~ area, index = c("userId", "activityDay"), data = model_data, model = "within")
-  return(fixed)
-}
-
-
-#' Estimate Fixed Effects Model ~ for the length
-#'
-#' This function estimates a fixed effects model using the provided model data.
-#'
-#' @param model_data A data frame containing the data for modeling.
-#'
-#' @return A fixed effects model object.
-
-fe_length <- function(model_data) {
-  fixed <- plm(motivation ~ length, index = c("userId", "activityDay"), data = model_data, model = "within")
-  return(fixed)
-}
-
-
-#' Estimate Fixed Effects Model ~ for the log(length)
-#'
-#' This function estimates a fixed effects model using the provided model data.
-#'
-#' @param model_data A data frame containing the data for modeling.
-#'
-#' @return A fixed effects model object.
-
-fe_length_log <- function(model_data) {
-  
-  fixed <- plm(motivation ~ log(length), index = c("userId", "activityDay"), data = model_data, model = "within")
-  return(fixed)
-}
-
-
-#' Estimate Fixed Effects Model ~ for the length^2
-#'
-#' This function estimates a fixed effects model using the provided model data.
-#'
-#' @param model_data A data frame containing the data for modeling.
-#'
-#' @return A fixed effects model object.
-
-fe_length_squared <- function(model_data) {
-  model_data$length <- as.numeric(model_data$length)
-  
-  model_data_squ <- model_data %>%
-    mutate(length_squared = length^2) %>%
-    filter(!is.na(length_squared))
-  
-  fixed <- plm(motivation ~ I(length^2) + length, index = c("userId", "activityDay"), data = model_data, model = "within")
-  return(fixed)
-}
-
-
-
+#
