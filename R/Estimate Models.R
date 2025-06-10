@@ -29,8 +29,8 @@ prep_models <- function(data) {
 #' @return An object of class "lm" representing the fitted OLS regression model.
 
 ols_model <- function(model_data) {
-  follow <- plm(sev_day_follow ~ motivation, data = model_data, model = "pooling")
-  leadin <- plm(motivation ~ sev_day_leadin, data = model_data, model = "pooling")
+  follow <- plm(sev_day_follow ~ motivation + sex + age + fsiq_2 + race + prescribed_group, data = model_data, model = "pooling") 
+  leadin <- plm(motivation ~ sev_day_leadin + sex + age + fsiq_2 + race + prescribed_group, data = model_data, model = "pooling")
 
   return(list("follow" = follow,  "leadin" = leadin))
 }
@@ -66,8 +66,8 @@ fixed_effects <- function(model_data) {
 #' @return A random effects model object.
 
 random_effects <- function(model_data) {
-  follow <- plm(sev_day_follow ~ motivation, index = c("userId", "activityDay"), data = model_data, model = "random")
-  leadin <- plm(motivation ~ sev_day_leadin, index = c("userId", "activityDay"), data = model_data, model = "random")
+  follow <- plm(sev_day_follow ~ motivation + sex + age + fsiq_2 + race + prescribed_group, index = c("userId", "activityDay"), data = model_data, model = "random")
+  leadin <- plm(motivation ~ sev_day_leadin + sex + age + fsiq_2 + race + prescribed_group, index = c("userId", "activityDay"), data = model_data, model = "random")
 
   return(list("follow" = follow,  "leadin" = leadin))
 }
@@ -82,11 +82,11 @@ random_effects <- function(model_data) {
 #' @param random A random effects model object.
 #'
 #' @return A p-value indicating the significance of the Hausman test.
-
+#' 
 hausman <- function(fixed, random) {
   leadin <- phtest(fixed$leadin, random$leadin)
   follow <- phtest(fixed$follow, random$follow)
-
+  
   list("leadin" = leadin, "follow" = follow)
 }
 
@@ -111,8 +111,21 @@ fe_analysis <- function(fe, demo) {
            fsiq_2 = as.numeric(fsiq_2),
            prescribed_group = fct_recode(prescribed_group, Control = "No Group"))
   
-  int_model <- list(
-    "Intercept Model" = lm(intercept ~ sex + age + fsiq_2 + prescribed_group, data = fe_model))
+  lm(intercept ~ sex + age + fsiq_2 + prescribed_group, data = fe_model)
+}
+
+#' Estimate Fixed Effects Model for groups
+#' 
+#' @param model_data A data frame containing the data for modeling.
+estimate_fe_groups <- function(model_data) {
+  model_data |> 
+    tibble::tibble() |> 
+    dplyr::group_by(prescribed_group) |> 
+    tidyr::nest() |> 
+    dplyr::mutate(model = purrr::map(data, 
+      function(d) plm::plm(sev_day_follow ~ motivation, 
+      index = c("userId", "activityDay"), data = d, model = "within")))
+
 }
 
 

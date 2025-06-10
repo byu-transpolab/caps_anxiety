@@ -148,8 +148,10 @@ list(
   tar_target(haus_result, hausman(fe, re)),
   
   # Create the Fixed Effects Linear Model
-  tar_target(fe_model, fe_analysis(fe$leadin, demo_ids)),
-  
+  tar_target(fe_model, fe_analysis(fe$follow, demo_ids)),
+
+  # estimate the FE model for each group
+  tar_target(fe_groups, estimate_fe_groups(model_data)),
   
   
   # Table for numeric descriptive statistics
