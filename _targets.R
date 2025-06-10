@@ -153,5 +153,5 @@ list(
   
   
   # Table for numeric descriptive statistics
-  tar_target(descrip_stats, desc_stats(demo_ids))
+  tar_target(descriptive_stats, build_descriptives(demo_ids, model_data))
 )

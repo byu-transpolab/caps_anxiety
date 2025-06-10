@@ -16,26 +16,25 @@ This final value did not affect our analysis for the limited number of students 
 A psychological evaluation measured each participant's intelligence quotient (IQ) and classified the participants into one of three neurotypology groups: those with autism spectrum disorder, those with social anxiety, or a final control group.
 @tbl-descriptivestats gives a statistical description of the sample organized by neurotypology; The study included 28 individuals in the social anxiety group, 29 in the autism group, and 31 in the control group.
 
-```{r table descripstats, message=FALSE, echo=FALSE, warning=FALSE}
+```{r descriptivestats, message=FALSE, echo=FALSE, warning=FALSE}
 #| label: tbl-descriptivestats
 #| tbl-cap: "Descriptive Statistics by Group: Age, IQ Score, Sex, and Race"
+tar_load(descriptive_stats)
 
-tar_load(descrip_stats)
-
-datasummary_balance(~Group, descrip_stats, dinm=FALSE, align = "llcccccc", 
+datasummary_balance(~Group, descriptive_stats, dinm=FALSE, align = "llcccccc", 
                      output = "kableExtra", booktabs = TRUE) %>%
   kable_styling(latex_options="scale_down")
 ```
 
 Participants installed an app on their phones that collected cellular LBS data, with some providing data for one month and others up to a year.
-There was a one-month gap when no LBS data was collected.
+There was a one-month gap when no LBS data was collected due to a malfunction in the collection process.
 In addition to LBS data, the app prompted participants to complete mental health surveys in the mornings and evenings, asking questions like, "Have you felt stressed since your last survey?" "How would you gauge your motivation?" and "Have you thought about killing yourself in the past 12 hours?" Participants were monetarily incentivized to complete the surveys.
 By integrating LBS data and survey responses, we can analyze the interaction between travel behavior and mental health, especially in relation to the three groups.
 
 ## Data Curation
 
 The raw LBS data included each participant's ID (userID), timestamp (date and time), and location coordinates (latitude and longitude).
-The first step in data cleaning was to prepare the raw LBS data for further analysis by determining the activity day, applying a scoring algorithm, and refining the dataset.
+The first step in data cleaning was to prepare the raw LBS data for further analysis by determining the activity day, applying a scoring algorithm to excluse low-quality days, and applying an algorithm to identify the number of activities per day.
 
 To capture daily travel patterns more accurately, we shifted the traditional 24-hour period (typically ending at 11:59 PM) to span from 3:00 AM to 2:59 AM.
 This adjustment ensured that any data points between 12:00 AM and 2:59 AM were classified as part of the previous day’s travel activities.
